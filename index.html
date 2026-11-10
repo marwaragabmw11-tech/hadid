@@ -1,4 +1,3 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
 <title>مكتبة الحفظ المصوّرة</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,7 +49,6 @@ a.card:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 footer{text-align:center;font-size:.78rem;color:var(--muted)}
 @media (max-width:380px){.name{font-size:1.25rem}a.card{gap:10px;padding:10px 12px}}
 </style>
-</head><body>
 <div class="wrap">
   <section class="hero" aria-labelledby="t">
     <svg viewBox="0 0 360 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -60,18 +58,15 @@ footer{text-align:center;font-size:.78rem;color:var(--muted)}
     </svg>
     <p class="basmala">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
     <h1 id="t">مكتبة الحفظ المصوّرة</h1>
-    <p class="sub">من الفاتحة إلى الأنفال: لكل سورة كتاب فيه مشاهد وصوت قارئ وتسميع</p>
-    <div class="stats"><span class="stat"><b>٨</b> سور</span><span class="stat"><b>١٢٣٥</b> آية</span><span class="stat">من الجزء <b>١</b> إلى <b>١٠</b></span></div>
+    <p class="sub">من الفاتحة إلى الناس: لكل سورة كتاب فيه مشاهد وصوت قارئ وتسميع</p>
+    <div class="stats"><span class="stat"><b>١١٤</b> سورة</span><span class="stat"><b>٦٢٣٦</b> آية</span><span class="stat">من الجزء <b>١</b> إلى <b>٣٠</b></span></div>
   </section>
 
   <h2>السور بترتيب المصحف</h2>
   <ul class="list" id="list"></ul>
 
-  <h2>سور أخرى</h2>
-  <ul class="list" id="extra"></ul>
-
   <p class="note">الكتاب الذي حفظتِ فيه من قبل تظهر تحته علامة خضراء «بدأتِ الحفظ». تظهر العلامة إذا فتحتِ الكتاب من رابط GitHub على هذا الجهاز نفسه.</p>
-  <footer>النص برواية حفص عن عاصم، ومراجَع على المصحف · المعاني من التفسير الميسر</footer>
+  <footer>النص برواية حفص عن عاصم، ومراجَع على المصحف · المعاني مأخوذة من التفسير الميسر وكتب التفسير المعتمدة</footer>
 </div>
 <script>
 const BASE='https://marwaragabmw11-tech.github.io/hadid/';
@@ -85,8 +80,114 @@ const BOOKS=[
   {n:6,name:'الأنعام',ayat:165,juz:'الأجزاء ٧–٨',file:'anam.html',key:'anam-page'},
   {n:7,name:'الأعراف',ayat:206,juz:'الأجزاء ٨–٩',file:'araf.html',key:'araf-page'},
   {n:8,name:'الأنفال',ayat:75,juz:'الأجزاء ٩–١٠',file:'anfal.html',key:'anfal-page'},
+  {n:9,name:'التوبة',ayat:129,juz:'الأجزاء ١٠–١١',file:'tawba.html',key:'tawba-page'},
+  {n:10,name:'يونس',ayat:109,juz:'الجزء ١١',file:'yunus.html',key:'yunus-page'},
+  {n:11,name:'هود',ayat:123,juz:'الأجزاء ١١–١٢',file:'hud.html',key:'hud-page'},
+  {n:12,name:'يوسف',ayat:111,juz:'الأجزاء ١٢–١٣',file:'yusuf.html',key:'yusuf-page'},
+  {n:13,name:'الرعد',ayat:43,juz:'الجزء ١٣',file:'raad.html',key:'raad-page'},
+  {n:14,name:'إبراهيم',ayat:52,juz:'الجزء ١٣',file:'ibrahim.html',key:'ibrahim-page'},
+  {n:15,name:'الحجر',ayat:99,juz:'الجزء ١٤',file:'hijr.html',key:'hijr-page'},
+  {n:16,name:'النحل',ayat:128,juz:'الجزء ١٤',file:'nahl.html',key:'nahl-page'},
+  {n:17,name:'الإسراء',ayat:111,juz:'الجزء ١٥',file:'isra.html',key:'isra-page'},
+  {n:18,name:'الكهف',ayat:110,juz:'الأجزاء ١٥–١٦',file:'kahf.html',key:'kahf-page'},
+  {n:19,name:'مريم',ayat:98,juz:'الجزء ١٦',file:'maryam.html',key:'maryam-page'},
+  {n:20,name:'طه',ayat:135,juz:'الجزء ١٦',file:'taha.html',key:'taha-page'},
+  {n:21,name:'الأنبياء',ayat:112,juz:'الجزء ١٧',file:'anbiya.html',key:'anbiya-page'},
+  {n:22,name:'الحج',ayat:78,juz:'الجزء ١٧',file:'hajj.html',key:'hajj-page'},
+  {n:23,name:'المؤمنون',ayat:118,juz:'الجزء ١٨',file:'muminun.html',key:'muminun-page'},
+  {n:24,name:'النور',ayat:64,juz:'الجزء ١٨',file:'nur.html',key:'nur-page'},
+  {n:25,name:'الفرقان',ayat:77,juz:'الأجزاء ١٨–١٩',file:'furqan.html',key:'furqan-page'},
+  {n:26,name:'الشعراء',ayat:227,juz:'الجزء ١٩',file:'shuara.html',key:'shuara-page'},
+  {n:27,name:'النمل',ayat:93,juz:'الأجزاء ١٩–٢٠',file:'naml.html',key:'naml-page'},
+  {n:28,name:'القصص',ayat:88,juz:'الجزء ٢٠',file:'qasas.html',key:'qasas-page'},
+  {n:29,name:'العنكبوت',ayat:69,juz:'الأجزاء ٢٠–٢١',file:'ankabut.html',key:'ankabut-page'},
+  {n:30,name:'الروم',ayat:60,juz:'الجزء ٢١',file:'rum.html',key:'rum-page'},
+  {n:31,name:'لقمان',ayat:34,juz:'الجزء ٢١',file:'luqman.html',key:'luqman-page'},
+  {n:32,name:'السجدة',ayat:30,juz:'الجزء ٢١',file:'sajda.html',key:'sajda-page'},
+  {n:33,name:'الأحزاب',ayat:73,juz:'الأجزاء ٢١–٢٢',file:'ahzab.html',key:'ahzab-page'},
+  {n:34,name:'سبأ',ayat:54,juz:'الجزء ٢٢',file:'saba.html',key:'saba-page'},
+  {n:35,name:'فاطر',ayat:45,juz:'الجزء ٢٢',file:'fatir.html',key:'fatir-page'},
+  {n:36,name:'يس',ayat:83,juz:'الأجزاء ٢٢–٢٣',file:'yasin.html',key:'yasin-page'},
+  {n:37,name:'الصافات',ayat:182,juz:'الجزء ٢٣',file:'saffat.html',key:'saffat-page'},
+  {n:38,name:'ص',ayat:88,juz:'الجزء ٢٣',file:'sad.html',key:'sad-page'},
+  {n:39,name:'الزمر',ayat:75,juz:'الأجزاء ٢٣–٢٤',file:'zumar.html',key:'zumar-page'},
+  {n:40,name:'غافر',ayat:85,juz:'الجزء ٢٤',file:'ghafir.html',key:'ghafir-page'},
+  {n:41,name:'فصلت',ayat:54,juz:'الأجزاء ٢٤–٢٥',file:'fussilat.html',key:'fussilat-page'},
+  {n:42,name:'الشورى',ayat:53,juz:'الجزء ٢٥',file:'shura.html',key:'shura-page'},
+  {n:43,name:'الزخرف',ayat:89,juz:'الجزء ٢٥',file:'zukhruf.html',key:'zukhruf-page'},
+  {n:44,name:'الدخان',ayat:59,juz:'الجزء ٢٥',file:'dukhan.html',key:'dukhan-page'},
+  {n:45,name:'الجاثية',ayat:37,juz:'الجزء ٢٥',file:'jathiya.html',key:'jathiya-page'},
+  {n:46,name:'الأحقاف',ayat:35,juz:'الجزء ٢٦',file:'ahqaf.html',key:'ahqaf-page'},
+  {n:47,name:'محمد',ayat:38,juz:'الجزء ٢٦',file:'muhammad.html',key:'muhammad-page'},
+  {n:48,name:'الفتح',ayat:29,juz:'الجزء ٢٦',file:'fath.html',key:'fath-page'},
+  {n:49,name:'الحجرات',ayat:18,juz:'الجزء ٢٦',file:'hujurat.html',key:'hujurat-page'},
+  {n:50,name:'ق',ayat:45,juz:'الجزء ٢٦',file:'qaf.html',key:'qaf-page'},
+  {n:51,name:'الذاريات',ayat:60,juz:'الأجزاء ٢٦–٢٧',file:'dhariyat.html',key:'dhariyat-page'},
+  {n:52,name:'الطور',ayat:49,juz:'الجزء ٢٧',file:'tur.html',key:'tur-page'},
+  {n:53,name:'النجم',ayat:62,juz:'الجزء ٢٧',file:'najm.html',key:'najm-page'},
+  {n:54,name:'القمر',ayat:55,juz:'الجزء ٢٧',file:'qamar.html',key:'qamar-page'},
+  {n:55,name:'الرحمن',ayat:78,juz:'الجزء ٢٧',file:'rahman.html',key:'rahman-page'},
+  {n:56,name:'الواقعة',ayat:96,juz:'الجزء ٢٧',file:'waqia.html',key:'waqia-page'},
+  {n:57,name:'الحديد',ayat:29,juz:'الجزء ٢٧',file:'surat-al-hadid.html',key:null},
+  {n:58,name:'المجادلة',ayat:22,juz:'الجزء ٢٨',file:'mujadila.html',key:'mujadila-page'},
+  {n:59,name:'الحشر',ayat:24,juz:'الجزء ٢٨',file:'hashr.html',key:'hashr-page'},
+  {n:60,name:'الممتحنة',ayat:13,juz:'الجزء ٢٨',file:'mumtahana.html',key:'mumtahana-page'},
+  {n:61,name:'الصف',ayat:14,juz:'الجزء ٢٨',file:'saff.html',key:'saff-page'},
+  {n:62,name:'الجمعة',ayat:11,juz:'الجزء ٢٨',file:'jumua.html',key:'jumua-page'},
+  {n:63,name:'المنافقون',ayat:11,juz:'الجزء ٢٨',file:'munafiqun.html',key:'munafiqun-page'},
+  {n:64,name:'التغابن',ayat:18,juz:'الجزء ٢٨',file:'taghabun.html',key:'taghabun-page'},
+  {n:65,name:'الطلاق',ayat:12,juz:'الجزء ٢٨',file:'talaq.html',key:'talaq-page'},
+  {n:66,name:'التحريم',ayat:12,juz:'الجزء ٢٨',file:'tahrim.html',key:'tahrim-page'},
+  {n:67,name:'الملك',ayat:30,juz:'الجزء ٢٩',file:'mulk.html',key:'mulk-page'},
+  {n:68,name:'القلم',ayat:52,juz:'الجزء ٢٩',file:'qalam.html',key:'qalam-page'},
+  {n:69,name:'الحاقة',ayat:52,juz:'الجزء ٢٩',file:'haqqa.html',key:'haqqa-page'},
+  {n:70,name:'المعارج',ayat:44,juz:'الجزء ٢٩',file:'maarij.html',key:'maarij-page'},
+  {n:71,name:'نوح',ayat:28,juz:'الجزء ٢٩',file:'nuh.html',key:'nuh-page'},
+  {n:72,name:'الجن',ayat:28,juz:'الجزء ٢٩',file:'jinn.html',key:'jinn-page'},
+  {n:73,name:'المزمل',ayat:20,juz:'الجزء ٢٩',file:'muzzammil.html',key:'muzzammil-page'},
+  {n:74,name:'المدثر',ayat:56,juz:'الجزء ٢٩',file:'muddathir.html',key:'muddathir-page'},
+  {n:75,name:'القيامة',ayat:40,juz:'الجزء ٢٩',file:'qiyama.html',key:'qiyama-page'},
+  {n:76,name:'الإنسان',ayat:31,juz:'الجزء ٢٩',file:'insan.html',key:'insan-page'},
+  {n:77,name:'المرسلات',ayat:50,juz:'الجزء ٢٩',file:'mursalat.html',key:'mursalat-page'},
+  {n:78,name:'النبأ',ayat:40,juz:'الجزء ٣٠',file:'naba.html',key:'naba-page'},
+  {n:79,name:'النازعات',ayat:46,juz:'الجزء ٣٠',file:'naziat.html',key:'naziat-page'},
+  {n:80,name:'عبس',ayat:42,juz:'الجزء ٣٠',file:'abasa.html',key:'abasa-page'},
+  {n:81,name:'التكوير',ayat:29,juz:'الجزء ٣٠',file:'takwir.html',key:'takwir-page'},
+  {n:82,name:'الانفطار',ayat:19,juz:'الجزء ٣٠',file:'infitar.html',key:'infitar-page'},
+  {n:83,name:'المطففين',ayat:36,juz:'الجزء ٣٠',file:'mutaffifin.html',key:'mutaffifin-page'},
+  {n:84,name:'الانشقاق',ayat:25,juz:'الجزء ٣٠',file:'inshiqaq.html',key:'inshiqaq-page'},
+  {n:85,name:'البروج',ayat:22,juz:'الجزء ٣٠',file:'buruj.html',key:'buruj-page'},
+  {n:86,name:'الطارق',ayat:17,juz:'الجزء ٣٠',file:'tariq.html',key:'tariq-page'},
+  {n:87,name:'الأعلى',ayat:19,juz:'الجزء ٣٠',file:'ala.html',key:'ala-page'},
+  {n:88,name:'الغاشية',ayat:26,juz:'الجزء ٣٠',file:'ghashiya.html',key:'ghashiya-page'},
+  {n:89,name:'الفجر',ayat:30,juz:'الجزء ٣٠',file:'fajr.html',key:'fajr-page'},
+  {n:90,name:'البلد',ayat:20,juz:'الجزء ٣٠',file:'balad.html',key:'balad-page'},
+  {n:91,name:'الشمس',ayat:15,juz:'الجزء ٣٠',file:'shams.html',key:'shams-page'},
+  {n:92,name:'الليل',ayat:21,juz:'الجزء ٣٠',file:'layl.html',key:'layl-page'},
+  {n:93,name:'الضحى',ayat:11,juz:'الجزء ٣٠',file:'duha.html',key:'duha-page'},
+  {n:94,name:'الشرح',ayat:8,juz:'الجزء ٣٠',file:'sharh.html',key:'sharh-page'},
+  {n:95,name:'التين',ayat:8,juz:'الجزء ٣٠',file:'tin.html',key:'tin-page'},
+  {n:96,name:'العلق',ayat:19,juz:'الجزء ٣٠',file:'alaq.html',key:'alaq-page'},
+  {n:97,name:'القدر',ayat:5,juz:'الجزء ٣٠',file:'qadr.html',key:'qadr-page'},
+  {n:98,name:'البينة',ayat:8,juz:'الجزء ٣٠',file:'bayyina.html',key:'bayyina-page'},
+  {n:99,name:'الزلزلة',ayat:8,juz:'الجزء ٣٠',file:'zalzala.html',key:'zalzala-page'},
+  {n:100,name:'العاديات',ayat:11,juz:'الجزء ٣٠',file:'adiyat.html',key:'adiyat-page'},
+  {n:101,name:'القارعة',ayat:11,juz:'الجزء ٣٠',file:'qaria.html',key:'qaria-page'},
+  {n:102,name:'التكاثر',ayat:8,juz:'الجزء ٣٠',file:'takathur.html',key:'takathur-page'},
+  {n:103,name:'العصر',ayat:3,juz:'الجزء ٣٠',file:'asr.html',key:'asr-page'},
+  {n:104,name:'الهمزة',ayat:9,juz:'الجزء ٣٠',file:'humaza.html',key:'humaza-page'},
+  {n:105,name:'الفيل',ayat:5,juz:'الجزء ٣٠',file:'fil.html',key:'fil-page'},
+  {n:106,name:'قريش',ayat:4,juz:'الجزء ٣٠',file:'quraysh.html',key:'quraysh-page'},
+  {n:107,name:'الماعون',ayat:7,juz:'الجزء ٣٠',file:'maun.html',key:'maun-page'},
+  {n:108,name:'الكوثر',ayat:3,juz:'الجزء ٣٠',file:'kawthar.html',key:'kawthar-page'},
+  {n:109,name:'الكافرون',ayat:6,juz:'الجزء ٣٠',file:'kafirun.html',key:'kafirun-page'},
+  {n:110,name:'النصر',ayat:3,juz:'الجزء ٣٠',file:'nasr.html',key:'nasr-page'},
+  {n:111,name:'المسد',ayat:5,juz:'الجزء ٣٠',file:'masad.html',key:'masad-page'},
+  {n:112,name:'الإخلاص',ayat:4,juz:'الجزء ٣٠',file:'ikhlas.html',key:'ikhlas-page'},
+  {n:113,name:'الفلق',ayat:5,juz:'الجزء ٣٠',file:'falaq.html',key:'falaq-page'},
+  {n:114,name:'الناس',ayat:6,juz:'الجزء ٣٠',file:'nas.html',key:'nas-page'},
 ];
-const EXTRA=[{n:57,name:'الحديد',ayat:29,juz:'الجزء ٢٧',file:'surat-al-hadid.html',key:null}];
+const EXTRA=[];
 function started(k){if(!k)return false;try{return localStorage.getItem(k)!==null}catch(e){return false}}
 const star=`<svg viewBox="0 0 52 52" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="10" y="10" width="32" height="32" rx="3"/><rect x="10" y="10" width="32" height="32" rx="3" transform="rotate(45 26 26)"/></g></svg>`;
 function card(b){
@@ -97,7 +198,5 @@ function card(b){
     <span class="go" aria-hidden="true">‹</span></a></li>`;
 }
 document.getElementById('list').innerHTML=BOOKS.map(card).join('');
-document.getElementById('extra').innerHTML=EXTRA.map(card).join('');
-</script>
 
-</body></html>
+</script>

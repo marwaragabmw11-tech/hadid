@@ -1,0 +1,525 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>سورة يوسف</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Noto+Naskh+Arabic:wght@400;600;700&family=Reem+Kufi:wght@500;700&display=swap">
+<style>
+/* Layout: one book page at a time — scene picture on top, ayat, then memorization keys; iron night + gilded light (نور) */
+:root{
+  --bg:#E9EDF0; --paper:#F9FAFB; --ink:#1C232B; --muted:#56616D; --line:#D2D9DF;
+  --gold:#9C6A15; --gold-soft:#F4E5C4; --iron:#3E4A57; --leaf:#3D8857; --dry:#C9A24A;
+  --sky:#CFE0EC; --night:#26344C; --earth:#B79A74; --glow:#FFD36B; --mercy:#CBE8D3; --cloud:#FFFFFF; --water:#7FB3D5; --danger:#B42318; --danger-soft:#FDE4E1;
+  --f-quran:"Amiri Quran","Amiri","Noto Naskh Arabic",serif;
+  --f-display:"Reem Kufi","Noto Naskh Arabic",sans-serif;
+  --f-body:"Noto Naskh Arabic","Segoe UI",Tahoma,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10151B; --paper:#18202A; --ink:#ECE7DC; --muted:#9BA6B2; --line:#2B3541;
+  --gold:#E5B65A; --gold-soft:#3A2F1B; --iron:#8C9BAB; --leaf:#5EAF7B; --dry:#C9A24A;
+  --sky:#233650; --night:#0B111B; --earth:#5F4D39; --glow:#FFD36B; --mercy:#1E3A2A; --cloud:#C9D3DD; --water:#4F86AE; --danger:#FF8173; --danger-soft:#43201C;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10151B; --paper:#18202A; --ink:#ECE7DC; --muted:#9BA6B2; --line:#2B3541;
+  --gold:#E5B65A; --gold-soft:#3A2F1B; --iron:#8C9BAB; --leaf:#5EAF7B; --dry:#C9A24A;
+  --sky:#233650; --night:#0B111B; --earth:#5F4D39; --glow:#FFD36B; --mercy:#1E3A2A; --cloud:#C9D3DD; --water:#4F86AE; --danger:#FF8173; --danger-soft:#43201C;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.8;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 28px}
+.wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-family:var(--f-display);font-weight:700;font-size:1.15rem;color:var(--gold);letter-spacing:.02em}
+.count{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.dot{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--paper);color:var(--muted);
+  font:600 .72rem var(--f-body);cursor:pointer;display:grid;place-items:center;padding:0}
+.dot[aria-current="true"]{background:var(--gold);border-color:var(--gold);color:var(--paper)}
+.page{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.scene svg{display:block;width:100%;height:auto}
+.inner{padding:18px 18px 22px;display:flex;flex-direction:column;gap:16px}
+.eyebrow{font-size:.8rem;color:var(--gold);font-weight:700;letter-spacing:.04em}
+h1,h2{font-family:var(--f-display);font-weight:700;margin:0;text-wrap:balance;line-height:1.4}
+h1{font-size:2.3rem} h2{font-size:1.5rem}
+.modes{display:flex;gap:6px;flex-wrap:wrap}
+.mode{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:4px 14px;
+  font:600 .85rem var(--f-body);cursor:pointer}
+.mode[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.ayat{font-family:var(--f-quran);font-size:1.6rem;line-height:2.45;text-align:justify;margin:0;
+  border-block:1px solid var(--line);padding-block:10px}
+.w{cursor:default;border-radius:6px;transition:background .2s}
+.w.hid{color:transparent;background:linear-gradient(transparent 58%,var(--gold-soft) 58%);cursor:pointer;box-shadow:inset 0 -2px 0 var(--gold);border-radius:0}
+.mark{color:var(--gold)}
+.num{font-family:var(--f-quran);color:var(--gold);white-space:nowrap;margin-inline:4px}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--gold);background:transparent;color:var(--gold);border-radius:8px;padding:6px 14px;font:600 .9rem var(--f-body);cursor:pointer}
+.btn.solid{background:var(--gold);color:var(--paper)}
+.box{border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.box h3{margin:0;font-family:var(--f-display);font-size:1.05rem;font-weight:500}
+.box p{margin:0}
+.kid{background:var(--mercy)}
+.adult{border:1px solid var(--line)}
+.adult h3{color:var(--gold)}
+.openers{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.op{font-family:var(--f-quran);font-size:1.05rem;border:1px solid var(--line);border-radius:8px;padding:0 8px}
+.op b{font-family:var(--f-body);font-size:.72rem;color:var(--muted);font-weight:600;margin-inline-start:4px}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px}
+dt{font-family:var(--f-quran);font-size:1.1rem;color:var(--gold)}
+dd{margin:0;min-width:0}
+nav.pager{display:flex;justify-content:space-between;gap:10px}
+nav.pager .btn{flex:1}
+.cover{padding:26px 20px;display:flex;flex-direction:column;gap:14px}
+.cover p{margin:0;max-width:60ch}
+.note{font-size:.85rem;color:var(--muted)}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.toc button{text-align:start;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:8px 12px;font:600 .95rem var(--f-body);cursor:pointer;display:flex;flex-direction:column}
+.toc span{font-size:.78rem;color:var(--muted);font-weight:400}
+.quiz-q{font-family:var(--f-quran);font-size:1.35rem;line-height:2.2;margin:0}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{font-family:var(--f-quran);font-size:1.25rem;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:8px;cursor:pointer}
+.opt.ok{background:var(--mercy);border-color:var(--leaf)}
+.opt.no{border-color:var(--gold);opacity:.6}
+.score{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.9rem}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+/* illustration fills */
+.f-sky{fill:var(--sky)}.f-night{fill:var(--night)}.f-glow{fill:var(--glow)}.f-earth{fill:var(--earth)}
+.f-leaf{fill:var(--leaf)}.f-dry{fill:var(--dry)}.f-iron{fill:var(--iron)}.f-cloud{fill:var(--cloud)}
+.f-water{fill:var(--water)}.f-mercy{fill:var(--mercy)}.f-paper{fill:var(--paper)}.f-gold{fill:var(--gold)}
+.s-water{stroke:var(--water);fill:none}.s-leaf{stroke:var(--leaf);fill:none}.s-gold{stroke:var(--gold);fill:none}
+.s-dry{stroke:var(--dry);fill:none}.s-iron{stroke:var(--iron);fill:none}.s-earth{stroke:var(--earth);fill:none}.s-ink{stroke:var(--muted);fill:none}
+@keyframes twinkle{50%{opacity:.35}}
+.tw{animation:twinkle 3s ease-in-out infinite}
+@keyframes fall{from{transform:translateY(-6px);opacity:0}30%{opacity:1}to{transform:translateY(14px);opacity:0}}
+.rain line{animation:fall 1.6s linear infinite}
+.rain line:nth-child(2n){animation-delay:.5s}.rain line:nth-child(3n){animation-delay:1s}
+@media (prefers-reduced-motion: reduce){.tw,.rain line{animation:none}}
+.num{background:none;border:0;padding:0 2px;cursor:pointer;font-size:inherit;line-height:inherit}
+.ay.now{background:var(--gold-soft);border-radius:6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.player{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.player label{font-size:.85rem;color:var(--muted)}
+select{font:600 .9rem var(--f-body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:4px 8px;max-width:100%}
+.status{margin:0;font-size:.88rem;color:var(--muted)}.status.bad{color:var(--danger);font-weight:600}
+.w.ok{background:var(--mercy);color:var(--ink)}
+.w.hint{background:var(--gold-soft);color:var(--ink)}
+.w.err{background:var(--danger-soft);color:var(--danger);box-shadow:inset 0 -2px 0 var(--danger)}
+.voice{display:flex;flex-direction:column;gap:8px}
+.alert{background:var(--danger-soft);color:var(--danger);border:1px solid var(--danger);border-radius:10px;padding:10px 12px;font-weight:700}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.alert.flash{animation:shake .25s 2}
+@media (prefers-reduced-motion: reduce){.alert.flash{animation:none}}
+.basmala{font-family:var(--f-quran);font-size:1.5rem;text-align:center;color:var(--gold);margin:0}
+.cover h2{font-size:1.15rem;margin-top:8px}
+.cover h2 .sub{font-family:var(--f-body);font-size:.85rem;color:var(--muted);font-weight:400;margin-inline-start:6px}
+#dots{flex-direction:column;align-items:center;gap:8px}
+.dots-in{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.rubbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:100%}
+.rubchip{flex:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:3px 12px;font:600 .8rem var(--f-body);cursor:pointer}
+.rubchip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--paper)}
+@media (max-width:420px){h1{font-size:1.9rem}.ayat{font-size:1.4rem}.opts{grid-template-columns:1fr}}
+</style>
+
+</head><body>
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <div class="brand">سورة يوسف</div>
+    <div class="count" id="count"></div>
+  </header>
+  <div class="dots" id="dots" aria-label="صفحات الكتاب"></div>
+  <main id="page" class="page"></main>
+  <nav class="pager">
+    <button class="btn" id="prev">→ السابق</button>
+    <button class="btn solid" id="next">التالي ←</button>
+  </nav>
+</div>
+
+<script>
+const AYAT=[[12, 1, "الر ۚ تِلْكَ آيَاتُ الْكِتَابِ الْمُبِينِ"], [12, 2, "إِنَّا أَنْزَلْنَاهُ قُرْآنًا عَرَبِيًّا لَعَلَّكُمْ تَعْقِلُونَ"], [12, 3, "نَحْنُ نَقُصُّ عَلَيْكَ أَحْسَنَ الْقَصَصِ بِمَا أَوْحَيْنَا إِلَيْكَ هَٰذَا الْقُرْآنَ وَإِنْ كُنْتَ مِنْ قَبْلِهِ لَمِنَ الْغَافِلِينَ"], [12, 4, "إِذْ قَالَ يُوسُفُ لِأَبِيهِ يَا أَبَتِ إِنِّي رَأَيْتُ أَحَدَ عَشَرَ كَوْكَبًا وَالشَّمْسَ وَالْقَمَرَ رَأَيْتُهُمْ لِي سَاجِدِينَ"], [12, 5, "قَالَ يَا بُنَيَّ لَا تَقْصُصْ رُؤْيَاكَ عَلَىٰ إِخْوَتِكَ فَيَكِيدُوا لَكَ كَيْدًا ۖ إِنَّ الشَّيْطَانَ لِلْإِنْسَانِ عَدُوٌّ مُبِينٌ"], [12, 6, "وَكَذَٰلِكَ يَجْتَبِيكَ رَبُّكَ وَيُعَلِّمُكَ مِنْ تَأْوِيلِ الْأَحَادِيثِ وَيُتِمُّ نِعْمَتَهُ عَلَيْكَ وَعَلَىٰ آلِ يَعْقُوبَ كَمَا أَتَمَّهَا عَلَىٰ أَبَوَيْكَ مِنْ قَبْلُ إِبْرَاهِيمَ وَإِسْحَاقَ ۚ إِنَّ رَبَّكَ عَلِيمٌ حَكِيمٌ"], [12, 7, "لَقَدْ كَانَ فِي يُوسُفَ وَإِخْوَتِهِ آيَاتٌ لِلسَّائِلِينَ"], [12, 8, "إِذْ قَالُوا لَيُوسُفُ وَأَخُوهُ أَحَبُّ إِلَىٰ أَبِينَا مِنَّا وَنَحْنُ عُصْبَةٌ إِنَّ أَبَانَا لَفِي ضَلَالٍ مُبِينٍ"], [12, 9, "اقْتُلُوا يُوسُفَ أَوِ اطْرَحُوهُ أَرْضًا يَخْلُ لَكُمْ وَجْهُ أَبِيكُمْ وَتَكُونُوا مِنْ بَعْدِهِ قَوْمًا صَالِحِينَ"], [12, 10, "قَالَ قَائِلٌ مِنْهُمْ لَا تَقْتُلُوا يُوسُفَ وَأَلْقُوهُ فِي غَيَابَتِ الْجُبِّ يَلْتَقِطْهُ بَعْضُ السَّيَّارَةِ إِنْ كُنْتُمْ فَاعِلِينَ"], [12, 11, "قَالُوا يَا أَبَانَا مَا لَكَ لَا تَأْمَنَّا عَلَىٰ يُوسُفَ وَإِنَّا لَهُ لَنَاصِحُونَ"], [12, 12, "أَرْسِلْهُ مَعَنَا غَدًا يَرْتَعْ وَيَلْعَبْ وَإِنَّا لَهُ لَحَافِظُونَ"], [12, 13, "قَالَ إِنِّي لَيَحْزُنُنِي أَنْ تَذْهَبُوا بِهِ وَأَخَافُ أَنْ يَأْكُلَهُ الذِّئْبُ وَأَنْتُمْ عَنْهُ غَافِلُونَ"], [12, 14, "قَالُوا لَئِنْ أَكَلَهُ الذِّئْبُ وَنَحْنُ عُصْبَةٌ إِنَّا إِذًا لَخَاسِرُونَ"], [12, 15, "فَلَمَّا ذَهَبُوا بِهِ وَأَجْمَعُوا أَنْ يَجْعَلُوهُ فِي غَيَابَتِ الْجُبِّ ۚ وَأَوْحَيْنَا إِلَيْهِ لَتُنَبِّئَنَّهُمْ بِأَمْرِهِمْ هَٰذَا وَهُمْ لَا يَشْعُرُونَ"], [12, 16, "وَجَاءُوا أَبَاهُمْ عِشَاءً يَبْكُونَ"], [12, 17, "قَالُوا يَا أَبَانَا إِنَّا ذَهَبْنَا نَسْتَبِقُ وَتَرَكْنَا يُوسُفَ عِنْدَ مَتَاعِنَا فَأَكَلَهُ الذِّئْبُ ۖ وَمَا أَنْتَ بِمُؤْمِنٍ لَنَا وَلَوْ كُنَّا صَادِقِينَ"], [12, 18, "وَجَاءُوا عَلَىٰ قَمِيصِهِ بِدَمٍ كَذِبٍ ۚ قَالَ بَلْ سَوَّلَتْ لَكُمْ أَنْفُسُكُمْ أَمْرًا ۖ فَصَبْرٌ جَمِيلٌ ۖ وَاللَّهُ الْمُسْتَعَانُ عَلَىٰ مَا تَصِفُونَ"], [12, 19, "وَجَاءَتْ سَيَّارَةٌ فَأَرْسَلُوا وَارِدَهُمْ فَأَدْلَىٰ دَلْوَهُ ۖ قَالَ يَا بُشْرَىٰ هَٰذَا غُلَامٌ ۚ وَأَسَرُّوهُ بِضَاعَةً ۚ وَاللَّهُ عَلِيمٌ بِمَا يَعْمَلُونَ"], [12, 20, "وَشَرَوْهُ بِثَمَنٍ بَخْسٍ دَرَاهِمَ مَعْدُودَةٍ وَكَانُوا فِيهِ مِنَ الزَّاهِدِينَ"], [12, 21, "وَقَالَ الَّذِي اشْتَرَاهُ مِنْ مِصْرَ لِامْرَأَتِهِ أَكْرِمِي مَثْوَاهُ عَسَىٰ أَنْ يَنْفَعَنَا أَوْ نَتَّخِذَهُ وَلَدًا ۚ وَكَذَٰلِكَ مَكَّنَّا لِيُوسُفَ فِي الْأَرْضِ وَلِنُعَلِّمَهُ مِنْ تَأْوِيلِ الْأَحَادِيثِ ۚ وَاللَّهُ غَالِبٌ عَلَىٰ أَمْرِهِ وَلَٰكِنَّ أَكْثَرَ النَّاسِ لَا يَعْلَمُونَ"], [12, 22, "وَلَمَّا بَلَغَ أَشُدَّهُ آتَيْنَاهُ حُكْمًا وَعِلْمًا ۚ وَكَذَٰلِكَ نَجْزِي الْمُحْسِنِينَ"], [12, 23, "وَرَاوَدَتْهُ الَّتِي هُوَ فِي بَيْتِهَا عَنْ نَفْسِهِ وَغَلَّقَتِ الْأَبْوَابَ وَقَالَتْ هَيْتَ لَكَ ۚ قَالَ مَعَاذَ اللَّهِ ۖ إِنَّهُ رَبِّي أَحْسَنَ مَثْوَايَ ۖ إِنَّهُ لَا يُفْلِحُ الظَّالِمُونَ"], [12, 24, "وَلَقَدْ هَمَّتْ بِهِ ۖ وَهَمَّ بِهَا لَوْلَا أَنْ رَأَىٰ بُرْهَانَ رَبِّهِ ۚ كَذَٰلِكَ لِنَصْرِفَ عَنْهُ السُّوءَ وَالْفَحْشَاءَ ۚ إِنَّهُ مِنْ عِبَادِنَا الْمُخْلَصِينَ"], [12, 25, "وَاسْتَبَقَا الْبَابَ وَقَدَّتْ قَمِيصَهُ مِنْ دُبُرٍ وَأَلْفَيَا سَيِّدَهَا لَدَى الْبَابِ ۚ قَالَتْ مَا جَزَاءُ مَنْ أَرَادَ بِأَهْلِكَ سُوءًا إِلَّا أَنْ يُسْجَنَ أَوْ عَذَابٌ أَلِيمٌ"], [12, 26, "قَالَ هِيَ رَاوَدَتْنِي عَنْ نَفْسِي ۚ وَشَهِدَ شَاهِدٌ مِنْ أَهْلِهَا إِنْ كَانَ قَمِيصُهُ قُدَّ مِنْ قُبُلٍ فَصَدَقَتْ وَهُوَ مِنَ الْكَاذِبِينَ"], [12, 27, "وَإِنْ كَانَ قَمِيصُهُ قُدَّ مِنْ دُبُرٍ فَكَذَبَتْ وَهُوَ مِنَ الصَّادِقِينَ"], [12, 28, "فَلَمَّا رَأَىٰ قَمِيصَهُ قُدَّ مِنْ دُبُرٍ قَالَ إِنَّهُ مِنْ كَيْدِكُنَّ ۖ إِنَّ كَيْدَكُنَّ عَظِيمٌ"], [12, 29, "يُوسُفُ أَعْرِضْ عَنْ هَٰذَا ۚ وَاسْتَغْفِرِي لِذَنْبِكِ ۖ إِنَّكِ كُنْتِ مِنَ الْخَاطِئِينَ"], [12, 30, "وَقَالَ نِسْوَةٌ فِي الْمَدِينَةِ امْرَأَتُ الْعَزِيزِ تُرَاوِدُ فَتَاهَا عَنْ نَفْسِهِ ۖ قَدْ شَغَفَهَا حُبًّا ۖ إِنَّا لَنَرَاهَا فِي ضَلَالٍ مُبِينٍ"], [12, 31, "فَلَمَّا سَمِعَتْ بِمَكْرِهِنَّ أَرْسَلَتْ إِلَيْهِنَّ وَأَعْتَدَتْ لَهُنَّ مُتَّكَأً وَآتَتْ كُلَّ وَاحِدَةٍ مِنْهُنَّ سِكِّينًا وَقَالَتِ اخْرُجْ عَلَيْهِنَّ ۖ فَلَمَّا رَأَيْنَهُ أَكْبَرْنَهُ وَقَطَّعْنَ أَيْدِيَهُنَّ وَقُلْنَ حَاشَ لِلَّهِ مَا هَٰذَا بَشَرًا إِنْ هَٰذَا إِلَّا مَلَكٌ كَرِيمٌ"], [12, 32, "قَالَتْ فَذَٰلِكُنَّ الَّذِي لُمْتُنَّنِي فِيهِ ۖ وَلَقَدْ رَاوَدْتُهُ عَنْ نَفْسِهِ فَاسْتَعْصَمَ ۖ وَلَئِنْ لَمْ يَفْعَلْ مَا آمُرُهُ لَيُسْجَنَنَّ وَلَيَكُونًا مِنَ الصَّاغِرِينَ"], [12, 33, "قَالَ رَبِّ السِّجْنُ أَحَبُّ إِلَيَّ مِمَّا يَدْعُونَنِي إِلَيْهِ ۖ وَإِلَّا تَصْرِفْ عَنِّي كَيْدَهُنَّ أَصْبُ إِلَيْهِنَّ وَأَكُنْ مِنَ الْجَاهِلِينَ"], [12, 34, "فَاسْتَجَابَ لَهُ رَبُّهُ فَصَرَفَ عَنْهُ كَيْدَهُنَّ ۚ إِنَّهُ هُوَ السَّمِيعُ الْعَلِيمُ"], [12, 35, "ثُمَّ بَدَا لَهُمْ مِنْ بَعْدِ مَا رَأَوُا الْآيَاتِ لَيَسْجُنُنَّهُ حَتَّىٰ حِينٍ"], [12, 36, "وَدَخَلَ مَعَهُ السِّجْنَ فَتَيَانِ ۖ قَالَ أَحَدُهُمَا إِنِّي أَرَانِي أَعْصِرُ خَمْرًا ۖ وَقَالَ الْآخَرُ إِنِّي أَرَانِي أَحْمِلُ فَوْقَ رَأْسِي خُبْزًا تَأْكُلُ الطَّيْرُ مِنْهُ ۖ نَبِّئْنَا بِتَأْوِيلِهِ ۖ إِنَّا نَرَاكَ مِنَ الْمُحْسِنِينَ"], [12, 37, "قَالَ لَا يَأْتِيكُمَا طَعَامٌ تُرْزَقَانِهِ إِلَّا نَبَّأْتُكُمَا بِتَأْوِيلِهِ قَبْلَ أَنْ يَأْتِيَكُمَا ۚ ذَٰلِكُمَا مِمَّا عَلَّمَنِي رَبِّي ۚ إِنِّي تَرَكْتُ مِلَّةَ قَوْمٍ لَا يُؤْمِنُونَ بِاللَّهِ وَهُمْ بِالْآخِرَةِ هُمْ كَافِرُونَ"], [12, 38, "وَاتَّبَعْتُ مِلَّةَ آبَائِي إِبْرَاهِيمَ وَإِسْحَاقَ وَيَعْقُوبَ ۚ مَا كَانَ لَنَا أَنْ نُشْرِكَ بِاللَّهِ مِنْ شَيْءٍ ۚ ذَٰلِكَ مِنْ فَضْلِ اللَّهِ عَلَيْنَا وَعَلَى النَّاسِ وَلَٰكِنَّ أَكْثَرَ النَّاسِ لَا يَشْكُرُونَ"], [12, 39, "يَا صَاحِبَيِ السِّجْنِ أَأَرْبَابٌ مُتَفَرِّقُونَ خَيْرٌ أَمِ اللَّهُ الْوَاحِدُ الْقَهَّارُ"], [12, 40, "مَا تَعْبُدُونَ مِنْ دُونِهِ إِلَّا أَسْمَاءً سَمَّيْتُمُوهَا أَنْتُمْ وَآبَاؤُكُمْ مَا أَنْزَلَ اللَّهُ بِهَا مِنْ سُلْطَانٍ ۚ إِنِ الْحُكْمُ إِلَّا لِلَّهِ ۚ أَمَرَ أَلَّا تَعْبُدُوا إِلَّا إِيَّاهُ ۚ ذَٰلِكَ الدِّينُ الْقَيِّمُ وَلَٰكِنَّ أَكْثَرَ النَّاسِ لَا يَعْلَمُونَ"], [12, 41, "يَا صَاحِبَيِ السِّجْنِ أَمَّا أَحَدُكُمَا فَيَسْقِي رَبَّهُ خَمْرًا ۖ وَأَمَّا الْآخَرُ فَيُصْلَبُ فَتَأْكُلُ الطَّيْرُ مِنْ رَأْسِهِ ۚ قُضِيَ الْأَمْرُ الَّذِي فِيهِ تَسْتَفْتِيَانِ"], [12, 42, "وَقَالَ لِلَّذِي ظَنَّ أَنَّهُ نَاجٍ مِنْهُمَا اذْكُرْنِي عِنْدَ رَبِّكَ فَأَنْسَاهُ الشَّيْطَانُ ذِكْرَ رَبِّهِ فَلَبِثَ فِي السِّجْنِ بِضْعَ سِنِينَ"], [12, 43, "وَقَالَ الْمَلِكُ إِنِّي أَرَىٰ سَبْعَ بَقَرَاتٍ سِمَانٍ يَأْكُلُهُنَّ سَبْعٌ عِجَافٌ وَسَبْعَ سُنْبُلَاتٍ خُضْرٍ وَأُخَرَ يَابِسَاتٍ ۖ يَا أَيُّهَا الْمَلَأُ أَفْتُونِي فِي رُؤْيَايَ إِنْ كُنْتُمْ لِلرُّؤْيَا تَعْبُرُونَ"], [12, 44, "قَالُوا أَضْغَاثُ أَحْلَامٍ ۖ وَمَا نَحْنُ بِتَأْوِيلِ الْأَحْلَامِ بِعَالِمِينَ"], [12, 45, "وَقَالَ الَّذِي نَجَا مِنْهُمَا وَادَّكَرَ بَعْدَ أُمَّةٍ أَنَا أُنَبِّئُكُمْ بِتَأْوِيلِهِ فَأَرْسِلُونِ"], [12, 46, "يُوسُفُ أَيُّهَا الصِّدِّيقُ أَفْتِنَا فِي سَبْعِ بَقَرَاتٍ سِمَانٍ يَأْكُلُهُنَّ سَبْعٌ عِجَافٌ وَسَبْعِ سُنْبُلَاتٍ خُضْرٍ وَأُخَرَ يَابِسَاتٍ لَعَلِّي أَرْجِعُ إِلَى النَّاسِ لَعَلَّهُمْ يَعْلَمُونَ"], [12, 47, "قَالَ تَزْرَعُونَ سَبْعَ سِنِينَ دَأَبًا فَمَا حَصَدْتُمْ فَذَرُوهُ فِي سُنْبُلِهِ إِلَّا قَلِيلًا مِمَّا تَأْكُلُونَ"], [12, 48, "ثُمَّ يَأْتِي مِنْ بَعْدِ ذَٰلِكَ سَبْعٌ شِدَادٌ يَأْكُلْنَ مَا قَدَّمْتُمْ لَهُنَّ إِلَّا قَلِيلًا مِمَّا تُحْصِنُونَ"], [12, 49, "ثُمَّ يَأْتِي مِنْ بَعْدِ ذَٰلِكَ عَامٌ فِيهِ يُغَاثُ النَّاسُ وَفِيهِ يَعْصِرُونَ"], [12, 50, "وَقَالَ الْمَلِكُ ائْتُونِي بِهِ ۖ فَلَمَّا جَاءَهُ الرَّسُولُ قَالَ ارْجِعْ إِلَىٰ رَبِّكَ فَاسْأَلْهُ مَا بَالُ النِّسْوَةِ اللَّاتِي قَطَّعْنَ أَيْدِيَهُنَّ ۚ إِنَّ رَبِّي بِكَيْدِهِنَّ عَلِيمٌ"], [12, 51, "قَالَ مَا خَطْبُكُنَّ إِذْ رَاوَدْتُنَّ يُوسُفَ عَنْ نَفْسِهِ ۚ قُلْنَ حَاشَ لِلَّهِ مَا عَلِمْنَا عَلَيْهِ مِنْ سُوءٍ ۚ قَالَتِ امْرَأَتُ الْعَزِيزِ الْآنَ حَصْحَصَ الْحَقُّ أَنَا رَاوَدْتُهُ عَنْ نَفْسِهِ وَإِنَّهُ لَمِنَ الصَّادِقِينَ"], [12, 52, "ذَٰلِكَ لِيَعْلَمَ أَنِّي لَمْ أَخُنْهُ بِالْغَيْبِ وَأَنَّ اللَّهَ لَا يَهْدِي كَيْدَ الْخَائِنِينَ"], [12, 53, "وَمَا أُبَرِّئُ نَفْسِي ۚ إِنَّ النَّفْسَ لَأَمَّارَةٌ بِالسُّوءِ إِلَّا مَا رَحِمَ رَبِّي ۚ إِنَّ رَبِّي غَفُورٌ رَحِيمٌ"], [12, 54, "وَقَالَ الْمَلِكُ ائْتُونِي بِهِ أَسْتَخْلِصْهُ لِنَفْسِي ۖ فَلَمَّا كَلَّمَهُ قَالَ إِنَّكَ الْيَوْمَ لَدَيْنَا مَكِينٌ أَمِينٌ"], [12, 55, "قَالَ اجْعَلْنِي عَلَىٰ خَزَائِنِ الْأَرْضِ ۖ إِنِّي حَفِيظٌ عَلِيمٌ"], [12, 56, "وَكَذَٰلِكَ مَكَّنَّا لِيُوسُفَ فِي الْأَرْضِ يَتَبَوَّأُ مِنْهَا حَيْثُ يَشَاءُ ۚ نُصِيبُ بِرَحْمَتِنَا مَنْ نَشَاءُ ۖ وَلَا نُضِيعُ أَجْرَ الْمُحْسِنِينَ"], [12, 57, "وَلَأَجْرُ الْآخِرَةِ خَيْرٌ لِلَّذِينَ آمَنُوا وَكَانُوا يَتَّقُونَ"], [12, 58, "وَجَاءَ إِخْوَةُ يُوسُفَ فَدَخَلُوا عَلَيْهِ فَعَرَفَهُمْ وَهُمْ لَهُ مُنْكِرُونَ"], [12, 59, "وَلَمَّا جَهَّزَهُمْ بِجَهَازِهِمْ قَالَ ائْتُونِي بِأَخٍ لَكُمْ مِنْ أَبِيكُمْ ۚ أَلَا تَرَوْنَ أَنِّي أُوفِي الْكَيْلَ وَأَنَا خَيْرُ الْمُنْزِلِينَ"], [12, 60, "فَإِنْ لَمْ تَأْتُونِي بِهِ فَلَا كَيْلَ لَكُمْ عِنْدِي وَلَا تَقْرَبُونِ"], [12, 61, "قَالُوا سَنُرَاوِدُ عَنْهُ أَبَاهُ وَإِنَّا لَفَاعِلُونَ"], [12, 62, "وَقَالَ لِفِتْيَانِهِ اجْعَلُوا بِضَاعَتَهُمْ فِي رِحَالِهِمْ لَعَلَّهُمْ يَعْرِفُونَهَا إِذَا انْقَلَبُوا إِلَىٰ أَهْلِهِمْ لَعَلَّهُمْ يَرْجِعُونَ"], [12, 63, "فَلَمَّا رَجَعُوا إِلَىٰ أَبِيهِمْ قَالُوا يَا أَبَانَا مُنِعَ مِنَّا الْكَيْلُ فَأَرْسِلْ مَعَنَا أَخَانَا نَكْتَلْ وَإِنَّا لَهُ لَحَافِظُونَ"], [12, 64, "قَالَ هَلْ آمَنُكُمْ عَلَيْهِ إِلَّا كَمَا أَمِنْتُكُمْ عَلَىٰ أَخِيهِ مِنْ قَبْلُ ۖ فَاللَّهُ خَيْرٌ حَافِظًا ۖ وَهُوَ أَرْحَمُ الرَّاحِمِينَ"], [12, 65, "وَلَمَّا فَتَحُوا مَتَاعَهُمْ وَجَدُوا بِضَاعَتَهُمْ رُدَّتْ إِلَيْهِمْ ۖ قَالُوا يَا أَبَانَا مَا نَبْغِي ۖ هَٰذِهِ بِضَاعَتُنَا رُدَّتْ إِلَيْنَا ۖ وَنَمِيرُ أَهْلَنَا وَنَحْفَظُ أَخَانَا وَنَزْدَادُ كَيْلَ بَعِيرٍ ۖ ذَٰلِكَ كَيْلٌ يَسِيرٌ"], [12, 66, "قَالَ لَنْ أُرْسِلَهُ مَعَكُمْ حَتَّىٰ تُؤْتُونِ مَوْثِقًا مِنَ اللَّهِ لَتَأْتُنَّنِي بِهِ إِلَّا أَنْ يُحَاطَ بِكُمْ ۖ فَلَمَّا آتَوْهُ مَوْثِقَهُمْ قَالَ اللَّهُ عَلَىٰ مَا نَقُولُ وَكِيلٌ"], [12, 67, "وَقَالَ يَا بَنِيَّ لَا تَدْخُلُوا مِنْ بَابٍ وَاحِدٍ وَادْخُلُوا مِنْ أَبْوَابٍ مُتَفَرِّقَةٍ ۖ وَمَا أُغْنِي عَنْكُمْ مِنَ اللَّهِ مِنْ شَيْءٍ ۖ إِنِ الْحُكْمُ إِلَّا لِلَّهِ ۖ عَلَيْهِ تَوَكَّلْتُ ۖ وَعَلَيْهِ فَلْيَتَوَكَّلِ الْمُتَوَكِّلُونَ"], [12, 68, "وَلَمَّا دَخَلُوا مِنْ حَيْثُ أَمَرَهُمْ أَبُوهُمْ مَا كَانَ يُغْنِي عَنْهُمْ مِنَ اللَّهِ مِنْ شَيْءٍ إِلَّا حَاجَةً فِي نَفْسِ يَعْقُوبَ قَضَاهَا ۚ وَإِنَّهُ لَذُو عِلْمٍ لِمَا عَلَّمْنَاهُ وَلَٰكِنَّ أَكْثَرَ النَّاسِ لَا يَعْلَمُونَ"], [12, 69, "وَلَمَّا دَخَلُوا عَلَىٰ يُوسُفَ آوَىٰ إِلَيْهِ أَخَاهُ ۖ قَالَ إِنِّي أَنَا أَخُوكَ فَلَا تَبْتَئِسْ بِمَا كَانُوا يَعْمَلُونَ"], [12, 70, "فَلَمَّا جَهَّزَهُمْ بِجَهَازِهِمْ جَعَلَ السِّقَايَةَ فِي رَحْلِ أَخِيهِ ثُمَّ أَذَّنَ مُؤَذِّنٌ أَيَّتُهَا الْعِيرُ إِنَّكُمْ لَسَارِقُونَ"], [12, 71, "قَالُوا وَأَقْبَلُوا عَلَيْهِمْ مَاذَا تَفْقِدُونَ"], [12, 72, "قَالُوا نَفْقِدُ صُوَاعَ الْمَلِكِ وَلِمَنْ جَاءَ بِهِ حِمْلُ بَعِيرٍ وَأَنَا بِهِ زَعِيمٌ"], [12, 73, "قَالُوا تَاللَّهِ لَقَدْ عَلِمْتُمْ مَا جِئْنَا لِنُفْسِدَ فِي الْأَرْضِ وَمَا كُنَّا سَارِقِينَ"], [12, 74, "قَالُوا فَمَا جَزَاؤُهُ إِنْ كُنْتُمْ كَاذِبِينَ"], [12, 75, "قَالُوا جَزَاؤُهُ مَنْ وُجِدَ فِي رَحْلِهِ فَهُوَ جَزَاؤُهُ ۚ كَذَٰلِكَ نَجْزِي الظَّالِمِينَ"], [12, 76, "فَبَدَأَ بِأَوْعِيَتِهِمْ قَبْلَ وِعَاءِ أَخِيهِ ثُمَّ اسْتَخْرَجَهَا مِنْ وِعَاءِ أَخِيهِ ۚ كَذَٰلِكَ كِدْنَا لِيُوسُفَ ۖ مَا كَانَ لِيَأْخُذَ أَخَاهُ فِي دِينِ الْمَلِكِ إِلَّا أَنْ يَشَاءَ اللَّهُ ۚ نَرْفَعُ دَرَجَاتٍ مَنْ نَشَاءُ ۗ وَفَوْقَ كُلِّ ذِي عِلْمٍ عَلِيمٌ"], [12, 77, "قَالُوا إِنْ يَسْرِقْ فَقَدْ سَرَقَ أَخٌ لَهُ مِنْ قَبْلُ ۚ فَأَسَرَّهَا يُوسُفُ فِي نَفْسِهِ وَلَمْ يُبْدِهَا لَهُمْ ۚ قَالَ أَنْتُمْ شَرٌّ مَكَانًا ۖ وَاللَّهُ أَعْلَمُ بِمَا تَصِفُونَ"], [12, 78, "قَالُوا يَا أَيُّهَا الْعَزِيزُ إِنَّ لَهُ أَبًا شَيْخًا كَبِيرًا فَخُذْ أَحَدَنَا مَكَانَهُ ۖ إِنَّا نَرَاكَ مِنَ الْمُحْسِنِينَ"], [12, 79, "قَالَ مَعَاذَ اللَّهِ أَنْ نَأْخُذَ إِلَّا مَنْ وَجَدْنَا مَتَاعَنَا عِنْدَهُ إِنَّا إِذًا لَظَالِمُونَ"], [12, 80, "فَلَمَّا اسْتَيْأَسُوا مِنْهُ خَلَصُوا نَجِيًّا ۖ قَالَ كَبِيرُهُمْ أَلَمْ تَعْلَمُوا أَنَّ أَبَاكُمْ قَدْ أَخَذَ عَلَيْكُمْ مَوْثِقًا مِنَ اللَّهِ وَمِنْ قَبْلُ مَا فَرَّطْتُمْ فِي يُوسُفَ ۖ فَلَنْ أَبْرَحَ الْأَرْضَ حَتَّىٰ يَأْذَنَ لِي أَبِي أَوْ يَحْكُمَ اللَّهُ لِي ۖ وَهُوَ خَيْرُ الْحَاكِمِينَ"], [12, 81, "ارْجِعُوا إِلَىٰ أَبِيكُمْ فَقُولُوا يَا أَبَانَا إِنَّ ابْنَكَ سَرَقَ وَمَا شَهِدْنَا إِلَّا بِمَا عَلِمْنَا وَمَا كُنَّا لِلْغَيْبِ حَافِظِينَ"], [12, 82, "وَاسْأَلِ الْقَرْيَةَ الَّتِي كُنَّا فِيهَا وَالْعِيرَ الَّتِي أَقْبَلْنَا فِيهَا ۖ وَإِنَّا لَصَادِقُونَ"], [12, 83, "قَالَ بَلْ سَوَّلَتْ لَكُمْ أَنْفُسُكُمْ أَمْرًا ۖ فَصَبْرٌ جَمِيلٌ ۖ عَسَى اللَّهُ أَنْ يَأْتِيَنِي بِهِمْ جَمِيعًا ۚ إِنَّهُ هُوَ الْعَلِيمُ الْحَكِيمُ"], [12, 84, "وَتَوَلَّىٰ عَنْهُمْ وَقَالَ يَا أَسَفَىٰ عَلَىٰ يُوسُفَ وَابْيَضَّتْ عَيْنَاهُ مِنَ الْحُزْنِ فَهُوَ كَظِيمٌ"], [12, 85, "قَالُوا تَاللَّهِ تَفْتَأُ تَذْكُرُ يُوسُفَ حَتَّىٰ تَكُونَ حَرَضًا أَوْ تَكُونَ مِنَ الْهَالِكِينَ"], [12, 86, "قَالَ إِنَّمَا أَشْكُو بَثِّي وَحُزْنِي إِلَى اللَّهِ وَأَعْلَمُ مِنَ اللَّهِ مَا لَا تَعْلَمُونَ"], [12, 87, "يَا بَنِيَّ اذْهَبُوا فَتَحَسَّسُوا مِنْ يُوسُفَ وَأَخِيهِ وَلَا تَيْأَسُوا مِنْ رَوْحِ اللَّهِ ۖ إِنَّهُ لَا يَيْأَسُ مِنْ رَوْحِ اللَّهِ إِلَّا الْقَوْمُ الْكَافِرُونَ"], [12, 88, "فَلَمَّا دَخَلُوا عَلَيْهِ قَالُوا يَا أَيُّهَا الْعَزِيزُ مَسَّنَا وَأَهْلَنَا الضُّرُّ وَجِئْنَا بِبِضَاعَةٍ مُزْجَاةٍ فَأَوْفِ لَنَا الْكَيْلَ وَتَصَدَّقْ عَلَيْنَا ۖ إِنَّ اللَّهَ يَجْزِي الْمُتَصَدِّقِينَ"], [12, 89, "قَالَ هَلْ عَلِمْتُمْ مَا فَعَلْتُمْ بِيُوسُفَ وَأَخِيهِ إِذْ أَنْتُمْ جَاهِلُونَ"], [12, 90, "قَالُوا أَإِنَّكَ لَأَنْتَ يُوسُفُ ۖ قَالَ أَنَا يُوسُفُ وَهَٰذَا أَخِي ۖ قَدْ مَنَّ اللَّهُ عَلَيْنَا ۖ إِنَّهُ مَنْ يَتَّقِ وَيَصْبِرْ فَإِنَّ اللَّهَ لَا يُضِيعُ أَجْرَ الْمُحْسِنِينَ"], [12, 91, "قَالُوا تَاللَّهِ لَقَدْ آثَرَكَ اللَّهُ عَلَيْنَا وَإِنْ كُنَّا لَخَاطِئِينَ"], [12, 92, "قَالَ لَا تَثْرِيبَ عَلَيْكُمُ الْيَوْمَ ۖ يَغْفِرُ اللَّهُ لَكُمْ ۖ وَهُوَ أَرْحَمُ الرَّاحِمِينَ"], [12, 93, "اذْهَبُوا بِقَمِيصِي هَٰذَا فَأَلْقُوهُ عَلَىٰ وَجْهِ أَبِي يَأْتِ بَصِيرًا وَأْتُونِي بِأَهْلِكُمْ أَجْمَعِينَ"], [12, 94, "وَلَمَّا فَصَلَتِ الْعِيرُ قَالَ أَبُوهُمْ إِنِّي لَأَجِدُ رِيحَ يُوسُفَ ۖ لَوْلَا أَنْ تُفَنِّدُونِ"], [12, 95, "قَالُوا تَاللَّهِ إِنَّكَ لَفِي ضَلَالِكَ الْقَدِيمِ"], [12, 96, "فَلَمَّا أَنْ جَاءَ الْبَشِيرُ أَلْقَاهُ عَلَىٰ وَجْهِهِ فَارْتَدَّ بَصِيرًا ۖ قَالَ أَلَمْ أَقُلْ لَكُمْ إِنِّي أَعْلَمُ مِنَ اللَّهِ مَا لَا تَعْلَمُونَ"], [12, 97, "قَالُوا يَا أَبَانَا اسْتَغْفِرْ لَنَا ذُنُوبَنَا إِنَّا كُنَّا خَاطِئِينَ"], [12, 98, "قَالَ سَوْفَ أَسْتَغْفِرُ لَكُمْ رَبِّي ۖ إِنَّهُ هُوَ الْغَفُورُ الرَّحِيمُ"], [12, 99, "فَلَمَّا دَخَلُوا عَلَىٰ يُوسُفَ آوَىٰ إِلَيْهِ أَبَوَيْهِ وَقَالَ ادْخُلُوا مِصْرَ إِنْ شَاءَ اللَّهُ آمِنِينَ"], [12, 100, "وَرَفَعَ أَبَوَيْهِ عَلَى الْعَرْشِ وَخَرُّوا لَهُ سُجَّدًا ۖ وَقَالَ يَا أَبَتِ هَٰذَا تَأْوِيلُ رُؤْيَايَ مِنْ قَبْلُ قَدْ جَعَلَهَا رَبِّي حَقًّا ۖ وَقَدْ أَحْسَنَ بِي إِذْ أَخْرَجَنِي مِنَ السِّجْنِ وَجَاءَ بِكُمْ مِنَ الْبَدْوِ مِنْ بَعْدِ أَنْ نَزَغَ الشَّيْطَانُ بَيْنِي وَبَيْنَ إِخْوَتِي ۚ إِنَّ رَبِّي لَطِيفٌ لِمَا يَشَاءُ ۚ إِنَّهُ هُوَ الْعَلِيمُ الْحَكِيمُ"], [12, 101, "رَبِّ قَدْ آتَيْتَنِي مِنَ الْمُلْكِ وَعَلَّمْتَنِي مِنْ تَأْوِيلِ الْأَحَادِيثِ ۚ فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ أَنْتَ وَلِيِّي فِي الدُّنْيَا وَالْآخِرَةِ ۖ تَوَفَّنِي مُسْلِمًا وَأَلْحِقْنِي بِالصَّالِحِينَ"], [12, 102, "ذَٰلِكَ مِنْ أَنْبَاءِ الْغَيْبِ نُوحِيهِ إِلَيْكَ ۖ وَمَا كُنْتَ لَدَيْهِمْ إِذْ أَجْمَعُوا أَمْرَهُمْ وَهُمْ يَمْكُرُونَ"], [12, 103, "وَمَا أَكْثَرُ النَّاسِ وَلَوْ حَرَصْتَ بِمُؤْمِنِينَ"], [12, 104, "وَمَا تَسْأَلُهُمْ عَلَيْهِ مِنْ أَجْرٍ ۚ إِنْ هُوَ إِلَّا ذِكْرٌ لِلْعَالَمِينَ"], [12, 105, "وَكَأَيِّنْ مِنْ آيَةٍ فِي السَّمَاوَاتِ وَالْأَرْضِ يَمُرُّونَ عَلَيْهَا وَهُمْ عَنْهَا مُعْرِضُونَ"], [12, 106, "وَمَا يُؤْمِنُ أَكْثَرُهُمْ بِاللَّهِ إِلَّا وَهُمْ مُشْرِكُونَ"], [12, 107, "أَفَأَمِنُوا أَنْ تَأْتِيَهُمْ غَاشِيَةٌ مِنْ عَذَابِ اللَّهِ أَوْ تَأْتِيَهُمُ السَّاعَةُ بَغْتَةً وَهُمْ لَا يَشْعُرُونَ"], [12, 108, "قُلْ هَٰذِهِ سَبِيلِي أَدْعُو إِلَى اللَّهِ ۚ عَلَىٰ بَصِيرَةٍ أَنَا وَمَنِ اتَّبَعَنِي ۖ وَسُبْحَانَ اللَّهِ وَمَا أَنَا مِنَ الْمُشْرِكِينَ"], [12, 109, "وَمَا أَرْسَلْنَا مِنْ قَبْلِكَ إِلَّا رِجَالًا نُوحِي إِلَيْهِمْ مِنْ أَهْلِ الْقُرَىٰ ۗ أَفَلَمْ يَسِيرُوا فِي الْأَرْضِ فَيَنْظُرُوا كَيْفَ كَانَ عَاقِبَةُ الَّذِينَ مِنْ قَبْلِهِمْ ۗ وَلَدَارُ الْآخِرَةِ خَيْرٌ لِلَّذِينَ اتَّقَوْا ۗ أَفَلَا تَعْقِلُونَ"], [12, 110, "حَتَّىٰ إِذَا اسْتَيْأَسَ الرُّسُلُ وَظَنُّوا أَنَّهُمْ قَدْ كُذِبُوا جَاءَهُمْ نَصْرُنَا فَنُجِّيَ مَنْ نَشَاءُ ۖ وَلَا يُرَدُّ بَأْسُنَا عَنِ الْقَوْمِ الْمُجْرِمِينَ"], [12, 111, "لَقَدْ كَانَ فِي قَصَصِهِمْ عِبْرَةٌ لِأُولِي الْأَلْبَابِ ۗ مَا كَانَ حَدِيثًا يُفْتَرَىٰ وَلَٰكِنْ تَصْدِيقَ الَّذِي بَيْنَ يَدَيْهِ وَتَفْصِيلَ كُلِّ شَيْءٍ وَهُدًى وَرَحْمَةً لِقَوْمٍ يُؤْمِنُونَ"]];
+const SURAH={1:'الفاتحة',2:'البقرة',3:'آل عمران',4:'النساء',5:'المائدة',6:'الأنعام',7:'الأعراف',8:'الأنفال',9:'التوبة',10:'يونس',12:'يوسف'};
+const AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const RAIN=(x,y,n)=>'<g class="rain">'+Array.from({length:n},(_,i)=>`<line class="s-water" stroke-width="2" stroke-linecap="round" x1="${x+i*9}" y1="${y}" x2="${x+i*9-3}" y2="${y+9}"/>`).join('')+'</g>';
+const CLOUD=(x,y,s=1,cls='f-cloud')=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse class="${cls}" cx="0" cy="0" rx="26" ry="13"/><ellipse class="${cls}" cx="18" cy="-8" rx="18" ry="13"/><ellipse class="${cls}" cx="-16" cy="-5" rx="14" ry="10"/></g>`;
+const STAR=(x,y,r=2,d=0)=>`<circle class="f-glow tw" style="animation-delay:${d}s" cx="${x}" cy="${y}" r="${r}"/>`;
+const TREE=(x,y,r=16)=>`<rect class="f-iron" x="${x-2}" y="${y}" width="4" height="${r}"/><circle class="f-leaf" cx="${x}" cy="${y-r*.4}" r="${r}"/>`;
+const FRUIT=(pts)=>pts.map(([x,y])=>`<circle class="f-gold" cx="${x}" cy="${y}" r="3.5"/>`).join('');
+const PLANT=(x,base,h,cls,leafCls)=>`<path class="${cls}" stroke-width="3" stroke-linecap="round" d="M${x} ${base} Q${x+3} ${base-h/2} ${x} ${base-h}"/><ellipse class="${leafCls}" cx="${x-8}" cy="${base-h*.55}" rx="9" ry="4" transform="rotate(-30 ${x-8} ${base-h*.55})"/><ellipse class="${leafCls}" cx="${x+9}" cy="${base-h*.75}" rx="9" ry="4" transform="rotate(30 ${x+9} ${base-h*.75})"/><ellipse class="${leafCls}" cx="${x}" cy="${base-h-3}" rx="4" ry="8"/>`;
+const PLANT_D=x=>`<path class="s-earth" stroke-width="3" stroke-linecap="round" d="M${x} 152 L${x+4} 128 L${x+14} 118 M${x+2} 140 l-10 -6"/>`;
+const SVG=b=>`<svg viewBox="0 0 360 200" role="img" aria-hidden="true">${b}</svg>`;
+const GLOW=id=>`<defs><radialGradient id="${id}"><stop offset="0" stop-color="var(--glow)"/><stop offset="1" stop-color="var(--glow)" stop-opacity="0"/></radialGradient></defs>`;
+
+const SCENES=[];
+const BOOK=(x,y,w=60,cls='f-paper')=>`<path class="${cls}" d="M${x-w} ${y+18} Q${x-w/2} ${y+8} ${x} ${y+16} Q${x+w/2} ${y+8} ${x+w} ${y+18} V${y-18} Q${x+w/2} ${y-28} ${x} ${y-20} Q${x-w/2} ${y-28} ${x-w} ${y-18}Z"/><path class="s-ink" stroke-width="1.2" d="M${x} ${y-20} V${y+16}"/>`;
+const MIHRAB=(x,y,h=70)=>`<path class="f-iron" d="M${x-26} ${y} V${y-h+26} Q${x-26} ${y-h} ${x} ${y-h-12} Q${x+26} ${y-h} ${x+26} ${y-h+26} V${y}Z"/><path class="f-glow" d="M${x-14} ${y} V${y-h+32} Q${x-14} ${y-h+14} ${x} ${y-h+6} Q${x+14} ${y-h+14} ${x+14} ${y-h+32} V${y}Z" opacity=".8"/>`;
+const LAMP=(id,x,y,r=8)=>`<circle fill="url(#${id})" cx="${x}" cy="${y}" r="${r*3}"/><rect class="f-glow" x="${x-r/2}" y="${y-r*.6}" width="${r}" height="${r*1.3}" rx="2"/>`;
+const KAABA=(x,y,w=80)=>`<rect class="f-night" x="${x-w/2}" y="${y-w*.75}" width="${w}" height="${w*.75}"/><rect class="f-gold" x="${x-w/2}" y="${y-w*.62}" width="${w}" height="${w*.08}"/>`;
+const FLAGS=(xs,y,cls='f-gold',op=1)=>xs.map(x=>`<rect class="f-iron" x="${x}" y="${y}" width="3" height="46" opacity="${op}"/><path class="${cls}" d="M${x+3} ${y} h15 l-5 6 l5 6 h-15Z" opacity="${op}"/>`).join('');
+const SCALE=(x,y,w=60,tilt=0)=>`<path class="s-iron" stroke-width="3" d="M${x} ${y} V${y-70} M${x-24} ${y} H${x+24}"/><g transform="rotate(${tilt} ${x} ${y-70})"><path class="s-iron" stroke-width="3" d="M${x-w} ${y-70} H${x+w}"/><path class="s-ink" stroke-width="1" d="M${x-w} ${y-70} L${x-w-14} ${y-40} M${x-w} ${y-70} L${x-w+14} ${y-40} M${x+w} ${y-70} L${x+w-14} ${y-40} M${x+w} ${y-70} L${x+w+14} ${y-40}"/><path class="f-gold" d="M${x-w-18} ${y-40} H${x-w+18} Q${x-w} ${y-28} ${x-w-18} ${y-40}Z"/><path class="f-gold" d="M${x+w-18} ${y-40} H${x+w+18} Q${x+w} ${y-28} ${x+w-18} ${y-40}Z"/></g><circle class="f-gold" cx="${x}" cy="${y-72}" r="5"/>`;
+const COINS=pts=>pts.map(([x,y])=>`<ellipse class="f-gold" cx="${x}" cy="${y}" rx="9" ry="4"/>`).join('');
+const HOUSE=(x,y,w=50,cls='f-paper',lit=true)=>`<rect class="${cls}" x="${x-w/2}" y="${y-w*.7}" width="${w}" height="${w*.7}"/><path class="f-iron" d="M${x-w/2-6} ${y-w*.7} L${x} ${y-w*1.15} L${x+w/2+6} ${y-w*.7}Z"/><rect class="${lit?'f-glow':'f-iron'}" x="${x-w*.12}" y="${y-w*.38}" width="${w*.24}" height="${w*.38}" rx="2"/>`;
+const TOWER=(x,y,w=40,h=110)=>`<rect class="f-iron" x="${x-w/2}" y="${y-h}" width="${w}" height="${h}"/>${[0,1,2].map(i=>`<rect class="f-iron" x="${x-w/2+i*(w/2.5)}" y="${y-h-10}" width="${w/5}" height="10"/>`).join('')}<rect class="f-glow" x="${x-5}" y="${y-h+24}" width="10" height="16" rx="5"/>`;
+const ROAD=(d,cls='s-gold')=>`<path class="${cls}" stroke-width="3" stroke-dasharray="6 6" fill="none" d="${d}"/>`;
+const TABLE=(x,y,w=120)=>`<ellipse class="f-iron" cx="${x}" cy="${y+6}" rx="${w/2}" ry="10" opacity=".35"/><rect class="f-paper" x="${x-w/2}" y="${y-10}" width="${w}" height="12" rx="6"/><path class="s-iron" stroke-width="3" d="M${x-w/2+12} ${y} V${y+28} M${x+w/2-12} ${y} V${y+28}"/><ellipse class="f-gold" cx="${x-w/4}" cy="${y-14}" rx="14" ry="6"/><circle class="f-mercy" cx="${x}" cy="${y-18}" r="9"/><ellipse class="f-leaf" cx="${x+w/4}" cy="${y-14}" rx="12" ry="6"/>`;
+const BIRD=(x,y,s=1,cls='s-ink')=>`<path class="${cls}" stroke-width="${2.4/s}" fill="none" transform="translate(${x} ${y}) scale(${s})" d="M-12 0 Q-6 -8 0 0 Q6 -8 12 0"/>`;
+const MOUNT=(x,y,w=140,h=90,cls='f-iron')=>`<path class="${cls}" d="M${x-w/2} ${y} L${x} ${y-h} L${x+w/2} ${y}Z"/>`;
+const FISH=(x,y,s=1)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse class="f-gold" cx="0" cy="0" rx="14" ry="6"/><path class="f-gold" d="M12 0 L22 -7 L22 7Z"/></g>`;
+const WAVES=(y,cls='s-water')=>`<path class="${cls}" stroke-width="2" fill="none" d="M0 ${y} Q20 ${y-6} 40 ${y} T80 ${y} T120 ${y} T160 ${y} T200 ${y} T240 ${y} T280 ${y} T320 ${y} T360 ${y}"/>`;
+const MOON=(x,y,r=16)=>`<circle class="f-glow" cx="${x}" cy="${y}" r="${r}"/><circle class="f-night" cx="${x+r*.45}" cy="${y-r*.3}" r="${r*.85}"/>`;
+const SUN=(x,y,r=20)=>`<circle class="f-glow" cx="${x}" cy="${y}" r="${r}"/>${[0,45,90,135,180,225,270,315].map(a=>`<path class="s-gold" stroke-width="2" d="M${x+Math.cos(a*Math.PI/180)*(r+5)} ${y+Math.sin(a*Math.PI/180)*(r+5)} L${x+Math.cos(a*Math.PI/180)*(r+13)} ${y+Math.sin(a*Math.PI/180)*(r+13)}"/>`).join('')}`;
+const PALM=(x,y,h=70)=>`<path class="s-earth" stroke-width="5" d="M${x} ${y} Q${x+6} ${y-h/2} ${x} ${y-h}"/>${[-60,-25,10,45,80].map(a=>`<path class="f-leaf" d="M${x} ${y-h} q${Math.cos(a*Math.PI/180)*30} ${-10+Math.sin(a*Math.PI/180)*20} ${Math.cos(a*Math.PI/180)*40} ${Math.sin(a*Math.PI/180)*30} q${-Math.cos(a*Math.PI/180)*20} ${-6} ${-Math.cos(a*Math.PI/180)*40} ${-Math.sin(a*Math.PI/180)*30}Z"/>`).join('')}<circle class="f-gold" cx="${x-5}" cy="${y-h+8}" r="4"/><circle class="f-gold" cx="${x+5}" cy="${y-h+9}" r="4"/>`;
+const SHEEP=(x,y,s=1)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse class="f-paper" cx="0" cy="0" rx="16" ry="10"/><circle class="f-iron" cx="15" cy="-4" r="5"/><path class="s-iron" stroke-width="2" d="M-8 8 V16 M8 8 V16"/></g>`;
+const HEART=(x,y,s=1,cls='f-mercy')=>`<path class="${cls}" transform="translate(${x} ${y}) scale(${s})" d="M0 -6 c-12 -18 -40 -6 -26 14 l26 24 l26 -24 c14 -20 -14 -32 -26 -14Z"/>`;
+const STAFF=(x,y,h=80)=>`<path class="s-earth" stroke-width="5" stroke-linecap="round" d="M${x} ${y} V${y-h} q0 -12 -12 -12"/>`;
+const SNAKE=(x,y,s=1)=>`<path class="s-leaf" stroke-width="${9*s}" stroke-linecap="round" fill="none" d="M${x-60*s} ${y} q${20*s} ${-24*s} ${40*s} 0 t${40*s} 0 t${40*s} 0 q${14*s} ${-16*s} ${24*s} ${-30*s}"/><circle class="f-glow" cx="${x+44*s}" cy="${y-30*s}" r="${3*s}"/>`;
+const PERSON=(x,y,s=1,cls='f-iron')=>`<g transform="translate(${x} ${y}) scale(${s})"><circle class="${cls}" cx="0" cy="-44" r="9"/><path class="${cls}" d="M-14 0 Q-14 -32 0 -32 Q14 -32 14 0Z"/></g>`;
+const WELL=(x,y,w=70)=>`<rect class="f-iron" x="${x-w/2}" y="${y-30}" width="${w}" height="30" rx="4"/><rect class="f-night" x="${x-w/2+8}" y="${y-30}" width="${w-16}" height="8"/><rect class="f-earth" x="${x-w/2-4}" y="${y-70}" width="6" height="40"/><rect class="f-earth" x="${x+w/2-2}" y="${y-70}" width="6" height="40"/><rect class="f-earth" x="${x-w/2-4}" y="${y-74}" width="${w+8}" height="6"/><path class="s-ink" stroke-width="1.5" d="M${x} ${y-68} V${y-40}"/><rect class="f-iron" x="${x-7}" y="${y-44}" width="14" height="10" rx="2"/>`;
+const SHIRT=(x,y,s=1,cls='f-paper')=>`<path class="${cls}" transform="translate(${x} ${y}) scale(${s})" d="M-12 -30 L-30 -20 L-24 -6 L-16 -10 V24 H16 V-10 L24 -6 L30 -20 L12 -30 Q0 -22 -12 -30Z"/>`;
+const COW=(x,y,s=1,cls='f-earth')=>`<g transform="translate(${x} ${y}) scale(${s})" class="${cls}"><ellipse cx="0" cy="-22" rx="24" ry="${cls==='f-dry'?9:14}"/><circle cx="24" cy="-30" r="8"/><rect x="-18" y="-14" width="5" height="14"/><rect x="-6" y="-14" width="5" height="14"/><rect x="8" y="-14" width="5" height="14"/><rect x="16" y="-14" width="5" height="14"/></g>`;
+const EAR=(x,y,green=true)=>`<path class="${green?'s-leaf':'s-dry'}" stroke-width="2" fill="none" d="M${x} ${y} V${y-40}"/>${[0,1,2,3].map(i=>`<ellipse class="${green?'f-leaf':'f-dry'}" cx="${x+(i%2?4:-4)}" cy="${y-40+i*7}" rx="4" ry="6"/>`).join('')}`;
+const BARS=(x,y,w=80,h=70)=>`<rect class="f-iron" x="${x-w/2}" y="${y-h}" width="${w}" height="${h}" rx="4"/><rect class="f-night" x="${x-w/2+10}" y="${y-h+12}" width="${w-20}" height="${h-24}"/>${[1,2,3].map(i=>`<rect class="f-iron" x="${x-w/2+10+i*(w-20)/4-2}" y="${y-h+12}" width="4" height="${h-24}"/>`).join('')}`;
+const MORE=[
+/* ===== ج١٢ · الربع ٦ (تتمة) ===== */
+{rub:1,s:12,from:1,to:3,title:'أحسن القصص',
+ svg:SVG(`${GLOW('u1')}<rect class="f-night" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u1)" cx="180" cy="96" r="95"/>${BOOK(180,100,56)}${[0,1,2,3,4,5,6,7].map(i=>STAR(25+i*45,28+(i%3)*12,2,i*.3)).join('')}`),
+ kid:'أنزل الله القرآن بلسان عربي لنفهمه، وقصّ علينا فيه أحسن القصص. وهذه السورة كلها قصة واحدة جميلة: قصة النبي يوسف عليه السلام.',
+ adult:'١ «الر تلك آيات الكتاب المبين»، وفي يونس «الكتاب الحكيم». ٢ «إنا أنزلناه قرآنا عربيا لعلكم تعقلون». ٣ «نحن نقص عليك أحسن القصص» و«وإن كنت من قبله لمن الغافلين».',
+ words:[['الْمُبِينِ','الواضح'],['نَقُصُّ','نحدّثك'],['الْقَصَصِ','الأخبار'],['الْغَافِلِينَ','الذين لا علم لهم بها']]},
+{rub:1,s:12,from:4,to:6,title:'رؤيا يوسف',
+ svg:SVG(`${GLOW('u2')}<rect class="f-night" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u2)" cx="180" cy="80" r="90"/>${SUN(80,60,18)}${MOON(280,60,14)}${Array.from({length:11},(_,i)=>STAR(60+i*24,110+Math.sin(i)*8,3,i*.2)).join('')}${PERSON(180,172,.8,'f-leaf')}`),
+ kid:'رأى يوسف وهو صغير في منامه أحد عشر كوكبًا والشمس والقمر يسجدون له. فقال له أبوه يعقوب: يا بني، لا تحكِ رؤياك لإخوتك فيحسدوك. وسيختارك ربك ويعلّمك تفسير الأحلام.',
+ adult:'٤ «يا أبت إني رأيت أحد عشر كوكبا والشمس والقمر رأيتهم لي ساجدين»، و«رأيت» مرتين. ٥ «يا بني لا تقصص رؤياك على إخوتك فيكيدوا لك كيدا». «تأويل الأحاديث» في ٦ «ويعلمك»، و٢١ «ولنعلمه»، و١٠١ «وعلمتني». ٦ تختم «إن ربك عليم حكيم».',
+ words:[['كَوْكَبًا','نجمًا'],['فَيَكِيدُوا','فيحتالوا'],['يَجْتَبِيكَ','يصطفيك'],['تَأْوِيلِ الْأَحَادِيثِ','تفسير الرؤى']]},
+/* ===== ج١٢ · الربع ٧ ===== */
+{rub:2,s:12,from:7,to:10,title:'ليوسف وأخوه أحب إلى أبينا',
+ svg:SVG(`<rect class="f-sky" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>${HOUSE(70,172,60)}
+ ${PERSON(130,172,1,'f-leaf')}${PERSON(160,172,.6,'f-glow')}${PERSON(178,172,.5,'f-glow')}${Array.from({length:10},(_,i)=>PERSON(214+i*14,172,.55,'f-iron')).join('')}`),
+ kid:'حسد إخوة يوسف أخاهم، وقالوا: أبونا يحب يوسف وأخاه أكثر منا! واتفقوا على أن يبعدوه عن أبيه. فقال أحدهم: لا تقتلوه، ألقوه في البئر. والحسد يقود إلى أعمال سيئة.',
+ adult:'٧ «آيات للسائلين». ٨ «ليوسف وأخوه أحب إلى أبينا منا ونحن عصبة»، و«عصبة» مرة أخرى في ١٤. ٩ «اقتلوا يوسف أو اطرحوه أرضا يخل لكم وجه أبيكم». ١٠ «لا تقتلوا يوسف وألقوه في غيابت الجب» و«يلتقطه بعض السيارة».',
+ words:[['عُصْبَةٌ','جماعة'],['اطْرَحُوهُ أَرْضًا','ألقوه في أرض بعيدة'],['غَيَابَتِ الْجُبِّ','قعر البئر'],['السَّيَّارَةِ','المسافرين']]},
+{rub:2,s:12,from:11,to:15,title:'في غيابت الجب',
+ svg:SVG(`${GLOW('u4')}<rect class="f-sky" width="360" height="200"/><path class="f-dry" d="M0 172 H360 V200 H0Z"/>
+ ${WELL(180,172,80)}<circle fill="url(#u4)" cx="180" cy="160" r="40"/>${[0,1,2,3].map(i=>PERSON(270+i*22,172,.6,'f-iron')).join('')}${PALM(50,172,60)}`),
+ kid:'طلب الإخوة من أبيهم أن يرسل يوسف معهم ليلعب، فقال: أخاف أن يأكله الذئب. فلما أخذوه ألقوه في البئر. لكن الله أوحى إلى يوسف: ستخبرهم يومًا بما فعلوا وهم لا يعرفونك.',
+ adult:'١١ «ما لك لا تأمنا على يوسف وإنا له لناصحون»، و١٢ «وإنا له لحافظون»، ومثلها ٦٣ عن أخيه. ١٢ «يرتع ويلعب». ١٣ «إني ليحزنني أن تذهبوا به وأخاف أن يأكله الذئب وأنتم عنه غافلون». ١٤ «لئن أكله الذئب ونحن عصبة». ١٥ «لتنبئنهم بأمرهم هذا وهم لا يشعرون».',
+ words:[['لَا تَأْمَنَّا','لا تأتمنّا'],['يَرْتَعْ','يسعى وينشط ويفرح'],['وَأَجْمَعُوا','وعزموا'],['لَتُنَبِّئَنَّهُمْ','لتخبرنّهم']]},
+{rub:2,s:12,from:16,to:18,title:'فصبر جميل',
+ svg:SVG(`${GLOW('u5')}<rect class="f-night" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u5)" cx="110" cy="120" r="70"/>${PERSON(110,172,1.1,'f-leaf')}${SHIRT(190,130,1.2)}${[0,1,2,3].map(i=>PERSON(250+i*24,172,.65,'f-iron')).join('')}${MOON(300,40,12)}`),
+ kid:'رجع الإخوة إلى أبيهم في الليل يبكون، وقالوا: أكله الذئب! وجاءوا بقميصه عليه دم كذب. فعرف يعقوب أنهم يكذبون، وقال: فصبر جميل، والله المستعان.',
+ adult:'١٦ «وجاءوا أباهم عشاء يبكون». ١٧ «إنا ذهبنا نستبق وتركنا يوسف عند متاعنا». ١٨ «بدم كذب» و«بل سولت لكم أنفسكم أمرا فصبر جميل»، وتتكرر في ٨٣. خاتمة ١٨ «والله المستعان على ما تصفون»، وخاتمة ٨٣ «عسى الله أن يأتيني بهم جميعا».',
+ words:[['عِشَاءً','وقت العشاء'],['نَسْتَبِقُ','نتسابق'],['مَتَاعِنَا','ثيابنا وزادنا'],['سَوَّلَتْ','زيّنت'],['الْمُسْتَعَانُ','الذي يُطلب منه العون']]},
+{rub:2,s:12,from:19,to:22,title:'يا بشرى هذا غلام',
+ svg:SVG(`${GLOW('u6')}<rect class="f-sky" width="360" height="200"/><path class="f-dry" d="M0 172 H360 V200 H0Z"/>
+ ${WELL(110,172,70)}<circle fill="url(#u6)" cx="110" cy="130" r="50"/>${PERSON(110,100,.5,'f-glow')}${PERSON(170,172,.9,'f-iron')}${[0,1,2].map(i=>`<g transform="translate(${240+i*40} 172) scale(.5)">${'<path class="f-gold" d="M-40 -30 Q-30 -60 -14 -40 Q0 -64 16 -40 Q24 -34 30 -34 L44 -60 Q52 -66 58 -58 L54 -50 L42 -26 Q36 -18 26 -18 H-34 Q-44 -20 -40 -30Z"/><rect class="f-gold" x="-32" y="-20" width="6" height="20"/><rect class="f-gold" x="22" y="-20" width="6" height="20"/>'}</g>`).join('')}`),
+ kid:'جاءت قافلة مسافرين، فأرسلوا من يأتي بالماء، فأنزل دلوه في البئر فتعلّق به يوسف! فقال: يا بشرى، هذا غلام! ثم باعوه بثمن قليل في مصر، واشتراه العزيز وقال لامرأته: أكرمي مقامه.',
+ adult:'١٩ «فأرسلوا واردهم فأدلى دلوه قال يا بشرى هذا غلام وأسروه بضاعة». ٢٠ «وشروه بثمن بخس دراهم معدودة». ٢١ «أكرمي مثواه عسى أن ينفعنا أو نتخذه ولدا»، ومثلها في القصص عن موسى. «وكذلك مكنا ليوسف في الأرض» في ٢١ و٥٦. ٢٢ «آتيناه حكما وعلما وكذلك نجزي المحسنين».',
+ words:[['وَارِدَهُمْ','من يطلب لهم الماء'],['فَأَدْلَىٰ','فأنزل'],['وَأَسَرُّوهُ بِضَاعَةً','وأخفوه على أنه بضاعة'],['بَخْسٍ','قليل'],['الزَّاهِدِينَ','الراغبين في التخلص منه'],['مَثْوَاهُ','مقامه عندنا'],['أَشُدَّهُ','منتهى قوته في شبابه']]},
+{rub:2,s:12,from:23,to:29,title:'معاذ الله',
+ svg:SVG(`${GLOW('u7')}<rect class="f-sky" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <rect class="f-paper" x="40" y="60" width="280" height="112"/>${[0,1,2].map(i=>`<rect class="f-earth" x="${70+i*90}" y="90" width="44" height="82" rx="3"/>`).join('')}<rect class="f-glow" x="250" y="90" width="44" height="82" rx="3"/><circle fill="url(#u7)" cx="272" cy="130" r="50"/>${PERSON(272,172,.9,'f-leaf')}`),
+ kid:'لما كبر يوسف طلبت منه امرأة العزيز أن يعصي الله، وأغلقت الأبواب. فقال يوسف: معاذ الله! وهرب نحو الباب. فصرف الله عنه السوء لأنه من عباده المخلصين. ثم ظهرت براءته.',
+ adult:'٢٣ «وغلقت الأبواب» و«معاذ الله إنه ربي أحسن مثواي»، و٧٩ «معاذ الله أن نأخذ». ٢٤ «كذلك لنصرف عنه السوء والفحشاء إنه من عبادنا المخلصين». ٢٥ «واستبقا الباب وقدت قميصه من دبر وألفيا سيدها لدى الباب». «قد» ثلاث مرات: ٢٦ «من قبل»، و٢٧ «من دبر»، و٢٨ «من دبر». ٢٨ «إن كيدكن عظيم».',
+ words:[['وَرَاوَدَتْهُ','طلبت منه'],['مَعَاذَ اللَّهِ','أعتصم بالله'],['بُرْهَانَ رَبِّهِ','آية من ربه تمنعه'],['وَقَدَّتْ','وشقّت'],['دُبُرٍ','خلف'],['وَأَلْفَيَا','ووجدا'],['قُبُلٍ','أمام']]},
+/* ===== ج١٢ · الربع ٨ ===== */
+{rub:3,s:12,from:30,to:35,title:'رب السجن أحب إلي',
+ svg:SVG(`${GLOW('u8')}<rect class="f-sky" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ ${BARS(250,172,110,100)}<circle fill="url(#u8)" cx="250" cy="122" r="50"/>${PERSON(250,160,.7,'f-glow')}${[0,1,2,3,4].map(i=>PERSON(40+i*28,172,.6,'f-iron')).join('')}`),
+ kid:'تعجّبت النساء من جمال يوسف حتى قلن: ما هذا بشرًا، إن هذا إلا ملك كريم! وهُدّد يوسف بالسجن إن لم يطعهن، فقال: رب، السجن أحب إليّ من المعصية. فاستجاب له ربه.',
+ adult:'٣٠ «امرأت العزيز تراود فتاها عن نفسه قد شغفها حبا». ٣١ «وأعتدت لهن متكأ» و«حاش لله ما هذا بشرا إن هذا إلا ملك كريم»، و٥١ «حاش لله ما علمنا عليه من سوء». ٣٢ «فاستعصم». ٣٣ «رب السجن أحب إلي مما يدعونني إليه». ٣٤ «فاستجاب له ربه». ٣٥ «ليسجننه حتى حين».',
+ words:[['شَغَفَهَا','بلغ حبه شغاف قلبها'],['مُتَّكَأً','وسائد يتكئن عليها'],['أَكْبَرْنَهُ','أعظمنه'],['حَاشَ لِلَّهِ','معاذ الله'],['فَاسْتَعْصَمَ','فامتنع'],['أَصْبُ','أمِلْ']]},
+{rub:3,s:12,from:36,to:42,title:'يا صاحبي السجن',
+ svg:SVG(`${GLOW('u9')}<rect class="f-iron" width="360" height="200"/><rect class="f-night" x="20" y="20" width="320" height="152" rx="6"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u9)" cx="180" cy="110" r="70"/>${PERSON(180,172,1,'f-leaf')}${PERSON(90,172,.8,'f-iron')}${PERSON(270,172,.8,'f-iron')}<rect class="f-glow" x="160" y="34" width="40" height="24"/>${[0,1,2].map(i=>`<rect class="f-iron" x="${168+i*10}" y="34" width="3" height="24"/>`).join('')}`),
+ kid:'دخل مع يوسف السجن شابان، رأى كل واحد منهما رؤيا. فدعاهما يوسف أولًا إلى توحيد الله: أآلهة كثيرة خير أم الله الواحد القهار؟ ثم فسّر لهما رؤياهما. وطلب ممن سينجو أن يذكره عند الملك، لكنه نسي.',
+ adult:'٣٦ «فتيان»: «أعصر خمرا» و«أحمل فوق رأسي خبزا تأكل الطير منه». ٣٧ «ذلكما مما علمني ربي». ٣٨ «ملة آبائي إبراهيم وإسحاق ويعقوب». «يا صاحبي السجن» مرتين: ٣٩ و٤١. ٣٩ «أأرباب متفرقون خير أم الله الواحد القهار». «إن الحكم إلا لله» في ٤٠ و٦٧. ٤٢ «اذكرني عند ربك» و«بضع سنين».',
+ words:[['أَعْصِرُ','أعصر العنب'],['مِلَّةَ','دين'],['الْقَهَّارُ','الغالب لكل شيء'],['سُلْطَانٍ','حجة وبرهان'],['الْقَيِّمُ','المستقيم'],['بِضْعَ سِنِينَ','عدة سنين']]},
+{rub:3,s:12,from:43,to:49,title:'سبع بقرات سمان',
+ svg:SVG(`<rect class="f-sky" width="360" height="200"/><path class="f-leaf" d="M0 172 H180 V200 H0Z"/><path class="f-dry" d="M180 172 H360 V200 H180Z"/>
+ ${COW(50,172,.7)}${COW(120,172,.7)}${COW(220,172,.7,'f-dry')}${COW(300,172,.7,'f-dry')}${[0,1,2,3].map(i=>EAR(40+i*30,110,true)).join('')}${[0,1,2,3].map(i=>EAR(220+i*30,110,false)).join('')}`),
+ kid:'رأى الملك سبع بقرات سمينة تأكلها سبع نحيفة، وسبع سنابل خضراء وأخرى يابسة. ففسّرها يوسف: ازرعوا سبع سنين واحفظوا القمح في سنابله، ثم تأتي سبع سنين شديدة، ثم عام فيه المطر والخير.',
+ adult:'رؤيا الملك في ٤٣ وتعاد في ٤٦: «سبع بقرات سمان يأكلهن سبع عجاف وسبع سنبلات خضر وأخر يابسات». ٤٤ «أضغاث أحلام». ٤٥ «وادكر بعد أمة». ٤٦ «يوسف أيها الصديق». ثلاث مراحل: ٤٧ «سبع سنين دأبا»، و٤٨ «سبع شداد»، و٤٩ «عام فيه يغاث الناس وفيه يعصرون».',
+ words:[['عِجَافٌ','هزيلة'],['تَعْبُرُونَ','تفسّرون'],['أَضْغَاثُ أَحْلَامٍ','أخلاط أحلام لا تأويل لها'],['وَادَّكَرَ بَعْدَ أُمَّةٍ','وتذكّر بعد مدة'],['دَأَبًا','متتابعة'],['تُحْصِنُونَ','تحفظون للبذر'],['يُغَاثُ','يُمطَر']]},
+{rub:3,s:12,from:50,to:52,title:'الآن حصحص الحق',
+ svg:SVG(`${GLOW('u11')}<rect class="f-sky" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u11)" cx="180" cy="90" r="90"/>${SUN(180,60,24)}${BARS(80,172,80,80)}${PERSON(80,160,.6,'f-glow')}${TOWER(290,172,50,100)}`),
+ kid:'طلب الملك يوسف ليخرج من السجن، فرفض يوسف أن يخرج حتى تظهر براءته. فاعترفت النساء أنه بريء، وقالت امرأة العزيز: الآن ظهر الحق، أنا التي طلبته، وإنه لمن الصادقين.',
+ adult:'«ائتوني به» في ٥٠ و٥٤. ٥٠ «ارجع إلى ربك فاسأله ما بال النسوة اللاتي قطعن أيديهن». ٥١ «ما خطبكن» و«الآن حصحص الحق». ٥٢ «ذلك ليعلم أني لم أخنه بالغيب وأن الله لا يهدي كيد الخائنين».',
+ words:[['مَا بَالُ','ما شأن'],['مَا خَطْبُكُنَّ','ما شأنكن'],['حَصْحَصَ','ظهر وتبيّن'],['بِالْغَيْبِ','في غيبته']]},
+/* ===== ج١٣ · الربع ١ ===== */
+{rub:4,s:12,from:53,to:57,title:'اجعلني على خزائن الأرض',
+ svg:SVG(`${GLOW('u12')}<rect class="f-sky" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u12)" cx="180" cy="100" r="90"/>${[0,1,2,3,4].map(i=>`<rect class="f-gold" x="${40+i*60}" y="110" width="44" height="62" rx="6"/><ellipse class="f-earth" cx="${62+i*60}" cy="110" rx="22" ry="7"/>`).join('')}${PERSON(180,100,.7,'f-leaf')}`),
+ kid:'قال يوسف: وما أبرّئ نفسي، فالنفس تأمر بالسوء إلا من رحم ربي. وأكرمه الملك وقال: أنت عندنا اليوم مكين أمين. فقال يوسف: اجعلني على خزائن الأرض، إني حفيظ عليم.',
+ adult:'٥٣ «وما أبرئ نفسي إن النفس لأمارة بالسوء إلا ما رحم ربي». ٥٤ «أستخلصه لنفسي» و«إنك اليوم لدينا مكين أمين». ٥٥ «اجعلني على خزائن الأرض إني حفيظ عليم». ٥٦ «يتبوأ منها حيث يشاء» و«ولا نضيع أجر المحسنين». ٥٧ «ولأجر الآخرة خير».',
+ words:[['لَأَمَّارَةٌ','كثيرة الأمر'],['أَسْتَخْلِصْهُ','أجعله من خاصتي'],['مَكِينٌ','ذو مكانة'],['خَزَائِنِ الْأَرْضِ','أموال مصر وطعامها'],['يَتَبَوَّأُ','ينزل']]},
+{rub:4,s:12,from:58,to:62,title:'وجاء إخوة يوسف',
+ svg:SVG(`${GLOW('u13')}<rect class="f-sky" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u13)" cx="90" cy="100" r="70"/>${PERSON(90,172,1.1,'f-leaf')}${Array.from({length:10},(_,i)=>PERSON(170+i*18,172,.6,'f-iron')).join('')}<ellipse class="f-gold" cx="140" cy="164" rx="16" ry="8"/>`),
+ kid:'جاء إخوة يوسف إلى مصر يطلبون الطعام، فعرفهم يوسف ولم يعرفوه! فأعطاهم الطعام وقال: ائتوني بأخيكم من أبيكم في المرة القادمة. وأمر غلمانه أن يردّوا لهم مالهم في رحالهم.',
+ adult:'٥٨ «فعرفهم وهم له منكرون». «جهزهم بجهازهم» مرتين: ٥٩ «قال ائتوني بأخ لكم من أبيكم»، و٧٠ «جعل السقاية في رحل أخيه». ٥٩ «ألا ترون أني أوفي الكيل وأنا خير المنزلين». ٦٠ «فلا كيل لكم عندي ولا تقربون». ٦١ «سنراود عنه أباه». ٦٢ «اجعلوا بضاعتهم في رحالهم».',
+ words:[['مُنْكِرُونَ','لا يعرفونه'],['جَهَّزَهُمْ','أعطاهم ما طلبوا'],['الْمُنْزِلِينَ','المضيفين'],['لِفِتْيَانِهِ','لغلمانه'],['رِحَالِهِمْ','أمتعتهم']]},
+{rub:4,s:12,from:63,to:68,title:'فالله خير حافظا',
+ svg:SVG(`${GLOW('u14')}<rect class="f-sky" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u14)" cx="180" cy="80" r="80"/>${HOUSE(60,172,50)}${PERSON(120,172,1,'f-leaf')}${Array.from({length:11},(_,i)=>PERSON(170+i*17,172,.55,i===0?'f-glow':'f-iron')).join('')}${HEART(180,60,.5)}`),
+ kid:'طلب الإخوة من أبيهم أن يرسل معهم أخاهم الصغير. فقال يعقوب: فالله خير حافظًا، وهو أرحم الراحمين. وأخذ عليهم عهدًا، وأوصاهم أن يدخلوا من أبواب متفرقة، وتوكل على الله.',
+ adult:'٦٣ «منع منا الكيل» و«وإنا له لحافظون». ٦٤ «هل آمنكم عليه إلا كما أمنتكم على أخيه من قبل فالله خير حافظا وهو أرحم الراحمين»، و٩٢ «وهو أرحم الراحمين». ٦٥ «هذه بضاعتنا ردت إلينا» و«ونزداد كيل بعير». ٦٦ «موثقا من الله» و«الله على ما نقول وكيل». ٦٧ «لا تدخلوا من باب واحد وادخلوا من أبواب متفرقة» و«عليه توكلت وعليه فليتوكل المتوكلون». ٦٨ «إلا حاجة في نفس يعقوب قضاها».',
+ words:[['نَكْتَلْ','نأخذ الطعام بالكيل'],['مَا نَبْغِي','ماذا نطلب أكثر'],['وَنَمِيرُ','ونجلب الطعام'],['بَعِيرٍ','جمل'],['مَوْثِقًا','عهدًا'],['يُحَاطَ بِكُمْ','تُغلبوا ولا تقدروا']]},
+{rub:4,s:12,from:69,to:76,title:'صواع الملك',
+ svg:SVG(`${GLOW('u15')}<rect class="f-sky" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u15)" cx="180" cy="110" r="60"/><path class="f-gold" d="M164 96 H196 L190 130 H170Z"/><ellipse class="f-gold" cx="180" cy="96" rx="16" ry="4"/>${[0,1,2,3].map(i=>`<rect class="f-earth" x="${30+i*36}" y="146" width="28" height="26" rx="4"/>`).join('')}${PERSON(300,172,1,'f-leaf')}${PERSON(260,172,.6,'f-glow')}`),
+ kid:'ضمّ يوسف أخاه إليه وقال: أنا أخوك. ثم وضع إناء الملك في متاع أخيه، ليبقيه عنده بتدبير من الله. فلما فتّشوا الأوعية وجدوه في وعاء أخيه. وفوق كل صاحب علم من هو أعلم منه.',
+ adult:'٦٩ «آوى إليه أخاه قال إني أنا أخوك فلا تبتئس». ٧٠ «أيتها العير إنكم لسارقون». ٧٢ «نفقد صواع الملك ولمن جاء به حمل بعير وأنا به زعيم». «تالله» أربع مرات في السورة: ٧٣ و٨٥ و٩١ و٩٥. ٧٥ «جزاؤه من وجد في رحله فهو جزاؤه». ٧٦ «كذلك كدنا ليوسف» و«نرفع درجات من نشاء وفوق كل ذي علم عليم».',
+ words:[['آوَىٰ إِلَيْهِ','ضمّ إليه'],['السِّقَايَةَ','الإناء الذي يُكال به'],['الْعِيرُ','القافلة'],['صُوَاعَ الْمَلِكِ','مكيال الملك'],['زَعِيمٌ','كفيل'],['أَوْعِيَتِهِمْ','أمتعتهم']]},
+/* ===== ج١٣ · الربع ٢ ===== */
+{rub:5,s:12,from:77,to:82,title:'فخذ أحدنا مكانه',
+ svg:SVG(`<rect class="f-sky" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>${TOWER(320,172,40,110)}
+ ${PERSON(260,172,1,'f-leaf')}${PERSON(225,172,.6,'f-glow')}${Array.from({length:10},(_,i)=>PERSON(30+i*17,172,.55,'f-iron')).join('')}`),
+ kid:'قال الإخوة: خذ واحدًا منا مكانه، فأبوه شيخ كبير. فقال يوسف: معاذ الله أن نأخذ غير من وجدنا متاعنا عنده. فتشاوروا، وقال أكبرهم: لن أترك مصر حتى يأذن لي أبي.',
+ adult:'٧٧ «إن يسرق فقد سرق أخ له من قبل» و«فأسرها يوسف في نفسه ولم يبدها لهم». ٧٨ «إن له أبا شيخا كبيرا فخذ أحدنا مكانه». ٧٩ «معاذ الله أن نأخذ إلا من وجدنا متاعنا عنده». ٨٠ «فلما استيأسوا منه خلصوا نجيا» و«فلن أبرح الأرض حتى يأذن لي أبي». ٨١ «وما كنا للغيب حافظين». ٨٢ «واسأل القرية التي كنا فيها والعير التي أقبلنا فيها».',
+ words:[['فَأَسَرَّهَا','فأخفاها'],['اسْتَيْأَسُوا','يئسوا'],['خَلَصُوا نَجِيًّا','انفردوا يتشاورون'],['فَرَّطْتُمْ','قصّرتم'],['أَبْرَحَ','أفارق']]},
+{rub:5,s:12,from:83,to:87,title:'ولا تيأسوا من روح الله',
+ svg:SVG(`${GLOW('u17')}<rect class="f-night" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u17)" cx="180" cy="70" r="100"/>${PERSON(180,172,1.2,'f-leaf')}${HOUSE(60,172,50)}${[0,1,2,3,4,5,6,7].map(i=>STAR(30+i*42,30+(i%2)*14,2,i*.3)).join('')}${MOON(310,50,12)}`),
+ kid:'حزن يعقوب على يوسف حتى ابيضّت عيناه من البكاء، لكنه لم ييأس. قال: إنما أشكو همّي وحزني إلى الله. وقال لأبنائه: اذهبوا فابحثوا عن يوسف وأخيه، ولا تيأسوا من رحمة الله.',
+ adult:'٨٣ «فصبر جميل عسى الله أن يأتيني بهم جميعا». ٨٤ «يا أسفى على يوسف وابيضت عيناه من الحزن فهو كظيم». ٨٥ «تالله تفتأ تذكر يوسف حتى تكون حرضا». ٨٦ «إنما أشكو بثي وحزني إلى الله»، و«وأعلم من الله ما لا تعلمون» تتكرر في ٩٦. ٨٧ «فتحسسوا من يوسف وأخيه ولا تيأسوا من روح الله».',
+ words:[['يَا أَسَفَىٰ','يا حزني'],['كَظِيمٌ','ممتلئ حزنًا يكتمه'],['تَفْتَأُ','لا تزال'],['حَرَضًا','قريبًا من الهلاك'],['بَثِّي','همّي'],['فَتَحَسَّسُوا','فابحثوا'],['رَوْحِ اللَّهِ','رحمة الله']]},
+{rub:5,s:12,from:88,to:93,title:'لا تثريب عليكم اليوم',
+ svg:SVG(`${GLOW('u18')}<rect class="f-sky" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u18)" cx="180" cy="100" r="100"/>${PERSON(180,172,1.1,'f-leaf')}${HEART(180,60,.7)}${Array.from({length:5},(_,i)=>PERSON(40+i*22,172,.6,'f-iron')).join('')}${Array.from({length:5},(_,i)=>PERSON(232+i*22,172,.6,'f-iron')).join('')}`),
+ kid:'رجع الإخوة إلى يوسف فقراء، فقال لهم: هل تذكرون ما فعلتم بيوسف؟ قالوا: أإنك لأنت يوسف؟! قال: أنا يوسف وهذا أخي. فاعتذروا، فسامحهم وقال: لا لوم عليكم اليوم، يغفر الله لكم.',
+ adult:'٨٨ «ببضاعة مزجاة فأوف لنا الكيل وتصدق علينا». ٨٩ «هل علمتم ما فعلتم بيوسف وأخيه». ٩٠ «أإنك لأنت يوسف» و«إنه من يتق ويصبر فإن الله لا يضيع أجر المحسنين». ٩١ «تالله لقد آثرك الله علينا». ٩٢ «لا تثريب عليكم اليوم يغفر الله لكم». ٩٣ «اذهبوا بقميصي هذا فألقوه على وجه أبي يأت بصيرا».',
+ words:[['مُزْجَاةٍ','قليلة رديئة'],['آثَرَكَ','فضّلك'],['لَا تَثْرِيبَ','لا لوم ولا تأنيب'],['بَصِيرًا','مبصرًا']]},
+{rub:5,s:12,from:94,to:100,title:'إني لأجد ريح يوسف',
+ svg:SVG(`${GLOW('u19')}<rect class="f-night" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u19)" cx="180" cy="80" r="100"/>${TOWER(180,172,90,110)}${PERSON(180,62,.7,'f-leaf')}${PERSON(150,172,.8,'f-glow')}${PERSON(210,172,.8,'f-glow')}${Array.from({length:11},(_,i)=>STAR(30+i*30,28+(i%2)*10,2.5,i*.2)).join('')}${SUN(40,90,12)}${MOON(320,90,10)}`),
+ kid:'شمّ يعقوب ريح يوسف قبل أن تصل القافلة! ولما ألقوا القميص على وجهه عاد بصيرًا. وجاء يعقوب وأهله إلى مصر، ورفع يوسف أبويه على العرش، وسجدوا له. وتحققت رؤياه القديمة.',
+ adult:'٩٤ «إني لأجد ريح يوسف لولا أن تفندون». ٩٥ «تالله إنك لفي ضلالك القديم». ٩٦ «فارتد بصيرا». ٩٨ «سوف أستغفر لكم ربي». «آوى إليه» مرتين: ٦٩ «أخاه»، و٩٩ «أبويه». ١٠٠ «يا أبت هذا تأويل رؤياي من قبل»، فتعود إلى «يا أبت» في الآية ٤، و«إن ربي لطيف لما يشاء».',
+ words:[['فَصَلَتِ','خرجت'],['تُفَنِّدُونِ','تسفّهوني'],['الْبَشِيرُ','حامل البشارة'],['الْعَرْشِ','سرير الملك'],['الْبَدْوِ','البادية'],['نَزَغَ','أفسد']]},
+/* ===== ج١٣ · الربع ٣ ===== */
+{rub:6,s:12,from:101,to:104,title:'توفني مسلما وألحقني بالصالحين',
+ svg:SVG(`${GLOW('u20')}<rect class="f-night" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u20)" cx="180" cy="90" r="100"/>${MIHRAB(180,172,110)}${PERSON(180,172,.8,'f-leaf')}${[0,1,2,3,4,5].map(i=>STAR(30+i*60,30+(i%2)*14,2,i*.3)).join('')}`),
+ kid:'دعا يوسف ربه: يا رب، أعطيتني الملك وعلّمتني تفسير الرؤى، أنت وليّي في الدنيا والآخرة، توفّني مسلمًا وألحقني بالصالحين. وهذه القصة من أخبار الغيب التي أوحاها الله إلى نبينا.',
+ adult:'١٠١ «رب قد آتيتني من الملك وعلمتني من تأويل الأحاديث فاطر السماوات والأرض أنت وليي في الدنيا والآخرة توفني مسلما وألحقني بالصالحين». ١٠٢ «ذلك من أنباء الغيب نوحيه إليك»، وفي هود ٤٩ «تلك... نوحيها». ١٠٣ «ولو حرصت بمؤمنين». ١٠٤ «إن هو إلا ذكر للعالمين».',
+ words:[['فَاطِرَ','خالق'],['وَلِيِّي','متولّي أموري'],['أَجْمَعُوا أَمْرَهُمْ','عزموا'],['حَرَصْتَ','اجتهدت']]},
+{rub:6,s:12,from:105,to:111,title:'عبرة لأولي الألباب',
+ svg:SVG(`${GLOW('u21')}<rect class="f-sky" width="360" height="200"/><path class="f-earth" d="M0 172 H360 V200 H0Z"/>
+ <circle fill="url(#u21)" cx="180" cy="80" r="90"/>${BOOK(180,80,50)}${ROAD('M180 172 V110','s-gold')}${PERSON(150,172,.7,'f-leaf')}${PERSON(210,172,.7,'f-leaf')}${HOUSE(50,172,40)}${HOUSE(310,172,40)}`),
+ kid:'في السماوات والأرض آيات كثيرة يمر عليها الناس ولا يتفكرون. والنبي ﷺ يدعو إلى الله على علم ويقين هو ومن اتبعه. وفي قصص الأنبياء عبرة لأصحاب العقول.',
+ adult:'١٠٥ «وكأين من آية في السماوات والأرض يمرون عليها». ١٠٦ «وما يؤمن أكثرهم بالله إلا وهم مشركون». ١٠٧ «غاشية من عذاب الله أو تأتيهم الساعة بغتة». ١٠٨ «قل هذه سبيلي أدعو إلى الله على بصيرة أنا ومن اتبعني». ١٠٩ «إلا رجالا نوحي إليهم من أهل القرى». ١١٠ «حتى إذا استيأس الرسل». ١١١ «عبرة لأولي الألباب» و«ما كان حديثا يفترى».',
+ words:[['وَكَأَيِّنْ','وكم'],['غَاشِيَةٌ','عقوبة تغشاهم'],['بَغْتَةً','فجأة'],['بَصِيرَةٍ','حجة ويقين'],['بَأْسُنَا','عذابنا'],['لِأُولِي الْأَلْبَابِ','لأصحاب العقول']]},
+];
+
+
+SCENES.forEach(s=>{s.rub=s.rub||1});SCENES.push(...MORE);
+SCENES.forEach(s=>{s.idx=AYAT.map((x,i)=>x[0]===s.s&&x[1]>=s.from&&x[1]<=s.to?i:-1).filter(i=>i>=0)});
+const RUBS=[["ج١٢ · الربع ٦ (تتمة)", "يوسف ١–٦"], ["ج١٢ · الربع ٧", "يوسف ٧–٢٩"], ["ج١٢ · الربع ٨", "يوسف ٣٠–٥٢"], ["ج١٣ · الربع ١", "يوسف ٥٣–٧٦"], ["ج١٣ · الربع ٢", "يوسف ٧٧–١٠٠"], ["ج١٣ · الربع ٣", "يوسف ١٠١–١١١"]];
+const AYRUB=AYAT.map(()=>1);SCENES.forEach(s=>s.idx.forEach(i=>AYRUB[i]=s.rub));
+const firstOfRub=r=>1+SCENES.findIndex(s=>s.rub===r);
+const range=s=>`${SURAH[s.s]} ${AR(s.from)}${s.to>s.from?'–'+AR(s.to):''}`;
+
+const MARKS=/^[ۖۗۚۛۙۘ]$/;
+const words=i=>AYAT[i][2].split(' ').filter(w=>!MARKS.test(w));
+const firstWords=i=>words(i).slice(0,2).join(' ');
+const PAGES=['cover',...SCENES.map((s,i)=>i),'quiz'];
+const LABEL=p=>p==='cover'?'غلاف':p==='quiz'?'تحدٍّ':AR(p+1);
+let cur=0, mode={};
+try{const s=+localStorage.getItem('yusuf-page');if(s>=0&&s<PAGES.length)cur=s}catch(e){}
+
+const $=id=>document.getElementById(id);
+function ayahHTML(i,m){
+  const toks=AYAT[i][2].split(' ');let k=0;
+  return `<span class="ay" data-a="${i}">`+toks.map(t=>{
+    if(MARKS.test(t))return `<span class="mark">${t}</span>`;
+    const idx=k++;const hide=m==='voice'||(m==='half'&&idx%2===1)||(m==='recite'&&idx>0);
+    return `<span class="w${hide?' hid':''}" data-k="${idx}" ${hide?'role="button" tabindex="0" aria-label="اضغطي لإظهار الكلمة"':''}>${t}</span>`;
+  }).join(' ')+` <button class="num" data-ayah="${i}" aria-label="استمعي للآية ${AR(AYAT[i][1])}">﴿${AR(AYAT[i][1])}﴾</button></span>`;
+}
+function render(){
+  stopAudio();vStop();
+  const p=PAGES[cur],el=$('page');
+  $('count').textContent=`${AR(cur+1)} / ${AR(PAGES.length)}`;
+  renderDots();
+  $('prev').style.visibility=cur===0?'hidden':'visible';
+  $('next').style.visibility=cur===PAGES.length-1?'hidden':'visible';
+  if(p==='cover'){
+    el.innerHTML=`<div class="scene">${SCENES[0].svg}</div><div class="cover">
+      <div class="eyebrow">١١١ آية · من الربع السادس في الجزء الثاني عشر إلى الربع الثالث في الجزء الثالث عشر · ٦ أرباع</div>
+      <h1>سورة يوسف</h1>
+      <p>كتاب مصوّر للحفظ معًا، ربعًا بعد ربع. لكل مقطع مشهد يُرسم في الذهن، وشرح قصير للصغار، ومفاتيح حفظ للكبار، ومعاني الكلمات.</p>
+      <p class="note">في كل صفحة: صوت القارئ، وأربعة أوضاع: «اقرأ»، و«نصف مخفي»، و«سمّعي» (أول كلمة فقط)، و«سمّعي بصوتك» بالميكروفون.</p>
+      ${RUBS.map(([n,r],k)=>`<h2>${n} <span class="sub">${r}</span></h2><div class="toc">${SCENES.map((s,i)=>s.rub===k+1?`<button data-go="${i+1}">${s.title}<span>${range(s)}</span></button>`:'').join('')}</div>`).join('')}
+      <div class="toc"><button data-go="${PAGES.length-1}">تحدّي الترتيب<span>لربع واحد أو للجزء كله</span></button></div>
+      <p class="note">النص برواية حفص عن عاصم، بالرسم الإملائي المشكول، ومُقابَل كلمة كلمة على نص المصحف. ومعاني الكلمات من التفسير الميسر (مجمع الملك فهد)، إلا كلمات قليلة لم يشرحها بلفظها فشُرحت بمعناها اللغوي. راجعي مع مصحفك عند التسميع.</p>
+    </div>`;
+  }else if(p==='quiz'){renderQuiz(el)}
+  else{
+    const s=SCENES[p],m=mode[p]||'read',idx=s.idx;
+    el.innerHTML=`<div class="scene">${s.svg}</div><div class="inner">
+      <div><div class="eyebrow">المشهد ${AR(p+1)} · سورة ${range(s)}</div><h2>${s.title}</h2></div>
+      <div class="player">
+        <label for="reciter">القارئ</label>
+        <select id="reciter">${RECITERS.map(([k,n])=>`<option value="${k}" ${k===reciter?'selected':''}>${n}</option>`).join('')}</select>
+        <label for="rep">التكرار</label>
+        <select id="rep">${[1,2,3,5].map(n=>`<option value="${n}" ${n===rep?'selected':''}>${AR(n)} ×</option>`).join('')}</select>
+        <button class="btn solid" id="playbtn" data-play>▶ استمعي للمشهد</button>
+      </div>
+      <p class="status" id="astatus">اضغطي رقم أي آية لسماعها وحدها.</p>
+      <div class="modes" role="group" aria-label="وضع الحفظ">
+        ${[['read','اقرأ'],['half','نصف مخفي'],['recite','سمّعي'],['voice','سمّعي بصوتك']].map(([k,t])=>`<button class="mode" data-mode="${k}" aria-pressed="${m===k}">${t}</button>`).join('')}
+      </div>
+      ${s.from===1?'<p class="basmala">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>':''}
+      <p class="ayat">${idx.map(i=>ayahHTML(i,m)).join(' ')}</p>
+      ${m==='voice'?`<div class="voice">
+        <div class="tools"><button class="btn solid" id="vbtn" data-vstart>🎙 ابدئي التسميع بالصوت</button><button class="btn" data-vhint>تلميح: الكلمة التالية</button><button class="btn" data-vreset>من البداية</button></div>
+        <p class="status" id="vstatus">اضغطي «ابدئي» واسمحي باستخدام الميكروفون، ثم اقرئي من أول الآية ${AR(s.from)} بصوت واضح وهادئ. تظهر كل كلمة صحيحة بالأخضر، وعند الخطأ يظهر تحذير أحمر بالكلمة الصحيحة.</p>
+        <div class="alert" id="valert" role="alert" hidden></div>
+      </div>`:''}
+      ${(m==='half'||m==='recite')?'<div class="tools"><button class="btn" data-reveal>أظهري كل الكلمات</button><button class="btn" data-mode="'+m+'">أخفيها من جديد</button></div>':''}
+      ${m==='voice'?'<p class="note">التعرّف على الصوت مصمَّم للكلام العادي، فقد يعدّ كلمة صحيحة خطأً، خاصة مع المدود الطويلة. إن كنتِ متأكدة من قراءتك فتابعي.</p>':''}
+      <div class="box kid"><h3>للصغار</h3><p>${s.kid}</p></div>
+      <div class="box adult"><h3>مفاتيح الحفظ</h3><p>${s.adult}</p>
+        <div class="openers">${idx.map(i=>`<span class="op">${firstWords(i)}<b>${AR(AYAT[i][1])}</b></span>`).join('')}</div></div>
+      <div class="box adult"><h3>معاني الكلمات</h3><dl>${s.words.map(([w,d])=>`<dt>${w}</dt><dd>${d}</dd>`).join('')}</dl></div>
+    </div>`;
+  }
+  if(typeof p==='number'&&(mode[p]||'read')==='voice'){V.exp=buildExp();V.ptr=0;V.ok=0;V.err=0}
+  try{localStorage.setItem('yusuf-page',cur)}catch(e){}
+}
+let Q={n:0,ok:0,ans:null,at:0,rub:0};
+const qpool=()=>AYAT.map((x,i)=>i).filter(i=>i+1<AYAT.length&&AYAT[i+1][0]===AYAT[i][0]&&(!Q.rub||AYRUB[i]===Q.rub));
+function newQ(){
+  const P=qpool(),at=P[Math.floor(Math.random()*P.length)];const right=firstWords(at+1);
+  const pool=[...new Set(P.map(i=>firstWords(i+1)).concat(AYAT.map((_,i)=>firstWords(i)).slice(0,0)))].filter(w=>w!==right);
+  const big=[...new Set(AYAT.map((_,i)=>firstWords(i)))].filter(w=>w!==right);
+  const src=pool.length>=6?pool:big;const opts=[right];while(opts.length<4){const w=src[Math.floor(Math.random()*src.length)];if(!opts.includes(w))opts.push(w)}
+  opts.sort(()=>Math.random()-.5);Q.at=at;Q.right=right;Q.opts=opts;Q.ans=null;
+}
+function renderQuiz(el){
+  if(Q.opts===undefined)newQ();
+  const a=AYAT[Q.at];
+  el.innerHTML=`<div class="scene">${SCENES[4].svg}</div><div class="inner">
+    <div><div class="eyebrow">تحدّي الترتيب · سورة ${SURAH[a[0]]}</div><h2>ما أول الآية التالية؟</h2></div>
+    <div class="player"><label for="qrub">الأسئلة من</label><select id="qrub"><option value="0" ${!Q.rub?'selected':''}>الجزء كله</option>${RUBS.map(([n,r],k)=>`<option value="${k+1}" ${Q.rub===k+1?'selected':''}>${n}: ${r}</option>`).join('')}</select></div>
+    <p class="score">الصحيح: ${AR(Q.ok)} من ${AR(Q.n)}</p>
+    <p class="quiz-q">${ayahHTML(Q.at,'read')}</p>
+    <div class="opts">${Q.opts.map(o=>`<button class="opt${Q.ans?(o===Q.right?' ok':(o===Q.ans?' no':'')):''}" data-opt="${o}" ${Q.ans?'disabled':''}>${o}</button>`).join('')}</div>
+    ${Q.ans?`<p>${Q.ans===Q.right?'أحسنتِ! ':'الصواب: '}الآية ${AR(a[1]+1)} تبدأ بـ«${Q.right}».</p><button class="btn solid" data-nextq>سؤال آخر</button>`:''}
+  </div>`;
+}
+
+/* ---------- audio ---------- */
+const RECITERS=[['Alafasy_128kbps','مشاري العفاسي'],['Husary_64kbps','محمود خليل الحصري'],['Minshawy_Murattal_128kbps','محمد صدّيق المنشاوي'],['Abdul_Basit_Murattal_64kbps','عبد الباسط عبد الصمد'],['Abdurrahmaan_As-Sudais_192kbps','عبد الرحمن السديس']];
+let reciter='Alafasy_128kbps',rep=1;
+try{const r=localStorage.getItem('hadid-reciter');if(RECITERS.some(x=>x[0]===r))reciter=r;const n=+localStorage.getItem('hadid-rep');if([1,2,3,5].includes(n))rep=n}catch(e){}
+const pad=n=>String(n).padStart(3,'0');
+const audioUrl=i=>`https://everyayah.com/data/${reciter}/${pad(AYAT[i][0])}${pad(AYAT[i][1])}.mp3`;
+const audio=new Audio();audio.preload='auto';
+const A={queue:[],pos:0,playing:false};
+function setStatus(t,bad){const s=$('astatus');if(s){s.textContent=t;s.classList.toggle('bad',!!bad)}}
+function hl(a){document.querySelectorAll('.ay.now').forEach(e=>e.classList.remove('now'));if(a>=0){const e=document.querySelector(`.ay[data-a="${a}"]`);if(e){e.classList.add('now');e.scrollIntoView({block:'nearest',behavior:'smooth'})}}}
+function setPlayBtn(){const b=$('playbtn');if(!b)return;b.textContent=A.playing?'■ إيقاف':'▶ استمعي للمشهد';b.toggleAttribute('data-stop',A.playing);b.toggleAttribute('data-play',!A.playing)}
+function playList(list){stopAudio();vStop();A.queue=list.flatMap(a=>Array(rep).fill(a));A.pos=0;A.playing=true;setPlayBtn();playCur()}
+function playCur(){
+  if(A.pos>=A.queue.length){stopAudio();setStatus('انتهت التلاوة.');return}
+  const a=A.queue[A.pos];audio.src=audioUrl(a);hl(a);
+  setStatus(`يُتلى الآن: ${SURAH[AYAT[a][0]]}، الآية ${AR(AYAT[a][1])} بصوت ${RECITERS.find(x=>x[0]===reciter)[1]}`);
+  const pr=audio.play();if(pr&&pr.catch)pr.catch(err=>{if(err&&err.name!=='AbortError')audioErr()});
+}
+function audioErr(){A.playing=false;audio.pause();hl(-1);setPlayBtn();setStatus('تعذّر تشغيل الصوت. تأكدي من الاتصال بالإنترنت. وإن كنتِ تفتحين الكتاب داخل تطبيق Claude فافتحيه من رابطه على GitHub في Chrome.',true)}
+audio.addEventListener('ended',()=>{if(!A.playing)return;A.pos++;playCur()});
+audio.addEventListener('error',()=>{if(A.playing)audioErr()});
+function stopAudio(){A.playing=false;try{audio.pause()}catch(e){}hl(-1);setPlayBtn()}
+
+/* ---------- voice recitation ---------- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const norm=s=>s.replace(/[ً-ٰٟۖ-ۭـ]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/ؤ/g,'و').replace(/ئ/g,'ي').replace(/ء/g,'').replace(/[^ء-ي]/g,'');
+const SKIP=new Set(['أعوذ','بالله','من','الشيطان','الرجيم','بسم','الله','الرحمن','الرحيم'].map(norm));
+const LETTERS=new Set(['الف','اليف','لام','را','راء','الر'].map(norm));
+const V={on:false,rec:null,exp:[],ptr:0,ok:0,err:0};
+function buildExp(){const out=[];SCENES[PAGES[cur]].idx.forEach(a=>{words(a).forEach((t,k)=>out.push({a,k,t,n:norm(t)}))});return out}
+const elOf=x=>document.querySelector(`.ay[data-a="${x.a}"] .w[data-k="${x.k}"]`);
+function mark(x,cls){const e=elOf(x);if(!e)return;e.classList.remove('hid','ok','err','hint');e.classList.add(cls);e.removeAttribute('role');e.removeAttribute('tabindex')}
+function lev(a,b){const d=Array.from({length:a.length+1},(_,i)=>[i]);for(let j=1;j<=b.length;j++)d[0][j]=j;
+  for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[a.length][b.length]}
+const sim=(a,b)=>1-lev(a,b)/Math.max(a.length,b.length,1);
+function match(a,b){if(!a||!b)return false;if(a===b)return true;const s=x=>x.replace(/^[وف](?=..)/,'');if(s(a)===s(b))return true;
+  if(Math.min(a.length,b.length)<=3)return false;return sim(a,b)>=.7||sim(s(a),s(b))>=.75}
+function vSet(t,bad){const s=$('vstatus');if(s){s.textContent=t;s.classList.toggle('bad',!!bad)}}
+function vAlert(t){const a=$('valert');if(!a)return;a.hidden=false;a.textContent='⚠ '+t;a.classList.remove('flash');void a.offsetWidth;a.classList.add('flash');try{navigator.vibrate&&navigator.vibrate(200)}catch(e){}}
+function vBtn(){const b=$('vbtn');if(!b)return;b.textContent=V.on?'■ إيقاف الاستماع':'🎙 ابدئي التسميع بالصوت';b.toggleAttribute('data-vstop',V.on);b.toggleAttribute('data-vstart',!V.on)}
+function vStop(){V.on=false;if(V.rec){const r=V.rec;V.rec=null;try{r.stop()}catch(e){}}vBtn()}
+const ayLabel=a=>`${SURAH[AYAT[a][0]]}، الآية ${AR(AYAT[a][1])}`;
+function vStart(){
+  if(!SR){vSet('التسميع بالصوت غير مدعوم في هذا المتصفح. استخدمي Chrome على أندرويد أو الكمبيوتر، أو Safari على آيفون وآيباد.',true);return}
+  if(!V.exp.length||V.ptr>=V.exp.length)render();
+  stopAudio();
+  const r=new SR();r.lang='ar-SA';r.continuous=true;r.interimResults=false;r.maxAlternatives=1;
+  r.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++)if(e.results[i].isFinal)feed(e.results[i][0].transcript)};
+  r.onerror=e=>{if(e.error==='no-speech'||e.error==='aborted')return;
+    const denied='لم يُسمح باستخدام الميكروفون. اسمحي للمتصفح بالوصول إليه ثم حاولي مرة أخرى. وإن كنتِ داخل تطبيق Claude فافتحي الكتاب من رابطه على GitHub في Chrome.';
+    const msg={'not-allowed':denied,'service-not-allowed':denied,'network':'التعرّف على الصوت يحتاج اتصالًا بالإنترنت.','audio-capture':'لم يُعثر على ميكروفون في هذا الجهاز.'}[e.error]||('توقف الاستماع: '+e.error);
+    vStop();vSet(msg,true)};
+  r.onend=()=>{if(V.on&&V.rec===r){try{r.start()}catch(e){}}};
+  try{r.start()}catch(e){vSet('تعذّر تشغيل الميكروفون.',true);return}
+  V.rec=r;V.on=true;vBtn();vSet('أستمع إليكِ… '+ayLabel(V.exp[V.ptr].a));
+}
+function done(){vStop();vSet(`انتهى التسميع: ${AR(V.ok)} كلمة صحيحة، و${AR(V.err)} ${V.err===1?'خطأ':'أخطاء'}.`,V.err>0)}
+function feed(text){
+  const ws=text.split(/\s+/).map(norm).filter(Boolean),E=V.exp;
+  for(let j=0;j<ws.length&&V.ptr<E.length;j++){
+    const w=ws[j],p=V.ptr;
+    if(E[p].n==='الر'&&LETTERS.has(w)){if(w===norm('را')||w===norm('راء')||w===norm('الر')){mark(E[p],'ok');V.ok++;V.ptr++}continue}
+    if(match(w,E[p].n)){mark(E[p],'ok');V.ok++;V.ptr++;continue}
+    if(p+1<E.length&&w===E[p].n+E[p+1].n){mark(E[p],'ok');mark(E[p+1],'ok');V.ok+=2;V.ptr+=2;continue}
+    if(j+1<ws.length&&match(w+ws[j+1],E[p].n)){mark(E[p],'ok');V.ok++;V.ptr++;j++;continue}
+    if(j+1<ws.length&&match(ws[j+1],E[p].n))continue;
+    if(p===0&&SKIP.has(w))continue;
+    if(w==='امين')continue;
+    let f=-1;for(let k=1;k<=3&&p+k<E.length;k++)if(match(w,E[p+k].n)){f=k;break}
+    if(f>0){const missed=E.slice(p,p+f);missed.forEach(x=>mark(x,'err'));V.err+=f;mark(E[p+f],'ok');V.ok++;V.ptr=p+f+1;
+      vAlert(`فاتتكِ ${f>1?'كلمات':'كلمة'} في ${ayLabel(missed[0].a)}: «${missed.map(x=>x.t).join(' ')}»`);continue}
+    mark(E[p],'err');V.err++;V.ptr++;vAlert(`خطأ في ${ayLabel(E[p].a)}: الصواب «${E[p].t}»`);
+  }
+  if(V.ptr>=E.length)done();
+  else if(V.on)vSet('أستمع إليكِ… '+ayLabel(E[V.ptr].a));
+}
+function vHint(){if(!V.exp.length)V.exp=buildExp();const x=V.exp[V.ptr];if(!x)return;mark(x,'hint');V.ptr++;if(V.ptr>=V.exp.length)done()}
+document.addEventListener('change',e=>{
+  if(e.target.id==='reciter'){reciter=e.target.value;try{localStorage.setItem('hadid-reciter',reciter)}catch(err){}if(A.playing){A.queue=A.queue.slice(A.pos);A.pos=0;playCur()}}
+  if(e.target.id==='qrub'){Q.rub=+e.target.value;Q.n=0;Q.ok=0;newQ();render();return}
+  if(e.target.id==='rep'){rep=+e.target.value;try{localStorage.setItem('hadid-rep',rep)}catch(err){}}
+});
+
+function renderDots(){
+  const p=PAGES[cur],r=typeof p==='number'?SCENES[p].rub:0;
+  const rubs=`<div class="rubbar">${RUBS.map(([n],i)=>`<button class="rubchip" data-go="${firstOfRub(i+1)}" aria-pressed="${r===i+1}">${n}</button>`).join('')}</div>`;
+  const sc=r?`<div class="dots-in">${SCENES.map((s,i)=>s.rub===r?`<button class="dot" data-go="${i+1}" aria-current="${p===i}" aria-label="المشهد ${AR(i+1)}">${AR(i+1)}</button>`:'').join('')}</div>`:'';
+  $('dots').innerHTML=`<div class="dots-in"><button class="dot" data-go="0" aria-current="${p==='cover'}" aria-label="الغلاف">◆</button><button class="dot" data-go="${PAGES.length-1}" aria-current="${p==='quiz'}" aria-label="تحدّي الترتيب">؟</button></div>${rubs}${sc}`;
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,.w.hid');if(!t)return;
+  if(t.classList.contains('hid')){t.classList.remove('hid');t.removeAttribute('role');return}
+  if(t.hasAttribute('data-stop')){stopAudio();setStatus('');return}
+  if(t.hasAttribute('data-play')){playList(SCENES[PAGES[cur]].idx);return}
+  if(t.dataset.ayah!==undefined){playList([+t.dataset.ayah]);return}
+  if(t.hasAttribute('data-vstop')){vStop();vSet('توقف الاستماع. اضغطي «ابدئي» للمتابعة من حيث توقفتِ.');return}
+  if(t.hasAttribute('data-vstart')){vStart();return}
+  if(t.hasAttribute('data-vhint')){vHint();return}
+  if(t.hasAttribute('data-vreset')){render();return}
+  if(t.dataset.go!==undefined){cur=+t.dataset.go;render();window.scrollTo({top:0,behavior:'smooth'});return}
+  if(t.dataset.mode){mode[PAGES[cur]]=t.dataset.mode;render();return}
+  if(t.hasAttribute('data-reveal')){document.querySelectorAll('.w.hid').forEach(w=>w.classList.remove('hid'));return}
+  if(t.dataset.opt){Q.ans=t.dataset.opt;Q.n++;if(Q.ans===Q.right)Q.ok++;render();return}
+  if(t.hasAttribute('data-nextq')){newQ();render();return}
+});
+document.addEventListener('keydown',e=>{const w=e.target.closest&&e.target.closest('.w.hid');if(w&&(e.key==='Enter'||e.key===' ')){e.preventDefault();w.classList.remove('hid')}});
+$('prev').onclick=()=>{if(cur>0){cur--;render();window.scrollTo({top:0})}};
+$('next').onclick=()=>{if(cur<PAGES.length-1){cur++;render();window.scrollTo({top:0})}};
+let tx=null;document.addEventListener('touchstart',e=>{if(e.target.closest('.scene'))tx=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;tx=null;
+  if(Math.abs(dx)>60){if(dx>0&&cur<PAGES.length-1)cur++;else if(dx<0&&cur>0)cur--;render()}},{passive:true});
+render();
+</script>
+
+</body></html>

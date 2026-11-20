@@ -320,7 +320,7 @@ async function recToggle(btn){
 
 /* ---------- خريطة القصة ---------- */
 const firstSent=t=>{const m=String(t).match(/^[^.!؟?]+[.!؟?]?/);const s=m?m[0]:String(t);return s.length>150?s.slice(0,147)+'…':s};
-function renderMap(){
+let renderMap=function(){
   stopAudio();if(typeof vStop==='function')vStop();KP.view='map';addBar();
   const el=$$('page');const cnt=$$('count');if(cnt)cnt.textContent='الخريطة';
   const total=AYAT.length,mm=KP.mapMode;
@@ -344,7 +344,7 @@ function renderMap(){
     <p class="note">نصيحة: بعد أن تحفظي المشاهد، أغلقي الكتاب واحكي القصة من الذاكرة: ما صورة المحطة الأولى؟ وبماذا تبدأ آياتها؟ ثم انتقلي للتي بعدها.</p>
   </div>`;
   window.scrollTo({top:0,behavior:'smooth'});
-}
+};
 
 /* ---------- الأحداث ---------- */
 document.addEventListener('click',e=>{
@@ -382,5 +382,12 @@ document.addEventListener('input',e=>{if(e.target.id==='kp-q')fillRList(e.target
 // تشغيل زر «استمعي» في وضع «آية واحدة» يشغّل الآية المختارة
 document.addEventListener('click',e=>{const t=e.target.closest('#playbtn[data-play]');if(t&&KP.rmode==='one'){e.stopImmediatePropagation();const s=SCENES[PAGES[cur]];playList([KP.one!=null&&sIdx(s).includes(KP.one)?KP.one:sIdx(s)[0]])}},true);
 
+const startMap=location.hash==='#map';
+const _rm=renderMap;
+renderMap=function(){_rm();try{history.replaceState(null,'','#map')}catch(e){}};
+const _r2=render;
+render=function(){if(location.hash==='#map'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}_r2()};
+window.addEventListener('hashchange',()=>{if(location.hash==='#map'&&KP.view!=='map')renderMap()});
 render();
+if(startMap)renderMap();
 })();

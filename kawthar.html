@@ -318,8 +318,8 @@ function renderQuiz(el){
 }
 
 /* ---------- audio ---------- */
-const RECITERS=[['Alafasy_128kbps','مشاري العفاسي'],['Husary_64kbps','محمود خليل الحصري'],['Minshawy_Murattal_128kbps','محمد صدّيق المنشاوي'],['Abdul_Basit_Murattal_64kbps','عبد الباسط عبد الصمد'],['Abdurrahmaan_As-Sudais_192kbps','عبد الرحمن السديس']];
-let reciter='Alafasy_128kbps',rep=1;
+const RECITERS=[['Husary_64kbps','محمود خليل الحصري'],['Minshawy_Murattal_128kbps','محمد صدّيق المنشاوي'],['Abdul_Basit_Murattal_64kbps','عبد الباسط عبد الصمد'],['mahmoud_ali_al_banna_32kbps','محمود علي البنا'],['Abdurrahmaan_As-Sudais_192kbps','عبد الرحمن السديس']];
+let reciter='Husary_64kbps',rep=1;
 try{const r=localStorage.getItem('hadid-reciter');if(RECITERS.some(x=>x[0]===r))reciter=r;const n=+localStorage.getItem('hadid-rep');if([1,2,3,5].includes(n))rep=n}catch(e){}
 const pad=n=>String(n).padStart(3,'0');
 const audioUrl=i=>`https://everyayah.com/data/${reciter}/${pad(AYAT[i][0])}${pad(AYAT[i][1])}.mp3`;
@@ -431,4 +431,6 @@ document.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedT
 render();
 </script>
 
+<script src="tajweed-engine.js?v=1"></script>
+<script src="kitab-plus.js?v=1"></script>
 </body></html>

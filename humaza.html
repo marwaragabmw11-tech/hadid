@@ -133,7 +133,7 @@ select{font:600 .9rem var(--f-body);color:var(--ink);background:var(--paper);bor
 </div>
 
 <script>
-const AYAT=[[104, 1, "وَيْلٌ لِكُلِّ هُمَزَةٍ لُمَزَةٍ"], [104, 2, "الَّذِي جَمَعَ مَالًا وَعَدَّدَهُ"], [104, 3, "يَحْسَبُ أَنَّ مَالَهُ أَخْلَدَهُ"], [104, 4, "كَلَّا ۖ لَيُنْبَذَنَّ فِي الْحُطَمَةِ"], [104, 5, "وَمَا أَدْرَاكَ مَا الْحُطَمَةُ"], [104, 6, "نَارُ اللَّهِ الْمُوقَدَةُ"], [104, 7, "الَّتِي تَطَّلِعُ عَلَى الْأَفْئِدَةِ"], [104, 8, "إِنَّهَا عَلَيْهِمْ مُؤْصَدَةٌ"], [104, 9, "فِي عَمَدٍ مُمَدَّدَةٍ"]];
+const AYAT=[[104, 1, "وَيْلٌ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍ"], [104, 2, "الَّذِي جَمَعَ مَالًا وَعَدَّدَهُ"], [104, 3, "يَحْسَبُ أَنَّ مَالَهُ أَخْلَدَهُ"], [104, 4, "كَلَّا ۖ لَيُنبَذَنَّ فِي الْحُطَمَةِ"], [104, 5, "وَمَا أَدْرَاكَ مَا الْحُطَمَةُ"], [104, 6, "نَارُ اللَّهِ الْمُوقَدَةُ"], [104, 7, "الَّتِي تَطَّلِعُ عَلَى الْأَفْئِدَةِ"], [104, 8, "إِنَّهَا عَلَيْهِم مُّؤْصَدَةٌ"], [104, 9, "فِي عَمَدٍ مُّمَدَّدَةٍ"]];
 const SURAH={1:'الفاتحة',2:'البقرة',3:'آل عمران',4:'النساء',5:'المائدة',6:'الأنعام',7:'الأعراف',8:'الأنفال',9:'التوبة',10:'يونس',104:'الهمزة'};
 const AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 const RAIN=(x,y,n)=>'<g class="rain">'+Array.from({length:n},(_,i)=>`<line class="s-water" stroke-width="2" stroke-linecap="round" x1="${x+i*9}" y1="${y}" x2="${x+i*9-3}" y2="${y+9}"/>`).join('')+'</g>';
@@ -318,8 +318,8 @@ function renderQuiz(el){
 }
 
 /* ---------- audio ---------- */
-const RECITERS=[['Alafasy_128kbps','مشاري العفاسي'],['Husary_64kbps','محمود خليل الحصري'],['Minshawy_Murattal_128kbps','محمد صدّيق المنشاوي'],['Abdul_Basit_Murattal_64kbps','عبد الباسط عبد الصمد'],['Abdurrahmaan_As-Sudais_192kbps','عبد الرحمن السديس']];
-let reciter='Alafasy_128kbps',rep=1;
+const RECITERS=[['Husary_64kbps','محمود خليل الحصري'],['Minshawy_Murattal_128kbps','محمد صدّيق المنشاوي'],['Abdul_Basit_Murattal_64kbps','عبد الباسط عبد الصمد'],['mahmoud_ali_al_banna_32kbps','محمود علي البنا'],['Abdurrahmaan_As-Sudais_192kbps','عبد الرحمن السديس']];
+let reciter='Husary_64kbps',rep=1;
 try{const r=localStorage.getItem('hadid-reciter');if(RECITERS.some(x=>x[0]===r))reciter=r;const n=+localStorage.getItem('hadid-rep');if([1,2,3,5].includes(n))rep=n}catch(e){}
 const pad=n=>String(n).padStart(3,'0');
 const audioUrl=i=>`https://everyayah.com/data/${reciter}/${pad(AYAT[i][0])}${pad(AYAT[i][1])}.mp3`;
@@ -431,4 +431,6 @@ document.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedT
 render();
 </script>
 
+<script src="tajweed-engine.js?v=1"></script>
+<script src="kitab-plus.js?v=1"></script>
 </body></html>

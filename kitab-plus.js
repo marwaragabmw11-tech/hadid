@@ -29,6 +29,9 @@ const css=`
 .kp-bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .kp-bar button,.kp-bar a{border:1px solid var(--gold);background:var(--paper);color:var(--gold);border-radius:999px;padding:4px 14px;font:600 .88rem var(--f-body);cursor:pointer;text-decoration:none}
 .kp-bar [aria-pressed="true"]{background:var(--gold);color:var(--paper)}
+.kp-bar [data-kp="map"]{background:#23824C;border-color:#23824C;color:#fff}
+.kp-bar a[href^="tajweed"]{background:#1D5FB0;border-color:#1D5FB0;color:#fff}
+.kp-bar [data-kp="map"],.kp-bar a[href^="tajweed"]{font-size:.95rem;padding:6px 16px;box-shadow:0 3px 10px rgba(0,0,0,.18)}
 .kp-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .kp-row label{font-size:.85rem;color:var(--muted)}
 .kp-row select,.kp-more input{font:inherit;font-size:.9rem;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);padding:4px 8px;max-width:100%}

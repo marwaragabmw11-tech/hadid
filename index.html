@@ -66,6 +66,27 @@ button.fcard{font:inherit;text-align:start;cursor:pointer;background:var(--paper
 button.fcard:hover{border-color:var(--gold)}
 @media (max-width:420px){.feat{grid-template-columns:1fr}}
 [hidden]{display:none!important}
+/* خانات الخرائط والتجويد بألوان ظاهرة */
+:root{--c-map:#23824C;--c-tj:#1D5FB0;--c-map-t:#23824C;--c-tj-t:#1D5FB0}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c-map-t:#6FD39A;--c-tj-t:#8DBBFF}}
+:root[data-theme="dark"]{--c-map-t:#6FD39A;--c-tj-t:#8DBBFF}
+.feat a.fcard,.feat button.fcard{border:0;color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.2);padding:18px 16px;min-height:104px;transition:transform .15s}
+.feat .fcard b{color:#fff;font-size:1.25rem}
+.feat .fcard span{color:rgba(255,255,255,.92);font-size:.9rem}
+.feat .fcard[data-view="tajweed"]{background:linear-gradient(135deg,#2B78D0,#173F7A)}
+.feat .fcard[data-view="map"]{background:linear-gradient(135deg,#2FA463,#1A5E38)}
+.feat .fcard:hover{transform:translateY(-2px)}
+.feat .fcard:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.tabs{gap:8px;padding:6px;border-width:2px}
+.tabs button{border:2px solid currentColor;font-size:1rem;padding:8px 16px}
+.tabs [data-view="books"]{color:var(--gold)}
+.tabs [data-view="map"]{color:var(--c-map-t)}
+.tabs [data-view="tajweed"]{color:var(--c-tj-t)}
+.tabs [data-view][aria-pressed="true"]{color:#fff}
+.tabs [data-view="books"][aria-pressed="true"]{background:var(--gold);border-color:var(--gold)}
+.tabs [data-view="map"][aria-pressed="true"]{background:var(--c-map);border-color:var(--c-map)}
+.tabs [data-view="tajweed"][aria-pressed="true"]{background:var(--c-tj);border-color:var(--c-tj)}
+
 /* قسم التجويد */
 #tj{
   --bg:#E9EDF0; --paper:#F9FAFB; --ink:#1C232B; --muted:#56616D; --line:#D2D9DF;

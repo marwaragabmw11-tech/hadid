@@ -50,11 +50,17 @@ ${L.small(180,192,'فكيف يطعمه بنفسه؟',12,'#FFF6D8','aq-fo',3.2)}`
 /* ٤ فويل للمصلين: عذاب شديد للمصلين الذين يضيّعون صلاتهم */
 4:SC(4,'storm',
 `${L.ground('#24222C',172)}
-<path d="M150 172 V112 Q150 88 180 80 Q210 88 210 112 V172Z" fill="#2E3A44"/>${L.lamp(180,110)}
-${[40,80,120,240,280,320].map((x,i)=>i===1||i===4?L.g('aq-dim',1.4,`<g class="aq-shake" style="animation-delay:1.4s">${L.person(x,172,.95,'#0A0A14')}</g>`):L.person(x,172,.95,'#0A0A14')).join('')}
+<path d="M190 172 V112 Q190 88 220 80 Q250 88 250 112 V172Z" fill="#2E3A44"/>${L.lamp(220,110)}
+<g class="aq-dim" style="animation-delay:1.6s"><rect x="186" y="150" width="68" height="20" rx="3" fill="#9A2A2A"/><rect x="191" y="153" width="58" height="14" rx="2" fill="none" stroke="#F2B33D"/></g>
+<circle cx="96" cy="128" r="30" fill="#FFF6D8" stroke="#5A3A22" stroke-width="3"/>
+<path d="M96 98 A30 30 0 0 1 122 113 L96 128Z" fill="#7CC48A" opacity=".7"/>
+<path d="M96 128 V112" stroke="#5A3A22" stroke-width="3" stroke-linecap="round"/>
+<g class="hd"><circle cx="96" cy="128" r="22" fill="none"/><path d="M96 128 V106" stroke="#B23A48" stroke-width="2.5" stroke-linecap="round"/></g>
+${L.small(96,176,'وقت الصلاة يمضي',11,'#FFE7A0','aq-fo',1)}
 ${L.text(180,62,'فَوَيْلٌ',28,'#FFB08A','aq-pop',1.8)}
 ${L.small(180,192,'وَيْل: عذابٌ شديد',12,'#FFE7A0','aq-fo',2.6)}`,
-'عذاب شديد للمصلين الذين يضيّعون صلاتهم'),
+'عذاب شديد للمصلين الذين يضيّعون صلاتهم',
+`.hd{transform-box:fill-box;transform-origin:center;animation:hd 3s .4s ease-in-out forwards}@keyframes hd{to{transform:rotate(150deg)}}`),
 
 /* ٥ الذين هم عن صلاتهم ساهون: لا يقيمونها على وجهها ولا يؤدونها في وقتها */
 5:SC(5,'day',

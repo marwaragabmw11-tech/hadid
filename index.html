@@ -86,6 +86,12 @@ button.fcard:hover{border-color:var(--gold)}
 .tabs [data-view="books"][aria-pressed="true"]{background:var(--gold);border-color:var(--gold)}
 .tabs [data-view="map"][aria-pressed="true"]{background:var(--c-map);border-color:var(--c-map)}
 .tabs [data-view="tajweed"][aria-pressed="true"]{background:var(--c-tj);border-color:var(--c-tj)}
+.feat .fcard[data-view="video"]{background:linear-gradient(135deg,#D0505E,#7A1F2B);grid-column:1/-1}
+.tabs [data-view="video"]{color:var(--c-vid-t)}
+.tabs [data-view="video"][aria-pressed="true"]{background:#B23A48;border-color:#B23A48;color:#fff}
+:root{--c-vid-t:#B23A48}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c-vid-t:#FF8E9A}}
+:root[data-theme="dark"]{--c-vid-t:#FF8E9A}
 
 /* قسم التجويد */
 #tj{
@@ -174,6 +180,7 @@ button.fcard:hover{border-color:var(--gold)}
 
   <div class="feat">
     <a class="fcard" href="#tajweed" data-view="tajweed"><b>📘 تعلّمي التجويد</b><span>النون والميم الساكنتان، الغنّة، المدود، القلقلة، اللامات، الوقف — بأمثلة مسموعة وتدريب</span></a>
+    <button class="fcard" data-view="video"><b>🎬 فيديو السور</b><span>قسم جديد: مشاهد كل سورة تتوالى بالصور مع صوت القارئ، وتُضاء كل كلمة عند قراءتها</span></button>
     <button class="fcard" data-view="map"><b>🗺 الخرائط الذهنية القصصية</b><span>قسم جديد: لكل سورة خريطة بالصور تحكي مشاهدها كقصة، بالترتيب</span></button>
   </div>
   <div class="new"><b>جديد في كل كتاب:</b>
@@ -185,7 +192,8 @@ button.fcard:hover{border-color:var(--gold)}
       <li>مراجعة تشكيل الآيات وعلامات الوقف على نص مصحف المدينة النبوية.</li>
     </ul></div>
 
-  <div class="tabs" role="group" aria-label="القسم" id="maps"><button data-view="books" aria-pressed="true">📖 كتب الحفظ</button><button data-view="map" aria-pressed="false">🗺 الخرائط الذهنية القصصية</button><button data-view="tajweed" aria-pressed="false">📘 التجويد</button></div>
+  <div class="tabs" role="group" aria-label="القسم" id="maps"><button data-view="books" aria-pressed="true">📖 كتب الحفظ</button><button data-view="map" aria-pressed="false">🗺 الخرائط الذهنية القصصية</button><button data-view="video" aria-pressed="false">🎬 فيديو السور</button><button data-view="tajweed" aria-pressed="false">📘 التجويد</button></div>
+  <p class="mapnote" id="vidnote" hidden>كل سورة هنا تفتح على الفيديو مباشرة: المشاهد تتوالى بالصور مع صوت القارئ الذي تختارينه، والآية مكتوبة تحت الصورة وتُضاء كل كلمة عند قراءتها. ويمكنك تكرار كل آية، وأخذ مهلة للترديد، وإخفاء النص لتختبري حفظك. يحتاج الفيديو اتصالًا بالإنترنت للصوت.</p>
   <p class="mapnote" id="mapnote" hidden>كل سورة هنا تفتح على خريطتها مباشرة: في الوسط اسم السورة، ثم محطات مصوّرة بترتيب المشاهد، وتحت كل محطة بدايات آياتها. وفي الخريطة ثلاثة أوضاع: «الخريطة»، و«احكي القصة»، و«اختبري نفسك».</p>
   <h2 id="lt">السور بترتيب المصحف</h2>
   <ul class="list" id="list"></ul>
@@ -340,25 +348,25 @@ function started(k){if(!k)return false;try{return localStorage.getItem(k)!==null
 const star=`<svg viewBox="0 0 52 52" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="10" y="10" width="32" height="32" rx="3"/><rect x="10" y="10" width="32" height="32" rx="3" transform="rotate(45 26 26)"/></g></svg>`;
 let VIEW='books';
 function card(b){
-  const r=b.ayat%100,ay=`${AR(b.ayat)} ${r>=3&&r<=10?'آيات':'آية'}`,m=VIEW==='map';
-  return `<li><a class="card" href="${BASE}${b.file}${m?'#map':''}">
+  const r=b.ayat%100,ay=`${AR(b.ayat)} ${r>=3&&r<=10?'آيات':'آية'}`,m=VIEW==='map',vd=VIEW==='video';
+  return `<li><a class="card" href="${BASE}${b.file}${m?'#map':(vd?'#video':'')}">
     <div class="num">${star}<span>${AR(b.n)}</span></div>
-    <div><p class="name">سورة ${b.name}</p><p class="meta">${m?'خريطة القصة · ':''}${ay} · ${b.juz}${b.note?' · '+b.note:''}</p>${started(b.key)?'<span class="badge">بدأتِ الحفظ</span>':''}</div>
-    <span class="go" aria-hidden="true">${m?'🗺':'‹'}</span></a></li>`;
+    <div><p class="name">سورة ${b.name}</p><p class="meta">${m?'خريطة القصة · ':(vd?'فيديو السورة · ':'')}${ay} · ${b.juz}${b.note?' · '+b.note:''}</p>${started(b.key)?'<span class="badge">بدأتِ الحفظ</span>':''}</div>
+    <span class="go" aria-hidden="true">${m?'🗺':(vd?'🎬':'‹')}</span></a></li>`;
 }
 function draw(){
   const tj=VIEW==='tajweed';
   document.getElementById('tj').hidden=!tj;document.getElementById('list').hidden=tj;document.getElementById('lt').hidden=tj;
   const nt=document.querySelector('.wrap>p.note');if(nt)nt.hidden=tj;
-  try{history.replaceState(null,'',tj?'#tajweed':(VIEW==='map'?'#maps':location.pathname+location.search))}catch(e){}
-  if(tj){document.querySelectorAll('.tabs [data-view]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.view===VIEW));document.getElementById('mapnote').hidden=true;return}
+  try{history.replaceState(null,'',tj?'#tajweed':(VIEW==='map'?'#maps':(VIEW==='video'?'#videos':location.pathname+location.search)))}catch(e){}
+  if(tj){document.querySelectorAll('.tabs [data-view]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.view===VIEW));document.getElementById('mapnote').hidden=true;document.getElementById('vidnote').hidden=true;return}
   document.getElementById('list').innerHTML=BOOKS.map(card).join('');
   document.querySelectorAll('.tabs [data-view]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.view===VIEW));
-  document.getElementById('mapnote').hidden=VIEW!=='map';
-  document.getElementById('lt').textContent=VIEW==='map'?'الخرائط الذهنية القصصية بترتيب المصحف':'السور بترتيب المصحف';
+  document.getElementById('mapnote').hidden=VIEW!=='map';document.getElementById('vidnote').hidden=VIEW!=='video';
+  document.getElementById('lt').textContent=VIEW==='map'?'الخرائط الذهنية القصصية بترتيب المصحف':(VIEW==='video'?'فيديو السور بترتيب المصحف':'السور بترتيب المصحف');
 }
 document.addEventListener('click',e=>{const t=e.target.closest('[data-view]');if(!t)return;e.preventDefault();VIEW=t.dataset.view;draw();document.getElementById('maps').scrollIntoView({behavior:'smooth',block:'start'})});
-if(location.hash==='#tajweed'||/^#(intro|noon|meem|ghunna|madd|qalqala|lam|tafkheem|idgham|waqf|practice)$/.test(location.hash))VIEW='tajweed';else if(location.hash==='#maps')VIEW='map';
+if(location.hash==='#tajweed'||/^#(intro|noon|meem|ghunna|madd|qalqala|lam|tafkheem|idgham|waqf|practice)$/.test(location.hash))VIEW='tajweed';else if(location.hash==='#maps')VIEW='map';else if(location.hash==='#videos')VIEW='video';
 const _h=location.hash;draw();if(VIEW==='tajweed'&&_h!=='#tajweed'){const el=document.querySelector(_h);if(el)setTimeout(()=>el.scrollIntoView(),50)}
 
 </script>

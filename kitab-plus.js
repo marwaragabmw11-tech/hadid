@@ -175,17 +175,18 @@ function addBar(){
   let bar=$$('kp-bar');
   if(!bar){bar=document.createElement('div');bar.id='kp-bar';bar.className='kp-bar';
     const d=$$('dots');d.parentNode.insertBefore(bar,d.nextSibling)}
-  bar.innerHTML=`<button data-kp="map" aria-pressed="${KP.view==='map'}">🗺 خريطة القصة</button><a href="tajweed.html">📘 تعلّمي التجويد</a><a href="index.html">📚 المكتبة</a>`;
+  bar.innerHTML=`<button data-kp="video" aria-pressed="${KP.view==='video'}">🎬 فيديو السورة</button><button data-kp="map" aria-pressed="${KP.view==='map'}">🗺 خريطة القصة</button><a href="tajweed.html">📘 تعلّمي التجويد</a><a href="index.html">📚 المكتبة</a>`;
 }
 function enhanceCover(){
   const c=document.querySelector('#page .cover');if(!c||c.querySelector('.kp-new'))return;
   const d=document.createElement('div');d.className='kp-new';
   d.innerHTML=`<h3>جديد في هذا الكتاب</h3>
-  <ul><li><b>خريطة القصة</b>: كل مشاهد السورة في طريق واحد بالصور، مع بدايات الآيات، لتحفظي الترتيب كأنه قصة.</li>
+  <ul><li><b>فيديو السورة</b>: مشاهد السورة تتوالى بالصور مع صوت القارئ، وتُضاء كل كلمة عند قراءتها، مع تكرار ومهلة للترديد وإخفاء النص لاختبار الحفظ.</li>
+  <li><b>خريطة القصة</b>: كل مشاهد السورة في طريق واحد بالصور، مع بدايات الآيات، لتحفظي الترتيب كأنه قصة.</li>
   <li><b>ألوان التجويد</b> في الآيات، ومراجعة للتجويد أثناء «سمّعي بصوتك» مع تسجيل صوتك ومقارنته بالقارئ.</li>
   <li><b>تكرار الآية</b>: آية واحدة، أو كل آية وحدها، أو المشهد كاملًا، أو تكرار تراكمي، مع مهلة لترديدك.</li>
   <li><b>قراء أكثر</b>: الشيخ محمود علي البنا ضمن القراء الخمسة، وقائمة بقراء آخرين من الإنترنت.</li></ul>
-  <div class="toc"><button data-kp="map">خريطة القصة<span>السورة كلها في صفحة واحدة</span></button><a class="kp-toc" href="tajweed.html">تعلّمي التجويد<span>دروس قصيرة وتدريب</span></a></div>
+  <div class="toc"><button data-kp="video">فيديو السورة<span>المشاهد تتوالى مع التلاوة</span></button><button data-kp="map">خريطة القصة<span>السورة كلها في صفحة واحدة</span></button><a class="kp-toc" href="tajweed.html">تعلّمي التجويد<span>دروس قصيرة وتدريب</span></a></div>
   <p class="note">رُوجع تشكيل الآيات وعلامات الوقف على نص مصحف المدينة النبوية (رواية حفص) من مجمع الملك فهد ومشروع تنزيل.</p>`;
   c.appendChild(d);
 }
@@ -385,12 +386,167 @@ document.addEventListener('input',e=>{if(e.target.id==='kp-q')fillRList(e.target
 // تشغيل زر «استمعي» في وضع «آية واحدة» يشغّل الآية المختارة
 document.addEventListener('click',e=>{const t=e.target.closest('#playbtn[data-play]');if(t&&KP.rmode==='one'){e.stopImmediatePropagation();const s=SCENES[PAGES[cur]];playList([KP.one!=null&&sIdx(s).includes(KP.one)?KP.one:sIdx(s)[0]])}},true);
 
-const startMap=location.hash==='#map';
+
+/* ---------- فيديو السورة: المشاهد تتوالى مع صوت القارئ ونص الآية ---------- */
+const vcss=`
+.kp-bar [data-kp="video"]{background:#B23A48;border-color:#B23A48;color:#fff;font-size:.95rem;padding:6px 16px;box-shadow:0 3px 10px rgba(0,0,0,.18)}
+.kp-vid{padding:16px 14px 22px;display:flex;flex-direction:column;gap:12px}
+.kp-stage{background:#0B111B;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;position:relative;color:#F3EEDF}
+.kp-pic{position:relative;aspect-ratio:9/5;overflow:hidden;background:#0B111B}
+.kp-sv{position:absolute;inset:0;animation:kpkb 16s ease-in-out infinite alternate}
+.kp-sv svg{width:100%;height:100%;display:block}
+.kp-in{animation:kpfade .9s ease-out,kpkb 16s ease-in-out infinite alternate}
+@keyframes kpkb{from{transform:scale(1.02)}to{transform:scale(1.15) translate(-2%,1.5%)}}
+@keyframes kpfade{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.kp-sv,.kp-in{animation:none}}
+.kp-top{position:absolute;top:8px;inset-inline-start:8px;background:rgba(11,17,27,.72);color:#FFD36B;border-radius:999px;padding:2px 12px;font:700 .8rem var(--f-body);max-width:calc(100% - 16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kp-big{position:absolute;inset:0;margin:auto;width:72px;height:72px;border-radius:50%;border:0;background:rgba(255,211,107,.92);color:#0B111B;font-size:1.8rem;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.kp-big[hidden]{display:none}
+.kp-cap{padding:12px 14px 14px;text-align:center;max-height:13.5em;overflow:auto;border-top:2px solid #FFD36B}
+.kp-ayah{font-family:var(--f-quran);font-size:clamp(1.35rem,5vw,2rem);line-height:2.1;margin:0}
+.kp-ayah .kv-w{transition:color .15s;border-radius:6px}
+.kp-ayah .kv-w.on{color:#FFD36B;background:rgba(255,211,107,.14)}
+.kp-ayah .kv-w.done{color:#F3EEDF}
+.kp-ayah.tm-reveal .kv-w:not(.on):not(.done){opacity:0}
+.kp-ayah.tm-hide .kv-w{opacity:0}
+.kp-ayah.tm-hide .kv-w.on{opacity:1;color:transparent;background:rgba(255,211,107,.25)}
+.kp-num{font-size:.8rem;color:#C9D2DC;margin-top:2px;display:block}
+.kp-prog{height:6px;background:var(--line);border-radius:999px;overflow:hidden;cursor:pointer}
+.kp-prog div{height:100%;background:#B23A48;width:0;transition:width .3s}
+.kp-vctl{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.kp-vctl button{min-width:48px;min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font:700 1rem var(--f-body);cursor:pointer;padding:0 12px}
+.kp-vctl button.main{background:#B23A48;border-color:#B23A48;color:#fff;min-width:88px}
+.kp-vset{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.kp-vset label{display:flex;flex-direction:column;gap:2px;font-size:.8rem;color:var(--muted)}
+.kp-vset select{font:inherit;font-size:.92rem;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);padding:6px 8px;min-height:40px}
+.kp-story{background:var(--gold-soft);border-radius:12px;padding:10px 12px;margin:0;font-size:.92rem;line-height:1.8}
+.kp-story b{font-family:var(--f-display);color:var(--gold)}
+.kp-stage:fullscreen{border-radius:0;height:100%}
+.kp-stage:fullscreen .kp-pic{aspect-ratio:auto;flex:1}
+.kp-stage:fullscreen .kp-cap{max-height:40vh}
+.kp-stage:fullscreen .kp-ayah{font-size:clamp(1.6rem,4vw,2.8rem)}
+.kp-stage:-webkit-full-screen{border-radius:0;height:100%}
+.kp-stage:-webkit-full-screen .kp-pic{aspect-ratio:auto;flex:1}
+`;
+const vst=document.createElement('style');vst.textContent=vcss;document.head.appendChild(vst);
+const sceneOf=[];SCENES.forEach((s,k)=>sIdx(s).forEach(i=>{if(sceneOf[i]==null)sceneOf[i]=k}));
+for(let i=0,last=0;i<AYAT.length;i++){if(sceneOf[i]==null)sceneOf[i]=last;else last=sceneOf[i]}
+const VV={i:0,r:1,playing:false,scene:-1,raf:0,au:new Audio(),
+  rep:+store.get('kp-vrep','1')||1,speed:+store.get('kp-vspeed','1')||1,tm:store.get('kp-vtm','show'),gap:+store.get('kp-vgap','0')||0,t:null};
+const vau=VV.au;
+const vw=t=>[...t].filter(ch=>!/[ً-ٰٟۖ-ۭ]/.test(ch)).length+1;
+function vStopAll(){VV.playing=false;clearTimeout(VV.t);cancelAnimationFrame(VV.raf);try{vau.pause()}catch(e){};vSetBtn()}
+function vSetBtn(){const b=$$('kv-play');if(b)b.textContent=VV.playing?'⏸ إيقاف':'▶ تشغيل';const g=$$('kv-big');if(g)g.hidden=VV.playing}
+function vStatus(t){const s=$$('kv-st');if(s)s.textContent=t||''}
+function vShow(i){
+  VV.i=Math.max(0,Math.min(AYAT.length-1,i));store.set(`kp-vpos-${FILE}`,String(VV.i));
+  const k=sceneOf[VV.i],s=SCENES[k];
+  if(k!==VV.scene&&s){VV.scene=k;const pic=$$('kv-scene');
+    if(pic){pic.innerHTML=`<div class="kp-sv kp-in">${s.svg}</div>`;const svg=pic.querySelector('svg');if(svg)svg.setAttribute('preserveAspectRatio','xMidYMid slice')}
+    const top=$$('kv-top');if(top)top.textContent=`المشهد ${ARn(k+1)} من ${ARn(SCENES.length)} · ${s.title.replace(/<[^>]+>/g,'')}`;
+    const st=$$('kv-story');if(st)st.innerHTML=s.kid?`<b>القصة:</b> ${s.kid}`:'';
+    const sel=$$('kv-scenes');if(sel)sel.value=String(k);
+  }
+  const a=ay(VV.i),ws=wordsOf(VV.i);
+  const el=$$('kv-ayah');if(el){el.className='kp-ayah tm-'+VV.tm;el.innerHTML=ws.map((w,j)=>`<span class="kv-w" data-j="${j}">${esc(w)}</span>`).join(' ')}
+  const n=$$('kv-num');if(n)n.textContent=`${sName(a.s)} · الآية ${ARn(a.v)}${VV.rep>1?` · المرة ${ARn(VV.r)} من ${ARn(VV.rep)}`:''}`;
+  const bar=$$('kv-bar');if(bar)bar.style.width=((VV.i+1)/AYAT.length*100)+'%';
+  const cap=$$('kv-cap');if(cap)cap.scrollTop=0;
+}
+function vTick(){
+  cancelAnimationFrame(VV.raf);
+  const el=$$('kv-ayah');if(!el){return}
+  const d=vau.duration;
+  if(isFinite(d)&&d>0){
+    const spans=[...el.querySelectorAll('.kv-w')],W=spans.map(s=>vw(s.textContent)),tot=W.reduce((x,y)=>x+y,0);
+    // نترك ١٠٪ في البداية والنهاية لأن القارئ يبدأ بعد لحظة ويمد آخر الآية
+    const f=Math.max(0,Math.min(1,(vau.currentTime/d-.04)/.9))*tot;
+    let acc=0,cur=spans.length-1;for(let j=0;j<W.length;j++){acc+=W[j];if(f<acc){cur=j;break}}
+    spans.forEach((s,j)=>{s.classList.toggle('on',j===cur);s.classList.toggle('done',j<cur)});
+    const on=spans[cur],cap=$$('kv-cap');
+    if(on&&cap&&(on.offsetTop>cap.scrollTop+cap.clientHeight-40||on.offsetTop<cap.scrollTop))cap.scrollTop=on.offsetTop-30;
+  }
+  if(VV.playing)VV.raf=requestAnimationFrame(vTick);
+}
+function vPlay(){
+  clearTimeout(VV.t);VV.playing=true;vSetBtn();vStatus(`بصوت ${rName(reciter)}`);
+  vau.src=urlOf(VV.i);vau.playbackRate=VV.speed;
+  const p=vau.play();if(p&&p.catch)p.catch(err=>{if(err&&err.name!=='AbortError'){vStopAll();vStatus('تعذّر تشغيل الصوت. تأكدي من الاتصال بالإنترنت ثم اضغطي «تشغيل».')}});
+  vTick();
+}
+vau.addEventListener('ended',()=>{
+  if(!VV.playing)return;
+  if(VV.r<VV.rep){VV.r++;vShow(VV.i)}
+  else{VV.r=1;if(VV.i>=AYAT.length-1){vStopAll();vStatus('انتهى فيديو السورة. بارك الله فيكِ.');store.set(`kp-vpos-${FILE}`,'0');return}vShow(VV.i+1)}
+  const go=()=>{if(VV.playing)vPlay()};
+  if(VV.gap){vStatus('ردّدي الآية…');VV.t=setTimeout(go,VV.gap===9?Math.max(1500,(vau.duration||3)*1000/VV.speed):VV.gap*1000)}else VV.t=setTimeout(go,250);
+});
+vau.addEventListener('error',()=>{if(!VV.playing)return;vStopAll();vStatus('تعذّر تحميل صوت هذه الآية. تأكدي من الاتصال بالإنترنت، أو اختاري قارئًا آخر.')});
+let renderVideo=function(){
+  stopAudio();if(typeof vStop==='function')vStop();vStopAll();KP.view='video';addBar();
+  const cnt=$$('count');if(cnt)cnt.textContent='الفيديو';
+  const p=PAGES[cur];let start=+store.get(`kp-vpos-${FILE}`,'0')||0;
+  if(typeof p==='number')start=sIdx(SCENES[p])[0];
+  VV.scene=-1;VV.r=1;
+  const o=(v,t,c)=>`<option value="${v}" ${String(v)===String(c)?'selected':''}>${t}</option>`;
+  $$('page').innerHTML=`<div class="kp-vid">
+   <div><div class="eyebrow">فيديو السورة</div><h2>${esc(BOOK)}</h2></div>
+   <div class="kp-stage" id="kv-stage">
+     <div class="kp-pic"><div id="kv-scene"></div><div class="kp-top" id="kv-top"></div><button class="kp-big" id="kv-big" data-kv="play" aria-label="تشغيل">▶</button></div>
+     <div class="kp-cap" id="kv-cap"><p class="kp-ayah" id="kv-ayah"></p><span class="kp-num" id="kv-num"></span></div>
+   </div>
+   <div class="kp-prog" id="kv-prog" title="اضغطي للانتقال"><div id="kv-bar"></div></div>
+   <div class="kp-vctl">
+     <button data-kv="prev" aria-label="الآية السابقة">السابقة</button>
+     <button class="main" id="kv-play" data-kv="play">▶ تشغيل</button>
+     <button data-kv="next" aria-label="الآية التالية">التالية</button>
+     <button data-kv="restart" aria-label="من البداية">↺</button>
+     <button data-kv="fs" aria-label="ملء الشاشة">⛶</button>
+   </div>
+   <p class="status" id="kv-st" aria-live="polite">اضغطي «تشغيل» فتتوالى مشاهد السورة مع التلاوة، وتُضاء كل كلمة عند قراءتها.</p>
+   <div class="kp-vset">
+     <label>المشهد<select id="kv-scenes">${SCENES.map((s,k)=>o(k,`${ARn(k+1)}. ${s.title.replace(/<[^>]+>/g,'')}`,-1)).join('')}</select></label>
+     <label>القارئ<select id="kv-rec">${reciterOptions()}</select></label>
+     <label>نص الآية<select id="kv-tm">${o('show','ظاهر',VV.tm)}${o('reveal','يظهر مع التلاوة',VV.tm)}${o('hide','مخفي: اختبري حفظك',VV.tm)}</select></label>
+     <label>تكرار كل آية<select id="kv-rep">${[1,2,3,5].map(n=>o(n,ARn(n)+' ×',VV.rep)).join('')}</select></label>
+     <label>مهلة للترديد<select id="kv-gap">${o(0,'بلا مهلة',VV.gap)}${o(3,'٣ ثوانٍ',VV.gap)}${o(6,'٦ ثوانٍ',VV.gap)}${o(9,'بطول الآية',VV.gap)}</select></label>
+     <label>السرعة<select id="kv-speed">${[.75,1,1.25].map(n=>o(n,n===1?'عادية':(n<1?'أبطأ':'أسرع'),VV.speed)).join('')}</select></label>
+   </div>
+   <p class="kp-story" id="kv-story"></p>
+  </div>`;
+  vShow(start);window.scrollTo({top:0,behavior:'smooth'});
+};
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-kv],[data-kp="video"],#kv-prog');if(!t)return;
+  if(t.dataset.kp==='video'){renderVideo();return}
+  if(t.id==='kv-prog'){const r=t.getBoundingClientRect();let f=(e.clientX-r.left)/r.width;if(getComputedStyle(t).direction==='rtl')f=1-f;const was=VV.playing;vStopAll();VV.r=1;vShow(Math.floor(f*AYAT.length));if(was)vPlay();return}
+  const k=t.dataset.kv;
+  if(k==='play'){if(VV.playing){vStopAll();vStatus('متوقف. اضغطي «تشغيل» لتكملي.')}else vPlay();return}
+  if(k==='next'||k==='prev'||k==='restart'){const was=VV.playing;vStopAll();VV.r=1;vShow(k==='restart'?0:VV.i+(k==='next'?1:-1));if(was)vPlay();return}
+  if(k==='fs'){const s=$$('kv-stage');if(!s)return;
+    if(document.fullscreenElement||document.webkitFullscreenElement){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}
+    else{const f=s.requestFullscreen||s.webkitRequestFullscreen;if(f){try{const r=f.call(s);if(r&&r.catch)r.catch(()=>vStatus('ملء الشاشة غير متاح هنا.'))}catch(err){vStatus('ملء الشاشة غير متاح هنا.')}}else vStatus('ملء الشاشة غير متاح في هذا المتصفح.')}
+    return}
+});
+document.addEventListener('change',e=>{
+  const id=e.target.id,v=e.target.value;if(!id||id.indexOf('kv-')!==0)return;
+  if(id==='kv-scenes'){const was=VV.playing;vStopAll();VV.r=1;vShow(sIdx(SCENES[+v])[0]);if(was)vPlay();return}
+  if(id==='kv-rec'){reciter=v;store.set('hadid-reciter',v);if(VV.playing)vPlay();return}
+  if(id==='kv-tm'){VV.tm=v;store.set('kp-vtm',v);const el=$$('kv-ayah');if(el)el.className='kp-ayah tm-'+v;return}
+  if(id==='kv-rep'){VV.rep=+v;VV.r=1;store.set('kp-vrep',v);return}
+  if(id==='kv-gap'){VV.gap=+v;store.set('kp-vgap',v);return}
+  if(id==='kv-speed'){VV.speed=+v;store.set('kp-vspeed',v);vau.playbackRate=VV.speed;return}
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&VV.playing){vStopAll();vStatus('توقف الفيديو لأن الصفحة أُغلقت. اضغطي «تشغيل» لتكملي.')}});
+
+const startHash=location.hash;
 const _rm=renderMap;
-renderMap=function(){_rm();try{history.replaceState(null,'','#map')}catch(e){}};
+renderMap=function(){vStopAll();_rm();try{history.replaceState(null,'','#map')}catch(e){}};
+const _rv=renderVideo;
+renderVideo=function(){_rv();try{history.replaceState(null,'','#video')}catch(e){}};
 const _r2=render;
-render=function(){if(location.hash==='#map'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}_r2()};
-window.addEventListener('hashchange',()=>{if(location.hash==='#map'&&KP.view!=='map')renderMap()});
+render=function(){vStopAll();if(location.hash==='#map'||location.hash==='#video'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}_r2()};
+window.addEventListener('hashchange',()=>{if(location.hash==='#map'&&KP.view!=='map')renderMap();else if(location.hash==='#video'&&KP.view!=='video')renderVideo()});
 render();
-if(startMap)renderMap();
+if(startHash==='#map')renderMap();else if(startHash==='#video')renderVideo();
 })();

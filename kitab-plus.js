@@ -396,6 +396,9 @@ const vcss=`
 .kp-sv{position:absolute;inset:0;animation:kpkb 16s ease-in-out infinite alternate}
 .kp-sv svg{width:100%;height:100%;display:block}
 .kp-in{animation:kpfade .9s ease-out,kpkb 16s ease-in-out infinite alternate}
+.kp-av{position:absolute;inset:0}.kp-av svg{width:100%;height:100%;display:block}
+.kp-in2{animation:kpfade .6s ease-out}
+@media (prefers-reduced-motion:reduce){.kp-av *{animation-duration:.01s!important;animation-iteration-count:1!important}}
 @keyframes kpkb{from{transform:scale(1.02)}to{transform:scale(1.15) translate(-2%,1.5%)}}
 @keyframes kpfade{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.kp-sv,.kp-in{animation:none}}
@@ -447,8 +450,13 @@ function vSetBtn(){const b=$$('kv-play');if(b)b.textContent=VV.playing?'⏸ إي
 function vStatus(t){const s=$$('kv-st');if(s)s.textContent=t||''}
 function vShow(i){
   VV.i=Math.max(0,Math.min(AYAT.length-1,i));store.set(`kp-vpos-${FILE}`,String(VV.i));
-  const k=sceneOf[VV.i],s=SCENES[k];
-  if(k!==VV.scene&&s){VV.scene=k;const pic=$$('kv-scene');
+  const k=sceneOf[VV.i],s=SCENES[k],a0=ay(VV.i),an=window.AYAH_ANIM&&AYAH_ANIM[a0.s]&&AYAH_ANIM[a0.s][a0.v];
+  if(an){VV.scene=-1;const pic=$$('kv-scene');
+    if(pic){pic.innerHTML=`<div class="kp-av kp-in2">${an}</div>`;const svg=pic.querySelector('svg');if(svg)svg.setAttribute('preserveAspectRatio','xMidYMid slice')}
+    const top=$$('kv-top');if(top)top.textContent=`مشهد الآية ${ARn(a0.v)}`;
+    if(s){const ix=sIdx(s),a1=ay(ix[0]),a2=ay(ix[ix.length-1]),rng=a1.v===a2.v?`الآية ${ARn(a1.v)}`:`الآيات ${ARn(a1.v)}–${ARn(a2.v)}`;const st=$$('kv-story');if(st)st.innerHTML=s.kid?`<b>قصة المشهد كله (${rng}):</b> ${s.kid}`:'';const sel=$$('kv-scenes');if(sel)sel.value=String(k)}
+  }
+  else if(k!==VV.scene&&s){VV.scene=k;const pic=$$('kv-scene');
     if(pic){pic.innerHTML=`<div class="kp-sv kp-in">${s.svg}</div>`;const svg=pic.querySelector('svg');if(svg)svg.setAttribute('preserveAspectRatio','xMidYMid slice')}
     const ix=sIdx(s),a1=ay(ix[0]),a2=ay(ix[ix.length-1]),rng=a1.v===a2.v?`الآية ${ARn(a1.v)}`:`الآيات ${ARn(a1.v)}–${ARn(a2.v)}`;
     const top=$$('kv-top');if(top)top.textContent=`صورة المشهد ${ARn(k+1)} من ${ARn(SCENES.length)} · ${rng}`;
@@ -478,7 +486,11 @@ function vMeaning(){
   box.innerHTML=`<b>معنى الآية ${ARn(a.v)}:</b> <span id="kv-mtxt">…</span>${glH}`;
   const p=vLoadTafsir(a.s);
   Promise.resolve(p).then(d=>{if(VV.i!==i)return;const t=$$('kv-mtxt');if(!t)return;
-    t.textContent=d&&d[a.v-1]?d[a.v-1]:'تعذّر تحميل المعنى. تأكدي من الاتصال بالإنترنت.'});
+    if(!d||!d[a.v-1]){t.textContent='تعذّر تحميل المعنى. تأكدي من الاتصال بالإنترنت.';return}
+    // التفسير الميسر يشرح أحيانًا عدة آيات معًا
+    let f=a.v,l=a.v;while(f>1&&d[f-2]===d[a.v-1])f--;while(l<d.length&&d[l]===d[a.v-1])l++;
+    const h=box.querySelector('b');if(h&&f!==l)h.textContent=`معنى الآيات ${ARn(f)}–${ARn(l)}:`;
+    t.textContent=d[a.v-1]});
 }
 function vTick(){
   cancelAnimationFrame(VV.raf);
@@ -543,6 +555,10 @@ let renderVideo=function(){
    <p class="kp-story" id="kv-story"></p>
   </div>`;
   vShow(start);window.scrollTo({top:0,behavior:'smooth'});
+  [...new Set(AYAT.map((x,i)=>ay(i).s))].forEach(su=>{
+    if(window.AYAH_ANIM&&AYAH_ANIM[su])return;const id='kp-anim-'+su;if(document.getElementById(id))return;
+    const sc=document.createElement('script');sc.id=id;sc.src=`anim/${su}.js?v=1`;sc.onload=()=>{if(KP.view==='video'&&ay(VV.i).s===su)vShow(VV.i)};sc.onerror=()=>sc.remove();document.head.appendChild(sc);
+  });
 };
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-kv],[data-kp="video"],#kv-prog');if(!t)return;

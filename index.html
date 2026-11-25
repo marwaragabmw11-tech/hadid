@@ -193,7 +193,7 @@ button.fcard:hover{border-color:var(--gold)}
     </ul></div>
 
   <div class="tabs" role="group" aria-label="القسم" id="maps"><button data-view="books" aria-pressed="true">📖 كتب الحفظ</button><button data-view="map" aria-pressed="false">🗺 الخرائط الذهنية القصصية</button><button data-view="video" aria-pressed="false">🎬 فيديو السور</button><button data-view="tajweed" aria-pressed="false">📘 التجويد</button></div>
-  <p class="mapnote" id="vidnote" hidden>كل سورة هنا تفتح على الفيديو مباشرة: المشاهد تتوالى بالصور مع صوت القارئ الذي تختارينه، والآية مكتوبة تحت الصورة وتُضاء كل كلمة عند قراءتها. ويمكنك تكرار كل آية، وأخذ مهلة للترديد، وإخفاء النص لتختبري حفظك. يحتاج الفيديو اتصالًا بالإنترنت للصوت.</p>
+  <p class="mapnote" id="vidnote" hidden>كل سورة هنا تفتح على الفيديو مباشرة: المشاهد تتوالى بالصور مع صوت القارئ الذي تختارينه، والآية مكتوبة تحت الصورة وتُضاء كل كلمة عند قراءتها. ويمكنك تكرار كل آية، وأخذ مهلة للترديد، وإخفاء النص لتختبري حفظك. يحتاج الفيديو اتصالًا بالإنترنت للصوت. السور المعلَّمة بـ«🎞 مشهد متحرك لكل آية» لكل آية فيها مشهد متحرك خاص بها، مثل سورة الانفطار.</p>
   <p class="mapnote" id="mapnote" hidden>كل سورة هنا تفتح على خريطتها مباشرة: في الوسط اسم السورة، ثم محطات مصوّرة بترتيب المشاهد، وتحت كل محطة بدايات آياتها. وفي الخريطة ثلاثة أوضاع: «الخريطة»، و«احكي القصة»، و«اختبري نفسك».</p>
   <h2 id="lt">السور بترتيب المصحف</h2>
   <ul class="list" id="list"></ul>
@@ -347,11 +347,12 @@ const EXTRA=[];
 function started(k){if(!k)return false;try{return localStorage.getItem(k)!==null}catch(e){return false}}
 const star=`<svg viewBox="0 0 52 52" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="10" y="10" width="32" height="32" rx="3"/><rect x="10" y="10" width="32" height="32" rx="3" transform="rotate(45 26 26)"/></g></svg>`;
 let VIEW='books';
+const ANIM=[82]; // سور فيها مشهد متحرك لكل آية
 function card(b){
   const r=b.ayat%100,ay=`${AR(b.ayat)} ${r>=3&&r<=10?'آيات':'آية'}`,m=VIEW==='map',vd=VIEW==='video';
   return `<li><a class="card" href="${BASE}${b.file}${m?'#map':(vd?'#video':'')}">
     <div class="num">${star}<span>${AR(b.n)}</span></div>
-    <div><p class="name">سورة ${b.name}</p><p class="meta">${m?'خريطة القصة · ':(vd?'فيديو السورة · ':'')}${ay} · ${b.juz}${b.note?' · '+b.note:''}</p>${started(b.key)?'<span class="badge">بدأتِ الحفظ</span>':''}</div>
+    <div><p class="name">سورة ${b.name}</p><p class="meta">${m?'خريطة القصة · ':(vd?'فيديو السورة · ':'')}${ay} · ${b.juz}${b.note?' · '+b.note:''}</p>${vd&&ANIM.includes(b.n)?'<span class="badge" style="color:#B23A48;background:color-mix(in srgb,#B23A48 14%,transparent)">🎞 مشهد متحرك لكل آية</span> ':''}${started(b.key)?'<span class="badge">بدأتِ الحفظ</span>':''}</div>
     <span class="go" aria-hidden="true">${m?'🗺':(vd?'🎬':'‹')}</span></a></li>`;
 }
 function draw(){

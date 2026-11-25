@@ -444,6 +444,7 @@ for(let i=0,last=0;i<AYAT.length;i++){if(sceneOf[i]==null)sceneOf[i]=last;else l
 const VV={i:0,r:1,playing:false,scene:-1,raf:0,au:new Audio(),
   rep:+store.get('kp-vrep','1')||1,mean:store.get('kp-vmean','1')==='1',tf:{},speed:+store.get('kp-vspeed','1')||1,tm:store.get('kp-vtm','show'),gap:+store.get('kp-vgap','0')||0,t:null};
 const vau=VV.au;
+const ANIM_V=2;
 const vw=t=>[...t].filter(ch=>!/[ً-ٰٟۖ-ۭ]/.test(ch)).length+1;
 function vStopAll(){VV.playing=false;clearTimeout(VV.t);cancelAnimationFrame(VV.raf);try{vau.pause()}catch(e){};vSetBtn()}
 function vSetBtn(){const b=$$('kv-play');if(b)b.textContent=VV.playing?'⏸ إيقاف':'▶ تشغيل';const g=$$('kv-big');if(g)g.hidden=VV.playing}
@@ -555,10 +556,12 @@ let renderVideo=function(){
    <p class="kp-story" id="kv-story"></p>
   </div>`;
   vShow(start);window.scrollTo({top:0,behavior:'smooth'});
-  [...new Set(AYAT.map((x,i)=>ay(i).s))].forEach(su=>{
+  const loadAnims=()=>[...new Set(AYAT.map((x,i)=>ay(i).s))].forEach(su=>{
     if(window.AYAH_ANIM&&AYAH_ANIM[su])return;const id='kp-anim-'+su;if(document.getElementById(id))return;
-    const sc=document.createElement('script');sc.id=id;sc.src=`anim/${su}.js?v=1`;sc.onload=()=>{if(KP.view==='video'&&ay(VV.i).s===su)vShow(VV.i)};sc.onerror=()=>sc.remove();document.head.appendChild(sc);
+    const sc=document.createElement('script');sc.id=id;sc.src=`anim/${su}.js?v=${ANIM_V}`;sc.onload=()=>{if(KP.view==='video'&&ay(VV.i).s===su)vShow(VV.i)};sc.onerror=()=>sc.remove();document.head.appendChild(sc);
   });
+  if(window.AAL)loadAnims();
+  else if(!document.getElementById('kp-anim-lib')){const lb=document.createElement('script');lb.id='kp-anim-lib';lb.src=`anim/lib.js?v=${ANIM_V}`;lb.onload=loadAnims;lb.onerror=loadAnims;document.head.appendChild(lb)}
 };
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-kv],[data-kp="video"],#kv-prog');if(!t)return;

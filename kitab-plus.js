@@ -402,7 +402,7 @@ const vcss=`
 .kp-top{position:absolute;top:8px;inset-inline-start:8px;background:rgba(11,17,27,.72);color:#FFD36B;border-radius:999px;padding:2px 12px;font:700 .8rem var(--f-body);max-width:calc(100% - 16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kp-big{position:absolute;inset:0;margin:auto;width:72px;height:72px;border-radius:50%;border:0;background:rgba(255,211,107,.92);color:#0B111B;font-size:1.8rem;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.4)}
 .kp-big[hidden]{display:none}
-.kp-cap{padding:12px 14px 14px;text-align:center;max-height:13.5em;overflow:auto;border-top:2px solid #FFD36B}
+.kp-cap{padding:12px 14px 14px;text-align:center;overflow:auto;border-top:2px solid #FFD36B}
 .kp-ayah{font-family:var(--f-quran);font-size:clamp(1.35rem,5vw,2rem);line-height:2.1;margin:0}
 .kp-ayah .kv-w{transition:color .15s;border-radius:6px}
 .kp-ayah .kv-w.on{color:#FFD36B;background:rgba(255,211,107,.14)}
@@ -411,6 +411,13 @@ const vcss=`
 .kp-ayah.tm-hide .kv-w{opacity:0}
 .kp-ayah.tm-hide .kv-w.on{opacity:1;color:transparent;background:rgba(255,211,107,.25)}
 .kp-num{font-size:.8rem;color:#C9D2DC;margin-top:2px;display:block}
+.kp-mean{margin:10px 0 0;padding:10px 12px;background:rgba(255,255,255,.07);border-radius:10px;text-align:start;font-size:clamp(.95rem,3.6vw,1.1rem);line-height:1.9;color:#F3EEDF}
+.kp-mean b{color:#8FE3B0;font-family:var(--f-display);font-weight:500}
+.kp-mean[hidden]{display:none}
+.kp-gl{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;justify-content:center}
+.kp-gl span{background:rgba(255,211,107,.14);border:1px solid rgba(255,211,107,.4);border-radius:999px;padding:1px 10px;font-size:.85rem;color:#F3EEDF}
+.kp-gl span i{font-style:normal;font-family:var(--f-quran);color:#FFD36B;margin-inline-end:4px}
+.kp-stage:fullscreen .kp-cap,.kp-stage:-webkit-full-screen .kp-cap{max-height:50vh}
 .kp-prog{height:6px;background:var(--line);border-radius:999px;overflow:hidden;cursor:pointer}
 .kp-prog div{height:100%;background:#B23A48;width:0;transition:width .3s}
 .kp-vctl{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
@@ -432,7 +439,7 @@ const vst=document.createElement('style');vst.textContent=vcss;document.head.app
 const sceneOf=[];SCENES.forEach((s,k)=>sIdx(s).forEach(i=>{if(sceneOf[i]==null)sceneOf[i]=k}));
 for(let i=0,last=0;i<AYAT.length;i++){if(sceneOf[i]==null)sceneOf[i]=last;else last=sceneOf[i]}
 const VV={i:0,r:1,playing:false,scene:-1,raf:0,au:new Audio(),
-  rep:+store.get('kp-vrep','1')||1,speed:+store.get('kp-vspeed','1')||1,tm:store.get('kp-vtm','show'),gap:+store.get('kp-vgap','0')||0,t:null};
+  rep:+store.get('kp-vrep','1')||1,mean:store.get('kp-vmean','1')==='1',tf:{},speed:+store.get('kp-vspeed','1')||1,tm:store.get('kp-vtm','show'),gap:+store.get('kp-vgap','0')||0,t:null};
 const vau=VV.au;
 const vw=t=>[...t].filter(ch=>!/[ً-ٰٟۖ-ۭ]/.test(ch)).length+1;
 function vStopAll(){VV.playing=false;clearTimeout(VV.t);cancelAnimationFrame(VV.raf);try{vau.pause()}catch(e){};vSetBtn()}
@@ -443,8 +450,9 @@ function vShow(i){
   const k=sceneOf[VV.i],s=SCENES[k];
   if(k!==VV.scene&&s){VV.scene=k;const pic=$$('kv-scene');
     if(pic){pic.innerHTML=`<div class="kp-sv kp-in">${s.svg}</div>`;const svg=pic.querySelector('svg');if(svg)svg.setAttribute('preserveAspectRatio','xMidYMid slice')}
-    const top=$$('kv-top');if(top)top.textContent=`المشهد ${ARn(k+1)} من ${ARn(SCENES.length)} · ${s.title.replace(/<[^>]+>/g,'')}`;
-    const st=$$('kv-story');if(st)st.innerHTML=s.kid?`<b>القصة:</b> ${s.kid}`:'';
+    const ix=sIdx(s),a1=ay(ix[0]),a2=ay(ix[ix.length-1]),rng=a1.v===a2.v?`الآية ${ARn(a1.v)}`:`الآيات ${ARn(a1.v)}–${ARn(a2.v)}`;
+    const top=$$('kv-top');if(top)top.textContent=`صورة المشهد ${ARn(k+1)} من ${ARn(SCENES.length)} · ${rng}`;
+    const st=$$('kv-story');if(st)st.innerHTML=s.kid?`<b>قصة المشهد كله (${rng}):</b> ${s.kid}`:'';
     const sel=$$('kv-scenes');if(sel)sel.value=String(k);
   }
   const a=ay(VV.i),ws=wordsOf(VV.i);
@@ -452,6 +460,25 @@ function vShow(i){
   const n=$$('kv-num');if(n)n.textContent=`${sName(a.s)} · الآية ${ARn(a.v)}${VV.rep>1?` · المرة ${ARn(VV.r)} من ${ARn(VV.rep)}`:''}`;
   const bar=$$('kv-bar');if(bar)bar.style.width=((VV.i+1)/AYAT.length*100)+'%';
   const cap=$$('kv-cap');if(cap)cap.scrollTop=0;
+  vMeaning();
+}
+// المعنى من التفسير الميسر، وكلمات الآية من مفردات المشهد
+const vNorm=t=>String(t).replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\u0640]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه');
+function vLoadTafsir(su){
+  if(VV.tf[su])return VV.tf[su];
+  VV.tf[su]=fetch(`muyassar/${su}.json`).then(r=>{if(!r.ok)throw 0;return r.json()}).catch(()=>{VV.tf[su]=null;return null});
+  return VV.tf[su];
+}
+function vMeaning(){
+  const box=$$('kv-mean');if(!box)return;const i=VV.i,a=ay(i);
+  box.hidden=!VV.mean;
+  const s=SCENES[sceneOf[i]],ws=wordsOf(i).map(vNorm);
+  const gl=((s&&s.words)||[]).filter(([w])=>{const n=vNorm(w);return ws.some(x=>x===n||x.endsWith(n)||(n.length>3&&x.includes(n)))});
+  const glH=gl.length?`<div class="kp-gl">${gl.map(([w,m])=>`<span><i>${esc(w)}</i>${esc(m)}</span>`).join('')}</div>`:'';
+  box.innerHTML=`<b>معنى الآية ${ARn(a.v)}:</b> <span id="kv-mtxt">…</span>${glH}`;
+  const p=vLoadTafsir(a.s);
+  Promise.resolve(p).then(d=>{if(VV.i!==i)return;const t=$$('kv-mtxt');if(!t)return;
+    t.textContent=d&&d[a.v-1]?d[a.v-1]:'تعذّر تحميل المعنى. تأكدي من الاتصال بالإنترنت.'});
 }
 function vTick(){
   cancelAnimationFrame(VV.raf);
@@ -493,7 +520,7 @@ let renderVideo=function(){
    <div><div class="eyebrow">فيديو السورة</div><h2>${esc(BOOK)}</h2></div>
    <div class="kp-stage" id="kv-stage">
      <div class="kp-pic"><div id="kv-scene"></div><div class="kp-top" id="kv-top"></div><button class="kp-big" id="kv-big" data-kv="play" aria-label="تشغيل">▶</button></div>
-     <div class="kp-cap" id="kv-cap"><p class="kp-ayah" id="kv-ayah"></p><span class="kp-num" id="kv-num"></span></div>
+     <div class="kp-cap" id="kv-cap"><p class="kp-ayah" id="kv-ayah"></p><span class="kp-num" id="kv-num"></span><div class="kp-mean" id="kv-mean"></div></div>
    </div>
    <div class="kp-prog" id="kv-prog" title="اضغطي للانتقال"><div id="kv-bar"></div></div>
    <div class="kp-vctl">
@@ -508,6 +535,7 @@ let renderVideo=function(){
      <label>المشهد<select id="kv-scenes">${SCENES.map((s,k)=>o(k,`${ARn(k+1)}. ${s.title.replace(/<[^>]+>/g,'')}`,-1)).join('')}</select></label>
      <label>القارئ<select id="kv-rec">${reciterOptions()}</select></label>
      <label>نص الآية<select id="kv-tm">${o('show','ظاهر',VV.tm)}${o('reveal','يظهر مع التلاوة',VV.tm)}${o('hide','مخفي: اختبري حفظك',VV.tm)}</select></label>
+     <label>معنى الآية<select id="kv-mean-s">${o(1,'يظهر (التفسير الميسر)',VV.mean?1:0)}${o(0,'مخفي',VV.mean?1:0)}</select></label>
      <label>تكرار كل آية<select id="kv-rep">${[1,2,3,5].map(n=>o(n,ARn(n)+' ×',VV.rep)).join('')}</select></label>
      <label>مهلة للترديد<select id="kv-gap">${o(0,'بلا مهلة',VV.gap)}${o(3,'٣ ثوانٍ',VV.gap)}${o(6,'٦ ثوانٍ',VV.gap)}${o(9,'بطول الآية',VV.gap)}</select></label>
      <label>السرعة<select id="kv-speed">${[.75,1,1.25].map(n=>o(n,n===1?'عادية':(n<1?'أبطأ':'أسرع'),VV.speed)).join('')}</select></label>
@@ -533,6 +561,7 @@ document.addEventListener('change',e=>{
   if(id==='kv-scenes'){const was=VV.playing;vStopAll();VV.r=1;vShow(sIdx(SCENES[+v])[0]);if(was)vPlay();return}
   if(id==='kv-rec'){reciter=v;store.set('hadid-reciter',v);if(VV.playing)vPlay();return}
   if(id==='kv-tm'){VV.tm=v;store.set('kp-vtm',v);const el=$$('kv-ayah');if(el)el.className='kp-ayah tm-'+v;return}
+  if(id==='kv-mean-s'){VV.mean=v==='1';store.set('kp-vmean',VV.mean?'1':'0');vMeaning();return}
   if(id==='kv-rep'){VV.rep=+v;VV.r=1;store.set('kp-vrep',v);return}
   if(id==='kv-gap'){VV.gap=+v;store.set('kp-vgap',v);return}
   if(id==='kv-speed'){VV.speed=+v;store.set('kp-vspeed',v);vau.playbackRate=VV.speed;return}

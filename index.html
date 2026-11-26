@@ -347,7 +347,7 @@ const EXTRA=[];
 function started(k){if(!k)return false;try{return localStorage.getItem(k)!==null}catch(e){return false}}
 const star=`<svg viewBox="0 0 52 52" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="10" y="10" width="32" height="32" rx="3"/><rect x="10" y="10" width="32" height="32" rx="3" transform="rotate(45 26 26)"/></g></svg>`;
 let VIEW='books';
-const ANIM=[82,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114]; // سور فيها مشهد متحرك لكل آية
+const ANIM=[82,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114]; // سور فيها مشهد متحرك لكل آية
 function card(b){
   const r=b.ayat%100,ay=`${AR(b.ayat)} ${r>=3&&r<=10?'آيات':'آية'}`,m=VIEW==='map',vd=VIEW==='video';
   return `<li><a class="card" href="${BASE}${b.file}${m?'#map':(vd?'#video':'')}">

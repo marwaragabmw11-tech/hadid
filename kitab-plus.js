@@ -444,7 +444,7 @@ for(let i=0,last=0;i<AYAT.length;i++){if(sceneOf[i]==null)sceneOf[i]=last;else l
 const VV={i:0,r:1,playing:false,scene:-1,raf:0,au:new Audio(),
   rep:+store.get('kp-vrep','1')||1,mean:store.get('kp-vmean','1')==='1',tf:{},speed:+store.get('kp-vspeed','1')||1,tm:store.get('kp-vtm','show'),gap:+store.get('kp-vgap','0')||0,t:null};
 const vau=VV.au;
-const ANIM_V=2;
+const ANIM_V=3;
 const vw=t=>[...t].filter(ch=>!/[ً-ٰٟۖ-ۭ]/.test(ch)).length+1;
 function vStopAll(){VV.playing=false;clearTimeout(VV.t);cancelAnimationFrame(VV.raf);try{vau.pause()}catch(e){};vSetBtn()}
 function vSetBtn(){const b=$$('kv-play');if(b)b.textContent=VV.playing?'⏸ إيقاف':'▶ تشغيل';const g=$$('kv-big');if(g)g.hidden=VV.playing}

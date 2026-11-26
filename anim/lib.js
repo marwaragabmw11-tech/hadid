@@ -85,7 +85,7 @@ const BG={
 };
 // مشهد عام: خلفية جاهزة + محتوى + عبارة قصيرة أعلى المشهد
 L.scene=(su,id,bg,body,note,css)=>{const b=BG[bg]||BG.night;
-  return L.svg(su,id,L.lin('bg',b[0],b[1]),`<rect width="360" height="200" fill="url(#bg)"/>${body}${note?`<g class="aq-fo" style="animation-delay:.4s"><rect x="40" y="8" width="280" height="28" rx="14" fill="${bg==='day'||bg==='garden'||bg==='desert'||bg==='morning'?'#FFFFFF':'#000000'}" opacity=".28"/>${L.note(180,28,note,13.5,b[2])}</g>`:''}`,css||'')};
+  return L.svg(su,id,L.lin('bg',b[0],b[1]),`<rect width="360" height="200" fill="url(#bg)"/>${body}${note?(()=>{const n=[...note].length,w=n>34?336:280,fs=n>34?Math.max(10.5,Math.min(13.5,318/(n*.5))):13.5;return `<g class="aq-fo" style="animation-delay:.4s"><rect x="${180-w/2}" y="8" width="${w}" height="28" rx="14" fill="${bg==='day'||bg==='garden'||bg==='desert'||bg==='morning'?'#FFFFFF':'#000000'}" opacity=".28"/>${L.note(180,27+fs*.06,note,+fs.toFixed(1),b[2])}</g>`})():''}`,css||'')};
 const D=(dl)=>dl?` style="animation-delay:${dl}s"`:'';
 const V=(o)=>{const s=Object.entries(o).filter(([k,v])=>v!==undefined&&v!=='').map(([k,v])=>`${k}:${v}`).join(';');return s?` style="${s}"`:''};
 L.D=D;L.V=V;

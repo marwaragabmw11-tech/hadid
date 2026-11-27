@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>اختبار الفحص التجريبي</title>
+<style>body{font-family:system-ui,sans-serif;margin:16px;line-height:1.6}pre{white-space:pre-wrap;direction:ltr;text-align:left;font-size:12px;background:#f4f4f4;padding:8px}
+.box{border:1px solid #ccc;border-radius:8px;padding:8px;margin:8px 0}</style>
+<h1>اختبار الفحص التجريبي على تلاوات القرّاء</h1>
+<p>يشغّل الفحص على آيات بصوت قارئ (تلاوة صحيحة)؛ كل ملاحظة تظهر هنا خطأ من الفحص.</p>
+<button id="go">ابدأ</button> <select id="rc"><option>Husary_128kbps</option><option>Minshawy_Murattal_128kbps</option><option>Alafasy_128kbps</option><option>Abdul_Basit_Murattal_192kbps</option></select>
+<pre id="log"></pre><div id="out"></div>
+<script src="../voice-check.js?v=t1"></script>
+<script>
+const log=m=>{document.getElementById('log').textContent+=m+'\n'};
+window.addEventListener('error',e=>log('ERR '+e.message));window.addEventListener('unhandledrejection',e=>log('REJ '+(e.reason&&(e.reason.stack||e.reason.message)||e.reason)));
+const CASES=(new URLSearchParams(location.search).get('a')||'78:1,78:2,1:1,1:7,112:1,108:1,106:4,114:1,103:3,2:5').split(',').map(x=>x.split(':').map(Number));
+const pad=n=>String(n).padStart(3,'0');
+document.getElementById('go').onclick=async()=>{
+  const rc=document.getElementById('rc').value;let words=0,bad=0;
+  for(const [s,a] of CASES){const box=document.createElement('div');box.className='box';document.getElementById('out').appendChild(box);
+    const url=`https://everyayah.com/data/${rc}/${pad(s)}${pad(a)}.mp3`;const t=performance.now();
+    try{const r=await HadidVoice.check(url,s,a,box,m=>log(`${s}:${a} ${m}`));
+      words+=r.res.length;bad+=r.res.filter(w=>!w.ok).length;
+      log(`${s}:${a} ${Math.round(performance.now()-t)}ms bad ${r.res.filter(w=>!w.ok).length}/${r.res.length}\n  exp ${r.expected}\n  got ${r.heard}`);
+      box.insertAdjacentHTML('afterbegin',`<b>${s}:${a}</b>`);
+    }catch(e){log(`${s}:${a} FAIL ${e&&(e.stack||e.message)||e}`)}}
+  log(`TOTAL words ${words}, flagged ${bad} (${(100*bad/Math.max(1,words)).toFixed(1)}%)`);
+};
+</script>
+</html>

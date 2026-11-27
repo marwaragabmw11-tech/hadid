@@ -4,6 +4,7 @@
       ومحرّك قواعد منقول من imam.py في المشروع نفسه. النتائج للاسترشاد فقط ولا تُغني عن المعلّم. */
 (function(){
 'use strict';
+const BASE=(document.currentScript&&document.currentScript.src)?new URL('.',document.currentScript.src).href:'';
 const ORT_V='1.20.1';
 const ORT_BASE=`https://cdn.jsdelivr.net/npm/onnxruntime-web@${ORT_V}/dist/`;
 const MODEL_URL='https://huggingface.co/HisnLabs/tajweed-v2/resolve/main/onnx/model-int8.onnx';
@@ -223,7 +224,7 @@ function listen(ref,heard,probs,times,minProb=.3,minJali=.7){
 }
 const TJC={};
 async function refOf(su,v){
-  if(!TJC[su]){const r=await fetch(`tj/${su}.json?v=1`);if(!r.ok)throw new Error('ref');TJC[su]=await r.json()}
+  if(!TJC[su]){const r=await fetch(`${BASE}tj/${su}.json?v=1`);if(!r.ok)throw new Error('ref');TJC[su]=await r.json()}
   const d=TJC[su],i=v-1;if(!d.p[i])throw new Error('ref');const s=d.s[i],spans=[];for(let k=0;k<s.length;k+=2)spans.push([s[k],s[k+1]]);
   return {words:d.w[i],phonemes:d.p[i],spans,units:d.u[i].map(u=>({s:u[0],e:u[1],kind:u[2],word:u[3],golden:u[4],allowed:u[5],rule:u[6],char:u[7]}))};
 }

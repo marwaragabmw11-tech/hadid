@@ -7,7 +7,7 @@
 const FILES=/*FILES*/{
   "index.html":"62d89c1606",
   "offline.js":"1a7714e9cf",
-  "kitab-plus.js":"fecfd2ff52",
+  "kitab-plus.js":"8992efbe0c",
   "tajweed-engine.js":"81c1a86880",
   "anim/lib.js":"53cdffeac6",
   "manifest.webmanifest":"ef1b0a949a",
@@ -121,7 +121,7 @@ const FILES=/*FILES*/{
   "tawba.html":"26859f4e80",
   "tin.html":"5feba2f82c",
   "tur.html":"1000f991c1",
-  "voice-check.js":"67f0bdca34",
+  "voice-check.js":"eb3cb5803d",
   "waqia.html":"7799c3d844",
   "yasin.html":"4d4c48ff0e",
   "yunus.html":"a0ce0a93de",

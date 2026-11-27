@@ -5,7 +5,7 @@
 (function(){
 'use strict';
 const BASE=(document.currentScript&&document.currentScript.src)?new URL('.',document.currentScript.src).href:'';
-const ORT_V=window.HADID_ORT_V||'1.20.1';
+const ORT_V=window.HADID_ORT_V||'1.24.3'; // 1.20 lacks ConvInteger (the int8 model needs it)
 const ORT_BASE=`https://cdn.jsdelivr.net/npm/onnxruntime-web@${ORT_V}/dist/`;
 const MODEL_URL=window.HADID_MODEL_URL||'https://huggingface.co/HisnLabs/tajweed-v2/resolve/main/onnx/model-int8.onnx';
 const MODEL_CACHE='hadid-model';

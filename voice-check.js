@@ -106,7 +106,7 @@ async function compare(recSrc,refSrc,box,onStatus){
 
 /* ---------- 2) الفحص التجريبي ---------- */
 let ORT=null,SESS=null;
-function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=()=>no(new Error('script'));document.head.appendChild(s)})}
+function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=()=>no(new Error('script '+src));document.head.appendChild(s)})}
 async function modelBytes(onP){
   let c=null;try{c=await caches.open(MODEL_CACHE)}catch(e){}
   if(c){const hit=await c.match(MODEL_URL);if(hit)return new Uint8Array(await hit.arrayBuffer())}

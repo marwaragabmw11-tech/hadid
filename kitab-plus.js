@@ -328,7 +328,7 @@ if(typeof done==='function'){
 }
 const refA=new Audio(),myA=new Audio();
 let VCload=null;
-const loadVoice=()=>VCload=VCload||new Promise((ok,no)=>{if(window.HadidVoice)return ok();const s=document.createElement('script');s.src='voice-check.js?v=1';s.onload=ok;s.onerror=()=>{VCload=null;no(new Error('load'))};document.head.appendChild(s)});
+const loadVoice=()=>VCload=VCload||new Promise((ok,no)=>{if(window.HadidVoice)return ok();const s=document.createElement('script');s.src='voice-check.js?v=2';s.onload=ok;s.onerror=()=>{VCload=null;no(new Error('load'))};document.head.appendChild(s)});
 let VCbusy=false;
 async function voice(k){
   const st=$$('kp-vc-st'),box=$$('kp-vc'),i=+(($$('kp-rec-a')||{}).value);if(!st||!box||isNaN(i)||VCbusy)return;
@@ -341,7 +341,7 @@ async function voice(k){
       if(!navigator.onLine&&!(await V.isReady())){say('الفحص يحتاج إلى الإنترنت أول مرة فقط لتنزيل النموذج. اتصلي بالإنترنت ثم حاولي.');return}
       await V.check(src,a.s,a.v,box,say);
       if(k==='vself')box.insertAdjacentHTML('afterbegin',`<p class="note">هذا فحص تلاوة القارئ (${esc(rName(reciter))}) للآية ${ARn(a.v)}. تلاوته صحيحة، فكل ملاحظة هنا خطأ من الفحص نفسه، وتدلّك على مقدار الثقة به.</p>`)}
-  }catch(e){say(e&&e.message==='short'?'التسجيل قصير جدًا أو صامت. اقرئي الآية كاملة قريبًا من الميكروفون.':k==='vcmp'?'تعذّرت المقارنة. تأكدي أن صوت القارئ متاح (بالإنترنت أو بعد تنزيله)، ثم حاولي.':'تعذّر الفحص. تأكدي من الاتصال بالإنترنت أول مرة، وجرّبي Chrome أو Edge أو Safari حديثًا.');console.warn(e)}
+  }catch(e){say(e&&e.message==='short'?'التسجيل قصير جدًا أو صامت. اقرئي الآية كاملة قريبًا من الميكروفون.':k==='vcmp'?'تعذّرت المقارنة. تأكدي أن صوت القارئ متاح (بالإنترنت أو بعد تنزيله)، ثم حاولي.':'تعذّر الفحص. تأكدي من الاتصال بالإنترنت أول مرة، وجرّبي Chrome أو Edge أو Safari حديثًا.');console.warn(e);st.insertAdjacentHTML('beforeend',` <small style="opacity:.6" dir="ltr">(${esc(String(e&&e.message||e).slice(0,140))})</small>`)}
   finally{VCbusy=false}
 }
 async function recToggle(btn){

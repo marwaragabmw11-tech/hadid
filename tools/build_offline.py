@@ -4,7 +4,7 @@
 """
 import hashlib, json, os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SKIP_DIRS = {'.git', 'tools', '.github'}
+SKIP_DIRS = {'.git', 'tools', '.github', 'tj'}  # tj/: تُحفظ السورة عند أول فحص لها
 SKIP_FILES = {'sw.js', 'README.md', 'index (1).html', 'juz1.html part one.html'}
 EXT = {'.html', '.js', '.json', '.css', '.png', '.svg', '.webmanifest', '.woff2'}
 files = {}

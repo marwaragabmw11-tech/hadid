@@ -51,6 +51,17 @@ const css=`
 .kp-check li{border-top:1px solid var(--line);padding-top:8px;display:flex;flex-direction:column;gap:4px}
 .kp-check .ex{font-family:var(--f-quran);font-size:1.15rem}
 .kp-check .how{font-size:.88rem;color:var(--muted)}
+.vc-facts{margin:8px 0;padding-inline-start:18px;font-size:.92rem;display:flex;flex-direction:column;gap:4px}
+#kp-vc{margin-top:8px}
+.vc-sum{font-weight:600}
+.vc-words{margin:6px 0;padding-inline-start:22px;display:flex;flex-direction:column;gap:6px}
+.vc-words>li .w{font-family:var(--f-quran);font-size:1.25rem}
+.vc-words>li.ok .w{color:var(--muted)}
+.vc-words>li.bad .w{color:#B3261E}
+.vc-words .md{font-size:.8rem;color:var(--muted)}
+.vc-words ul{margin:2px 0;padding-inline-start:16px;font-size:.9rem}
+.vc-words li.jali{color:#B3261E}.vc-words li.khafi{color:#8A5A00}
+.kp-exp{font-size:.72rem;background:#8A5A00;color:#fff;border-radius:6px;padding:1px 6px;margin-inline-start:4px}
 .kp-self{display:flex;gap:6px;flex-wrap:wrap}
 .kp-self button{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:2px 10px;font:600 .82rem var(--f-body);cursor:pointer}
 .kp-self button[aria-pressed="true"][data-v="1"]{background:var(--leaf);border-color:var(--leaf);color:#fff}
@@ -281,7 +292,7 @@ function voicePanel(p,idx,inner){
   const key=`kp-self-${FILE}-${p}`;let self={};try{self=JSON.parse(store.get(key,'{}'))||{}}catch(e){}
   const box=document.createElement('div');box.className='box adult';box.id='kp-review';
   box.innerHTML=`<h3>مراجعة التجويد مع التسميع</h3>
-   <p class="note">التعرّف على الصوت في المتصفح يفهم الكلمات فقط، ولا يقيس المدود والغنّة. لذلك: انظري إلى الأحكام قبل أن تبدئي، وسيظهر لكِ هنا الحكم عند كل كلمة صحيحة فيها حكم، ثم قيّمي نفسك وسجّلي تلاوتك وقارنيها بالقارئ.</p>
+   <p class="note">التسميع بالصوت يتعرّف على الكلمات فقط. لذلك: انظري إلى الأحكام قبل أن تبدئي، وسيظهر لكِ هنا الحكم عند كل كلمة صحيحة فيها حكم. ثم قيّمي نفسك، وسجّلي آية وقارني صوتك بصوت القارئ، أو جرّبي الفحص التجريبي للتجويد.</p>
    <p class="kp-live" id="kp-live" aria-live="polite"></p>
    <details class="kp-more" id="kp-rules"><summary>أحكام التجويد في هذا المشهد (${ARn(R.length)}) — قيّمي نفسك</summary><ul class="kp-check">${R.map(({r,list})=>`<li><div><span class="tj-${TJ.RULES[r].c||'x'}"><span class="kp-dot"></span></span> <b>${TJ.RULES[r].n}</b> <span class="note">(${ARn(list.length)})</span></div>
      <div class="ex">${[...new Set(list.map(x=>x.w))].slice(0,6).map(esc).join(' · ')}</div>
@@ -291,7 +302,10 @@ function voicePanel(p,idx,inner){
    <div class="kp-row"><label for="kp-rec-a">سجّلي آية وقارنيها:</label>
      <select id="kp-rec-a">${idx.map(i=>`<option value="${i}">الآية ${ARn(ay(i).v)}</option>`).join('')}</select>
      <button class="btn solid" data-kp="rec">🎙 سجّلي</button><button class="btn" data-kp="recplay" ${KP.recUrl?'':'disabled'}>▶ تلاوتي</button><button class="btn" data-kp="refplay">▶ القارئ</button></div>
-   <p class="status" id="kp-rec-st">اختاري آية، ثم «سجّلي» واقرئيها، ثم «إيقاف». استمعي لتلاوتك ثم للقارئ، وانتبهي للمدود والغنّة.</p>`;
+   <p class="status" id="kp-rec-st">اختاري آية، ثم «سجّلي» واقرئيها، ثم «إيقاف». استمعي لتلاوتك ثم للقارئ، وانتبهي للمدود والغنّة.</p>
+   <div class="kp-row"><button class="btn" data-kp="vcmp" ${KP.recUrl?'':'disabled'}>📊 قارني صوتي بالقارئ</button><button class="btn" data-kp="vchk" ${KP.recUrl?'':'disabled'}>🧪 فحص التجويد <span class="kp-exp">تجريبي</span></button></div>
+   <details class="kp-more"><summary>عن الفحص التجريبي</summary><p class="note">يستمع نموذج ذكاء اصطناعي مفتوح (HisnLabs tajweed-v2) إلى تسجيلك داخل المتصفح، ويكتب ما سمعه بالأصوات، ثم يقارنه بالقراءة الصحيحة برواية حفص: المدود، والغنّة، والإخفاء، والإقلاب، والإدغام، والقلقلة، والشدّة، والحروف والحركات. يُنزَّل النموذج مرة واحدة (نحو ٢٣ ميغابايت) ثم يعمل بلا إنترنت، ولا يُرسَل صوتك إلى أي خادم.</p><p class="note">حدوده: يصف أحيانًا كلمة صحيحة بأنها خاطئة، ولم يُختبر على أصوات الأطفال، ولا يفهم الوقف في وسط الآية ولا التكرار. ملاحظاته للاسترشاد، والحكم للمعلّم.</p><button class="btn" data-kp="vself">جرّبي الفحص على صوت القارئ</button></details>
+   <p class="status" id="kp-vc-st" aria-live="polite"></p><div id="kp-vc"></div>`;
   const v=inner.querySelector('.voice');inner.insertBefore(box,v?v.nextSibling:inner.querySelector('.box.kid'));
   selfSummary(self,R);
 }
@@ -313,6 +327,23 @@ if(typeof done==='function'){
   done=function(){_done();const b=$$('kp-review');if(b){const d=$$('kp-rules');if(d)d.open=true;const l=$$('kp-live');if(l)l.textContent='انتهى التسميع. الآن قيّمي تجويدك في كل حكم، وسجّلي آية لتقارنيها بالقارئ.';b.scrollIntoView({behavior:'smooth',block:'start'})}};
 }
 const refA=new Audio(),myA=new Audio();
+let VCload=null;
+const loadVoice=()=>VCload=VCload||new Promise((ok,no)=>{if(window.HadidVoice)return ok();const s=document.createElement('script');s.src='voice-check.js?v=1';s.onload=ok;s.onerror=()=>{VCload=null;no(new Error('load'))};document.head.appendChild(s)});
+let VCbusy=false;
+async function voice(k){
+  const st=$$('kp-vc-st'),box=$$('kp-vc'),i=+(($$('kp-rec-a')||{}).value);if(!st||!box||isNaN(i)||VCbusy)return;
+  const say=m=>{st.textContent=m};const a=ay(i);
+  if(k!=='vself'&&!KP.recUrl){say('سجّلي الآية أولًا.');return}
+  VCbusy=true;refA.pause();myA.pause();stopAudio();box.innerHTML='';
+  try{await loadVoice();const V=window.HadidVoice;
+    if(k==='vcmp'){await V.compare(KP.recUrl,urlOf(i),box,say)}
+    else{const src=k==='vself'?urlOf(i):KP.recUrl;
+      if(!navigator.onLine&&!(await V.isReady())){say('الفحص يحتاج إلى الإنترنت أول مرة فقط لتنزيل النموذج. اتصلي بالإنترنت ثم حاولي.');return}
+      await V.check(src,a.s,a.v,box,say);
+      if(k==='vself')box.insertAdjacentHTML('afterbegin',`<p class="note">هذا فحص تلاوة القارئ (${esc(rName(reciter))}) للآية ${ARn(a.v)}. تلاوته صحيحة، فكل ملاحظة هنا خطأ من الفحص نفسه، وتدلّك على مقدار الثقة به.</p>`)}
+  }catch(e){say(e&&e.message==='short'?'التسجيل قصير جدًا أو صامت. اقرئي الآية كاملة قريبًا من الميكروفون.':k==='vcmp'?'تعذّرت المقارنة. تأكدي أن صوت القارئ متاح (بالإنترنت أو بعد تنزيله)، ثم حاولي.':'تعذّر الفحص. تأكدي من الاتصال بالإنترنت أول مرة، وجرّبي Chrome أو Edge أو Safari حديثًا.');console.warn(e)}
+  finally{VCbusy=false}
+}
 async function recToggle(btn){
   const stEl=$$('kp-rec-st');
   if(KP.rec&&KP.rec.state==='recording'){KP.rec.stop();return}
@@ -323,7 +354,7 @@ async function recToggle(btn){
     rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
     rec.onstop=()=>{stream.getTracks().forEach(t=>t.stop());if(KP.recUrl)URL.revokeObjectURL(KP.recUrl);
       KP.recUrl=URL.createObjectURL(new Blob(chunks,{type:rec.mimeType||'audio/webm'}));
-      btn.textContent='🎙 سجّلي من جديد';const pb=document.querySelector('[data-kp="recplay"]');if(pb)pb.disabled=false;
+      btn.textContent='🎙 سجّلي من جديد';['recplay','vcmp','vchk'].forEach(k=>{const b=document.querySelector(`[data-kp="${k}"]`);if(b)b.disabled=false});
       stEl.textContent='تم التسجيل. استمعي إلى «تلاوتي» ثم «القارئ» وقارني.'};
     rec.start();btn.textContent='■ إيقاف';stEl.textContent='جارٍ التسجيل… اقرئي الآية الآن.';
   }catch(e){stEl.textContent='لم يُسمح باستخدام الميكروفون. اسمحي للمتصفح به ثم حاولي مرة أخرى.'}
@@ -378,6 +409,7 @@ document.addEventListener('click',e=>{
     const pb=$$('playbtn');if(pb){pb.textContent='■ إيقاف';pb.setAttribute('data-stop','');pb.removeAttribute('data-play')}
     if(pr&&pr.catch)pr.catch(()=>setStatus('تعذّر تشغيل هذا الرابط. تأكدي أنه رابط ملف صوتي مباشر.',true));return}
   if(k==='rec'){recToggle(t);return}
+  if(k==='vcmp'||k==='vchk'||k==='vself'){voice(k);return}
   if(k==='dlaudio'){dlAudio();return}
   if(k==='recplay'){if(KP.recUrl){refA.pause();stopAudio();myA.src=KP.recUrl;myA.play()}return}
   if(k==='refplay'){const i=+(($$('kp-rec-a')||{}).value);if(isNaN(i))return;myA.pause();stopAudio();refA.src=urlOf(i);refA.play().catch(()=>{const s=$$('kp-rec-st');if(s)s.textContent='تعذّر تشغيل صوت القارئ. تأكدي من الاتصال بالإنترنت.'});return}

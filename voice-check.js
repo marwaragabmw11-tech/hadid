@@ -254,5 +254,40 @@ async function check(src,su,v,box,onStatus){
   st('');return {res,heard:r.heard,expected:ref.phonemes};
 }
 
-window.HadidVoice={compare,check,isReady,_t:{logMel,melFilters,listen,opcodes,boundaries,refOf,toMono16k,hear,session}};
+/* ---------- المقارنة كلمةً بكلمة (بالنموذج، تعمل بلا إنترنت بعد تنزيله) ---------- */
+const UNIT_NAME={ghunnah:'الغنة',idgham_ghunnah:'الإدغام بغنة',ikhfa:'الإخفاء',iqlab:'الإقلاب'};
+function timeline(ref,r){
+  const h=r.heard,b=boundaries(ref.phonemes,h),T=r.times,L=T.length-1;
+  const words=ref.spans.map(([a,z])=>{const s=b[a],e=b[z];return e>s?{s:T[s],e:T[Math.min(e,L)]}:null});
+  const long=ref.units.filter(u=>(u.kind==='madd'&&u.rule!=='NormalMaddRule')||UNIT_NAME[u.kind]).map(u=>{
+    const ch=u.kind==='madd'?u.char:u.char;const [n,rs,re]=run(h,Math.max(0,b[u.s]-1),Math.min(h.length,b[u.e]+1),ch);
+    return {word:u.word,name:u.kind==='madd'?(MADD[u.rule]||'المد'):UNIT_NAME[u.kind],sec:n?dur(h,T,rs,re):0}});
+  return {words,long};
+}
+async function compareWords(recSrc,refSrc,su,v,box,onStatus){
+  const st=onStatus||(()=>{});
+  if(!SESS){st((await isReady())?'جارٍ تشغيل النموذج…':'تنزيل نموذج المقارنة (مرة واحدة)…');await session(p=>st(`تنزيل النموذج… ${ARn(Math.min(100,Math.round(p*100)))}٪`))}
+  st('جارٍ الاستماع إلى الصوتين…');
+  const ref=await refOf(su,v);
+  const [xr,xm]=await Promise.all([toMono16k(refSrc),toMono16k(recSrc)]);
+  const R=trim(xr).x,M=trim(xm).x;if(M.length<SR*.4)throw new Error('short');
+  const rr=await hear(R),rm=await hear(M),A=timeline(ref,rr),B=timeline(ref,rm);
+  const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const dA=R.length/SR,dB=M.length/SR,ratio=dB/dA;
+  const len=w=>w?Math.max(0,w.e-w.s):0,mx=Math.max(.3,...A.words.map(len),...B.words.map(len));
+  const missing=B.words.filter(w=>!w).length;
+  const rows=ref.words.map((w,k)=>{const a=len(A.words[k]),m=len(B.words[k]);
+    return `<tr><td class="w">${esc(w)}</td><td><div class="vc-bar r" style="width:${(a/mx*100).toFixed(1)}%"></div><div class="vc-bar m${B.words[k]?'':' none'}" style="width:${(m/mx*100).toFixed(1)}%"></div></td><td class="t">${sec(a)}<br>${B.words[k]?sec(m):'—'}</td></tr>`}).join('');
+  const lg=A.long.map((x,i)=>{const y=B.long[i];if(!y)return '';const f=x.sec>.05?y.sec/x.sec:1;
+    const tag=y.sec===0?'<b class="lo">لم يظهر</b>':f<.6?'<b class="lo">أقصر بوضوح</b>':f>1.7?'<b class="hi">أطول بوضوح</b>':'قريب';
+    return `<li><span class="w">${esc(ref.words[x.word])}</span> — ${x.name}: القارئ ${sec(x.sec)}، أنتِ ${sec(y.sec)} · ${tag}</li>`}).join('');
+  box.innerHTML=`<p class="vc-sum">المدة: القارئ ${sec(dA)} — أنتِ ${sec(dB)}. ${ratio>1.35?'تلاوتك أبطأ بكثير من القارئ.':ratio>1.12?'تلاوتك أبطأ قليلًا.':ratio<.75?'تلاوتك أسرع بكثير من القارئ؛ تمهّلي، فالسرعة تُضيِّع المدود والغنّة.':ratio<.9?'تلاوتك أسرع قليلًا.':'سرعتك قريبة من سرعة القارئ.'}</p>
+   ${missing>ref.words.length/3?'<p class="note">لم تُسمع كلمات كثيرة في تسجيلك. تأكدي أنكِ قرأتِ الآية المختارة نفسها.</p>':''}
+   <table class="vc-tl"><caption>زمن كل كلمة: <span class="vc-key r"></span> القارئ <span class="vc-key m"></span> أنتِ</caption>${rows}</table>
+   ${lg?`<h4 class="vc-h">المدود والغنّة</h4><ul class="vc-long">${lg}</ul>`:''}
+   <p class="note">الأزمنة تقريبية من نموذج الاستماع. «أقصر بوضوح» موضع يستحق أن تستمعي فيه إلى القارئ ثم تعيدي، وليس حكمًا نهائيًا.</p>`;
+  st('');return {A,B,ratio};
+}
+
+window.HadidVoice={compare,compareWords,check,isReady,_t:{logMel,melFilters,listen,opcodes,boundaries,refOf,toMono16k,hear,session}};
 })();

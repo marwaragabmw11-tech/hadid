@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>اختبار الفحص التجريبي</title>
 <style>body{font-family:system-ui,sans-serif;margin:16px;line-height:1.6}pre{white-space:pre-wrap;direction:ltr;text-align:left;font-size:12px;background:#f4f4f4;padding:8px}
+.vc-bar{height:8px;border-radius:4px;margin:2px 0}.vc-bar.r{background:#1B4A48}.vc-bar.m{background:#B8860B}.vc-tl{width:100%}.vc-long .lo{color:#B3261E}
 .box{border:1px solid #ccc;border-radius:8px;padding:8px;margin:8px 0}</style>
 <h1>اختبار الفحص التجريبي على تلاوات القرّاء</h1>
 <p>يشغّل الفحص على آيات بصوت قارئ (تلاوة صحيحة)؛ كل ملاحظة تظهر هنا خطأ من الفحص.</p>
@@ -9,14 +10,14 @@
 <button id="cmp">قارن الحصري (القارئ) بالعفاسي (كأنه تسجيلك)</button>
 <pre id="log"></pre><div id="cmpbox" style="max-width:420px"></div><div id="out"></div>
 <script>{const q=new URLSearchParams(location.search);if(q.get('ort'))window.HADID_ORT_V=q.get('ort');if(q.get('model'))window.HADID_MODEL_URL='https://huggingface.co/HisnLabs/tajweed-v2/resolve/main/onnx/'+q.get('model')}</script>
-<script src="../voice-check.js?v=t3"></script>
+<script src="../voice-check.js?v=t4"></script>
 <script>
 const log=m=>{document.getElementById('log').textContent+=m+'\n'};
 window.addEventListener('error',e=>log('ERR '+e.message));window.addEventListener('unhandledrejection',e=>log('REJ '+(e.reason&&(e.reason.stack||e.reason.message)||e.reason)));
 const CASES=(new URLSearchParams(location.search).get('a')||'78:1,78:2,1:1,1:7,112:1,108:1,106:4,114:1,103:3,2:5').split(',').map(x=>x.split(':').map(Number));
 const pad=n=>String(n).padStart(3,'0');
 document.getElementById('cmp').onclick=async()=>{for(const [s,a] of CASES.slice(0,3)){const d=document.createElement('div');d.innerHTML=`<h3>${s}:${a}</h3>`;const b=document.createElement('div');d.appendChild(b);document.getElementById('cmpbox').appendChild(d);
-  try{const r=await HadidVoice.compare(`https://everyayah.com/data/Alafasy_128kbps/${pad(s)}${pad(a)}.mp3`,`https://everyayah.com/data/Husary_128kbps/${pad(s)}${pad(a)}.mp3`,b,m=>m&&log(m));log(JSON.stringify(r))}catch(e){log('CMP FAIL '+(e.stack||e))}}};
+  try{const r=await HadidVoice.compareWords(`https://everyayah.com/data/Alafasy_128kbps/${pad(s)}${pad(a)}.mp3`,`https://everyayah.com/data/Husary_128kbps/${pad(s)}${pad(a)}.mp3`,s,a,b,m=>m&&log(m));log('ratio '+r.ratio.toFixed(2))}catch(e){log('CMP FAIL '+(e.stack||e))}}};
 document.getElementById('go').onclick=async()=>{
   const rc=document.getElementById('rc').value;let words=0,bad=0;
   for(const [s,a] of CASES){const box=document.createElement('div');box.className='box';document.getElementById('out').appendChild(box);

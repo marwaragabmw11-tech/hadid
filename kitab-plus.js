@@ -61,6 +61,15 @@ const css=`
 .vc-words .md{font-size:.8rem;color:var(--muted)}
 .vc-words ul{margin:2px 0;padding-inline-start:16px;font-size:.9rem}
 .vc-words li.jali{color:#B3261E}.vc-words li.khafi{color:#8A5A00}
+.vc-tl{width:100%;border-collapse:collapse;margin:6px 0;font-size:.85rem}
+.vc-tl caption{caption-side:top;text-align:start;color:var(--muted);font-size:.8rem;padding-bottom:4px}
+.vc-tl td{padding:3px 4px;border-top:1px solid var(--line);vertical-align:middle}
+.vc-tl td.w{font-family:var(--f-quran);font-size:1.1rem;white-space:nowrap;width:1%}
+.vc-tl td.t{white-space:nowrap;width:1%;color:var(--muted);font-size:.75rem;line-height:1.3}
+.vc-bar{height:8px;border-radius:4px;margin:2px 0;min-width:2px}.vc-bar.r,.vc-key.r{background:var(--teal,#1B4A48)}.vc-bar.m,.vc-key.m{background:var(--gold,#B8860B)}.vc-bar.none{background:#B3261E;opacity:.4;width:100%!important}
+.vc-key{display:inline-block;width:12px;height:8px;border-radius:3px;vertical-align:middle}
+.vc-h{margin:10px 0 4px;font-size:.95rem}.vc-long{margin:0;padding-inline-start:18px;font-size:.88rem;display:flex;flex-direction:column;gap:3px}
+.vc-long .w{font-family:var(--f-quran);font-size:1.05rem}.vc-long .lo{color:#B3261E}.vc-long .hi{color:#8A5A00}
 .kp-exp{font-size:.72rem;background:#8A5A00;color:#fff;border-radius:6px;padding:1px 6px;margin-inline-start:4px}
 .kp-self{display:flex;gap:6px;flex-wrap:wrap}
 .kp-self button{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:2px 10px;font:600 .82rem var(--f-body);cursor:pointer}
@@ -304,7 +313,7 @@ function voicePanel(p,idx,inner){
      <button class="btn solid" data-kp="rec">🎙 سجّلي</button><button class="btn" data-kp="recplay" ${KP.recUrl?'':'disabled'}>▶ تلاوتي</button><button class="btn" data-kp="refplay">▶ القارئ</button></div>
    <p class="status" id="kp-rec-st">اختاري آية، ثم «سجّلي» واقرئيها، ثم «إيقاف». استمعي لتلاوتك ثم للقارئ، وانتبهي للمدود والغنّة.</p>
    <div class="kp-row"><button class="btn" data-kp="vcmp" ${KP.recUrl?'':'disabled'}>📊 قارني صوتي بالقارئ</button><button class="btn" data-kp="vchk" ${KP.recUrl?'':'disabled'}>🧪 فحص التجويد <span class="kp-exp">تجريبي</span></button></div>
-   <details class="kp-more"><summary>عن الفحص التجريبي</summary><p class="note">يستمع نموذج ذكاء اصطناعي مفتوح (HisnLabs tajweed-v2) إلى تسجيلك داخل المتصفح، ويكتب ما سمعه بالأصوات، ثم يقارنه بالقراءة الصحيحة برواية حفص: المدود، والغنّة، والإخفاء، والإقلاب، والإدغام، والقلقلة، والشدّة، والحروف والحركات. يُنزَّل النموذج مرة واحدة (نحو ٢٣ ميغابايت) ثم يعمل بلا إنترنت، ولا يُرسَل صوتك إلى أي خادم.</p><p class="note">حدوده: يصف أحيانًا كلمة صحيحة بأنها خاطئة، ولم يُختبر على أصوات الأطفال، ولا يفهم الوقف في وسط الآية ولا التكرار. ملاحظاته للاسترشاد، والحكم للمعلّم.</p><button class="btn" data-kp="vself">جرّبي الفحص على صوت القارئ</button></details>
+   <details class="kp-more"><summary>عن الفحص التجريبي</summary><p class="note">«قارني صوتي بالقارئ» يعرض زمن كل كلمة وكل مدّ وغنّة عندكِ وعند القارئ جنبًا إلى جنب. يستمع نموذج ذكاء اصطناعي مفتوح (HisnLabs tajweed-v2) إلى تسجيلك داخل المتصفح، ويكتب ما سمعه بالأصوات، ثم يقارنه بالقراءة الصحيحة برواية حفص: المدود، والغنّة، والإخفاء، والإقلاب، والإدغام، والقلقلة، والشدّة، والحروف والحركات. يُنزَّل النموذج مرة واحدة (نحو ٢٣ ميغابايت) ثم يعمل بلا إنترنت، ولا يُرسَل صوتك إلى أي خادم.</p><p class="note">حدوده: يصف أحيانًا كلمة صحيحة بأنها خاطئة، ولم يُختبر على أصوات الأطفال، ولا يفهم الوقف في وسط الآية ولا التكرار. ملاحظاته للاسترشاد، والحكم للمعلّم.</p><button class="btn" data-kp="vself">جرّبي الفحص على صوت القارئ</button></details>
    <p class="status" id="kp-vc-st" aria-live="polite"></p><div id="kp-vc"></div>`;
   const v=inner.querySelector('.voice');inner.insertBefore(box,v?v.nextSibling:inner.querySelector('.box.kid'));
   selfSummary(self,R);
@@ -328,7 +337,7 @@ if(typeof done==='function'){
 }
 const refA=new Audio(),myA=new Audio();
 let VCload=null;
-const loadVoice=()=>VCload=VCload||new Promise((ok,no)=>{if(window.HadidVoice)return ok();const s=document.createElement('script');s.src='voice-check.js?v=5';s.onload=ok;s.onerror=()=>{VCload=null;no(new Error('load'))};document.head.appendChild(s)});
+const loadVoice=()=>VCload=VCload||new Promise((ok,no)=>{if(window.HadidVoice)return ok();const s=document.createElement('script');s.src='voice-check.js?v=6';s.onload=ok;s.onerror=()=>{VCload=null;no(new Error('load'))};document.head.appendChild(s)});
 let VCbusy=false;
 async function voice(k){
   const st=$$('kp-vc-st'),box=$$('kp-vc'),i=+(($$('kp-rec-a')||{}).value);if(!st||!box||isNaN(i)||VCbusy)return;
@@ -336,7 +345,9 @@ async function voice(k){
   if(k!=='vself'&&!KP.recUrl){say('سجّلي الآية أولًا.');return}
   VCbusy=true;refA.pause();myA.pause();stopAudio();box.innerHTML='';
   try{await loadVoice();const V=window.HadidVoice;
-    if(k==='vcmp'){await V.compare(KP.recUrl,urlOf(i),box,say)}
+    if(k==='vcmp'){
+      if(navigator.onLine||await V.isReady()){try{await V.compareWords(KP.recUrl,urlOf(i),a.s,a.v,box,say);return}catch(e){if(e&&e.message==='short')throw e;console.warn(e)}}
+      await V.compare(KP.recUrl,urlOf(i),box,say);box.insertAdjacentHTML('afterbegin','<p class="note">مقارنة مبسّطة بارتفاع الصوت فقط، لأن نموذج الاستماع غير متاح الآن. اتصلي بالإنترنت مرة لتنزيله، فتظهر المقارنة كلمةً بكلمة.</p>')}
     else{const src=k==='vself'?urlOf(i):KP.recUrl;
       if(!navigator.onLine&&!(await V.isReady())){say('الفحص يحتاج إلى الإنترنت أول مرة فقط لتنزيل النموذج. اتصلي بالإنترنت ثم حاولي.');return}
       await V.check(src,a.s,a.v,box,say);

@@ -57,18 +57,27 @@ function logMel(x){
 }
 
 /* ---------- 1) المقارنة المرئية ---------- */
-function envelope(x){ // طاقة كل ١٠ مللي ثانية (dB منسوبة إلى أعلى قيمة)
-  const F=160,n=Math.floor(x.length/F),e=new Float32Array(n);let mx=1e-9;
-  for(let i=0;i<n;i++){let s=0;for(let k=i*F;k<(i+1)*F;k++)s+=x[k]*x[k];e[i]=Math.sqrt(s/F);if(e[i]>mx)mx=e[i]}
-  for(let i=0;i<n;i++)e[i]=Math.max(0,1+Math.log10(e[i]/mx+1e-6)/2.5); // 0..1 على مدى ٥٠ dB
-  return e;
+function envelope(x){ // ارتفاع الصوت (٠–١) والثبات الطيفي كل ١٠ مللي ثانية
+  const {mel,frames:T}=logMel(x),e=new Float32Array(T),d=new Float32Array(T);
+  for(let t=0;t<T;t++){let s=0;for(let k=0;k<N_MEL;k++)s+=mel[k*T+t];e[t]=s/N_MEL}
+  const srt=Float32Array.from(e).sort(),lo=srt[Math.floor(T*.05)]||0,hi=srt[Math.floor(T*.98)]||1;
+  for(let t=0;t<T;t++)e[t]=Math.max(0,Math.min(1,(e[t]-lo)/Math.max(1e-6,hi-lo)));
+  // تغيّر الطيف بين إطارين (بعد تنعيم ٣ إطارات): صغير في الحرف الممدود والغنّة، كبير عند الانتقال بين الحروف
+  const sm=(k,t)=>{let a=0,n=0;for(let j=t-1;j<=t+1;j++)if(j>=0&&j<T){a+=mel[k*T+j];n++}return a/n};
+  for(let t=1;t<T;t++){let s=0;for(let k=0;k<N_MEL;k++)s+=Math.abs(sm(k,t)-sm(k,t-1));d[t]=s/N_MEL}
+  d[0]=d[1]||0;return {e,d};
 }
-function segments(e){ // مقاطع الصوت المتصل، ومنها الأصوات الممدودة (ثبات الطاقة مدة طويلة)
-  const on=.42,segs=[];let a=-1;
-  for(let i=0;i<=e.length;i++){const v=i<e.length&&e[i]>on;if(v&&a<0)a=i;if(!v&&a>=0){if(i-a>=4)segs.push([a,i]);a=-1}}
-  const held=[];
-  for(const [a,b] of segs){let s=a;for(let i=a+1;i<=b;i++){const brk=i===b||Math.abs(e[i]-e[i-1])>.07;if(brk){if(i-s>=30)held.push([s,i]);s=i}}}
-  return {segs,held};
+function segments(A){ // مقاطع الصوت المتصل، والأصوات الثابتة الطويلة (مدّ أو غنّة غالبًا)
+  const {e,d}=A,T=e.length,on=.35,segs=[];let a=-1;
+  for(let i=0;i<=T;i++){const v=i<T&&e[i]>on;if(v&&a<0)a=i;if(!v&&a>=0){if(i-a>=8)segs.push([a,i]);a=-1}}
+  // دمج الفجوات القصيرة (أقل من ١٥٠ مللي ثانية): ليست وقفًا
+  const S=[];for(const g of segs){const l=S[S.length-1];if(l&&g[0]-l[1]<15)l[1]=g[1];else S.push(g.slice())}
+  const vd=[];for(const [p,q] of S)for(let i=p;i<q;i++)vd.push(d[i]);vd.sort((x,y)=>x-y);
+  const th=vd.length?vd[Math.floor(vd.length*.4)]:0,held=[];
+  for(const [p,q] of S){let s=-1,gap=0;
+    for(let i=p;i<=q;i++){const st=i<q&&d[i]<=th&&e[i]>on;
+      if(st){if(s<0)s=i;gap=0}else if(s>=0){if(++gap>2||i===q){const end=i-gap+1;if(end-s>=35)held.push([s,end]);s=-1;gap=0}}}}
+  return {segs:S,held};
 }
 function drawPair(cv,A,B){
   const dpr=window.devicePixelRatio||1,W=cv.clientWidth||600,H=180;cv.width=W*dpr;cv.height=H*dpr;
@@ -89,8 +98,8 @@ function drawPair(cv,A,B){
 async function compare(recSrc,refSrc,box,onStatus){
   const st=onStatus||(()=>{});st('جارٍ تحليل الصوتين…');
   const [r0,m0]=await Promise.all([toMono16k(refSrc),toMono16k(recSrc)]);
-  const R=trim(r0).x,M=trim(m0).x;const A={e:envelope(R)},B={e:envelope(M)};
-  Object.assign(A,segments(A.e));Object.assign(B,segments(B.e));
+  const R=trim(r0).x,M=trim(m0).x;const A=envelope(R),B=envelope(M);
+  Object.assign(A,segments(A));Object.assign(B,segments(B));
   const dA=R.length/SR,dB=M.length/SR,ratio=dB/dA;
   const hA=A.held.map(([a,b])=>(b-a)/100),hB=B.held.map(([a,b])=>(b-a)/100);
   const tempo=ratio>1.35?'تلاوتك أبطأ بكثير من القارئ':ratio>1.12?'تلاوتك أبطأ قليلًا من القارئ':ratio<.75?'تلاوتك أسرع بكثير من القارئ — تمهّلي، فالسرعة تُضيِّع المدود والغنّة':ratio<.9?'تلاوتك أسرع قليلًا من القارئ':'سرعتك قريبة من سرعة القارئ';

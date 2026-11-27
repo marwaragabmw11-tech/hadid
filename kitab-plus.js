@@ -328,7 +328,7 @@ if(typeof done==='function'){
 }
 const refA=new Audio(),myA=new Audio();
 let VCload=null;
-const loadVoice=()=>VCload=VCload||new Promise((ok,no)=>{if(window.HadidVoice)return ok();const s=document.createElement('script');s.src='voice-check.js?v=4';s.onload=ok;s.onerror=()=>{VCload=null;no(new Error('load'))};document.head.appendChild(s)});
+const loadVoice=()=>VCload=VCload||new Promise((ok,no)=>{if(window.HadidVoice)return ok();const s=document.createElement('script');s.src='voice-check.js?v=5';s.onload=ok;s.onerror=()=>{VCload=null;no(new Error('load'))};document.head.appendChild(s)});
 let VCbusy=false;
 async function voice(k){
   const st=$$('kp-vc-st'),box=$$('kp-vc'),i=+(($$('kp-rec-a')||{}).value);if(!st||!box||isNaN(i)||VCbusy)return;

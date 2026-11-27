@@ -313,7 +313,7 @@ function voicePanel(p,idx,inner){
      <button class="btn solid" data-kp="rec">🎙 سجّلي</button><button class="btn" data-kp="recplay" ${KP.recUrl?'':'disabled'}>▶ تلاوتي</button><button class="btn" data-kp="refplay">▶ القارئ</button></div>
    <p class="status" id="kp-rec-st">اختاري آية، ثم «سجّلي» واقرئيها، ثم «إيقاف». استمعي لتلاوتك ثم للقارئ، وانتبهي للمدود والغنّة.</p>
    <div class="kp-row"><button class="btn" data-kp="vcmp" ${KP.recUrl?'':'disabled'}>📊 قارني صوتي بالقارئ</button><button class="btn" data-kp="vchk" ${KP.recUrl?'':'disabled'}>🧪 فحص التجويد <span class="kp-exp">تجريبي</span></button></div>
-   <details class="kp-more"><summary>عن الفحص التجريبي</summary><p class="note">«قارني صوتي بالقارئ» يعرض زمن كل كلمة وكل مدّ وغنّة عندكِ وعند القارئ جنبًا إلى جنب. يستمع نموذج ذكاء اصطناعي مفتوح (HisnLabs tajweed-v2) إلى تسجيلك داخل المتصفح، ويكتب ما سمعه بالأصوات، ثم يقارنه بالقراءة الصحيحة برواية حفص: المدود، والغنّة، والإخفاء، والإقلاب، والإدغام، والقلقلة، والشدّة، والحروف والحركات. يُنزَّل النموذج مرة واحدة (نحو ٢٣ ميغابايت) ثم يعمل بلا إنترنت، ولا يُرسَل صوتك إلى أي خادم.</p><p class="note">حدوده: يصف أحيانًا كلمة صحيحة بأنها خاطئة، ولم يُختبر على أصوات الأطفال، ولا يفهم الوقف في وسط الآية ولا التكرار. ملاحظاته للاسترشاد، والحكم للمعلّم.</p><button class="btn" data-kp="vself">جرّبي الفحص على صوت القارئ</button></details>
+   <details class="kp-more"><summary>عن الفحص التجريبي</summary><p class="note">«قارني صوتي بالقارئ» يعرض زمن كل كلمة وكل مدّ وغنّة عندكِ وعند القارئ جنبًا إلى جنب. يستمع نموذج ذكاء اصطناعي مفتوح (HisnLabs tajweed-v2) إلى تسجيلك داخل المتصفح، ويكتب ما سمعه بالأصوات، ثم يقارنه بالقراءة الصحيحة برواية حفص: المدود، والغنّة، والإخفاء، والإقلاب، والإدغام، والقلقلة، والشدّة، والحروف والحركات. يُنزَّل النموذج مرة واحدة (نحو ٣٥ ميغابايت مع أداة التشغيل) ثم يعمل بلا إنترنت، ولا يُرسَل صوتك إلى أي خادم.</p><p class="note">حدوده: يصف أحيانًا كلمة صحيحة بأنها خاطئة، ولم يُختبر على أصوات الأطفال، ولا يفهم الوقف في وسط الآية ولا التكرار. ملاحظاته للاسترشاد، والحكم للمعلّم.</p><button class="btn" data-kp="vself">جرّبي الفحص على صوت القارئ</button></details>
    <p class="status" id="kp-vc-st" aria-live="polite"></p><div id="kp-vc"></div>`;
   const v=inner.querySelector('.voice');inner.insertBefore(box,v?v.nextSibling:inner.querySelector('.box.kid'));
   selfSummary(self,R);
@@ -337,7 +337,7 @@ if(typeof done==='function'){
 }
 const refA=new Audio(),myA=new Audio();
 let VCload=null;
-const loadVoice=()=>VCload=VCload||new Promise((ok,no)=>{if(window.HadidVoice)return ok();const s=document.createElement('script');s.src='voice-check.js?v=6';s.onload=ok;s.onerror=()=>{VCload=null;no(new Error('load'))};document.head.appendChild(s)});
+const loadVoice=()=>VCload=VCload||new Promise((ok,no)=>{if(window.HadidVoice)return ok();const s=document.createElement('script');s.src='voice-check.js?v=7';s.onload=ok;s.onerror=()=>{VCload=null;no(new Error('load'))};document.head.appendChild(s)});
 let VCbusy=false;
 async function voice(k){
   const st=$$('kp-vc-st'),box=$$('kp-vc'),i=+(($$('kp-rec-a')||{}).value);if(!st||!box||isNaN(i)||VCbusy)return;

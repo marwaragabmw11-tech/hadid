@@ -239,7 +239,7 @@ async function refOf(su,v){
 }
 async function check(src,su,v,box,onStatus){
   const st=onStatus||(()=>{});
-  if(!SESS){const had=await isReady();st(had?'جارٍ تشغيل النموذج…':'تنزيل نموذج الفحص (نحو ٢٣ ميغابايت، مرة واحدة)…');
+  if(!SESS){const had=await isReady();st(had?'جارٍ تشغيل النموذج…':'تنزيل نموذج الفحص (نحو ٣٥ ميغابايت مع أداة التشغيل، مرة واحدة)…');
     await session(p=>st(`تنزيل نموذج الفحص… ${ARn(Math.min(100,Math.round(p*100)))}٪`))}
   st('جارٍ الاستماع إلى التلاوة…');
   const ref=await refOf(su,v);const x=trim(await toMono16k(src)).x;

@@ -231,6 +231,13 @@ function enhanceScene(p){
       <p class="note">وللاستماع إلى السورة كاملة بمئات القراء: <a href="https://quran.com/${a0.s}" target="_blank" rel="noopener">Quran.com</a> · <a href="https://www.mp3quran.net/ar" target="_blank" rel="noopener">mp3quran.net</a></p>`;
     const status=$$('astatus');(status||box).parentNode.insertBefore(more,(status||box).nextSibling);
     fillRList('');
+    // تنزيل تلاوة الصفحة للاستماع بدون إنترنت
+    if(window.HadidOffline&&'caches' in window){
+      const dl=document.createElement('div');dl.className='kp-row kp-offline';
+      dl.innerHTML=`<button class="btn" data-kp="dlaudio">⬇ تنزيل تلاوة هذه الصفحة للاستماع بدون إنترنت</button><span class="note" id="kp-dl-st"></span>`;
+      more.parentNode.insertBefore(dl,more.nextSibling);
+      dlStatus();
+    }
   }
   // زر ألوان التجويد
   const modes=inner.querySelector('.modes');
@@ -357,7 +364,7 @@ document.addEventListener('click',e=>{
   if(t.classList.contains('kp-t')||t.classList.contains('kp-leaf')){t.classList.toggle('kp-shown');return}
   if(t.dataset.kpRule){showRule(t.dataset.kpRule,'');return}
   if(t.dataset.kpMm){KP.mapMode=t.dataset.kpMm;renderMap();return}
-  if(t.dataset.kpR){reciter=t.dataset.kpR;store.set('hadid-reciter',reciter);const s=$$('reciter');if(s)s.value=reciter;fillRList(($$('kp-q')||{}).value);
+  if(t.dataset.kpR){reciter=t.dataset.kpR;store.set('hadid-reciter',reciter);const s=$$('reciter');if(s)s.value=reciter;fillRList(($$('kp-q')||{}).value);dlStatus();
     if(A.playing){A.queue=A.queue.slice(A.pos);A.pos=0;playCur()}else setStatus(`القارئ الآن: ${rName(reciter)}. اضغطي «استمعي».`);return}
   if(t.dataset.kpSelf){const key=`kp-self-${FILE}-${PAGES[cur]}`;let self={};try{self=JSON.parse(store.get(key,'{}'))||{}}catch(err){}
     const v=+t.dataset.v;if(self[t.dataset.kpSelf]===v)delete self[t.dataset.kpSelf];else self[t.dataset.kpSelf]=v;store.set(key,JSON.stringify(self));
@@ -371,6 +378,7 @@ document.addEventListener('click',e=>{
     const pb=$$('playbtn');if(pb){pb.textContent='■ إيقاف';pb.setAttribute('data-stop','');pb.removeAttribute('data-play')}
     if(pr&&pr.catch)pr.catch(()=>setStatus('تعذّر تشغيل هذا الرابط. تأكدي أنه رابط ملف صوتي مباشر.',true));return}
   if(k==='rec'){recToggle(t);return}
+  if(k==='dlaudio'){dlAudio();return}
   if(k==='recplay'){if(KP.recUrl){refA.pause();stopAudio();myA.src=KP.recUrl;myA.play()}return}
   if(k==='refplay'){const i=+(($$('kp-rec-a')||{}).value);if(isNaN(i))return;myA.pause();stopAudio();refA.src=urlOf(i);refA.play().catch(()=>{const s=$$('kp-rec-st');if(s)s.textContent='تعذّر تشغيل صوت القارئ. تأكدي من الاتصال بالإنترنت.'});return}
 });
@@ -380,8 +388,19 @@ document.addEventListener('change',e=>{
   if(id==='kp-n'){KP.n=+e.target.value;store.set('kp-n',String(KP.n));return}
   if(id==='kp-gap'){KP.gap=e.target.value;store.set('kp-gap',KP.gap);return}
   if(id==='kp-one'){KP.one=+e.target.value;return}
-  if(id==='reciter'){fillRList(($$('kp-q')||{}).value);return}
+  if(id==='reciter'){fillRList(($$('kp-q')||{}).value);setTimeout(dlStatus,50);return}
 });
+const allUrls=()=>AYAT.map((_,i)=>urlOf(i));
+function dlStatus(){const st=$$('kp-dl-st');if(!st||!window.HadidOffline)return;const H=window.HadidOffline,u=allUrls();
+  H.audioCount(u).then(n=>{st.textContent=n>=u.length?` ✓ محفوظة على الجهاز بصوت ${rName(reciter)}`:(n?` محفوظ ${H.ARn(n)} من ${H.ARn(u.length)} آية بصوت ${rName(reciter)}`:'')}).catch(()=>{})}
+async function dlAudio(){const st=$$('kp-dl-st'),H=window.HadidOffline;if(!st||!H||KP.dl)return;KP.dl=true;
+  const u=allUrls();st.textContent=' جارٍ التنزيل…';
+  try{const r=await H.cacheAudio(u,(d,t)=>{st.textContent=` جارٍ التنزيل: ${H.ARn(d)} من ${H.ARn(t)}`});
+    if(r.saved>=r.total)st.textContent=` ✓ نُزّلت التلاوة كاملة بصوت ${rName(reciter)}، وتعمل بدون إنترنت`;
+    else if(r.blocked&&!r.saved)st.textContent=' تعذّر التنزيل: تأكدي من الاتصال بالإنترنت ثم أعيدي المحاولة.';
+    else st.textContent=` نُزّل ${H.ARn(r.saved)} من ${H.ARn(r.total)} آية. أعيدي الضغط لإكمال الباقي.`}
+  catch(e){st.textContent=' المتصفح لا يدعم الحفظ على الجهاز.'}
+  KP.dl=false}
 document.addEventListener('input',e=>{if(e.target.id==='kp-q')fillRList(e.target.value)});
 // تشغيل زر «استمعي» في وضع «آية واحدة» يشغّل الآية المختارة
 document.addEventListener('click',e=>{const t=e.target.closest('#playbtn[data-play]');if(t&&KP.rmode==='one'){e.stopImmediatePropagation();const s=SCENES[PAGES[cur]];playList([KP.one!=null&&sIdx(s).includes(KP.one)?KP.one:sIdx(s)[0]])}},true);

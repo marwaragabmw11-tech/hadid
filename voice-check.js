@@ -5,9 +5,9 @@
 (function(){
 'use strict';
 const BASE=(document.currentScript&&document.currentScript.src)?new URL('.',document.currentScript.src).href:'';
-const ORT_V='1.20.1';
+const ORT_V=window.HADID_ORT_V||'1.20.1';
 const ORT_BASE=`https://cdn.jsdelivr.net/npm/onnxruntime-web@${ORT_V}/dist/`;
-const MODEL_URL='https://huggingface.co/HisnLabs/tajweed-v2/resolve/main/onnx/model-int8.onnx';
+const MODEL_URL=window.HADID_MODEL_URL||'https://huggingface.co/HisnLabs/tajweed-v2/resolve/main/onnx/model-int8.onnx';
 const MODEL_CACHE='hadid-model';
 const PHONEMES=['ء','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي','ا','ۦ','ۥ','َ','ُ','ِ','۪','ـ','ٲ','ڇ','ں','۾','ۜ','ؙ'];
 const SR=16000,N_FFT=400,HOP=160,N_MEL=80,LEAD=Math.round(SR*.4);

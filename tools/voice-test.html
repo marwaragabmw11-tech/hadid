@@ -7,7 +7,8 @@
 <p>يشغّل الفحص على آيات بصوت قارئ (تلاوة صحيحة)؛ كل ملاحظة تظهر هنا خطأ من الفحص.</p>
 <button id="go">ابدأ</button> <select id="rc"><option>Husary_128kbps</option><option>Minshawy_Murattal_128kbps</option><option>Alafasy_128kbps</option><option>Abdul_Basit_Murattal_192kbps</option></select>
 <pre id="log"></pre><div id="out"></div>
-<script src="../voice-check.js?v=t1"></script>
+<script>{const q=new URLSearchParams(location.search);if(q.get('ort'))window.HADID_ORT_V=q.get('ort');if(q.get('model'))window.HADID_MODEL_URL='https://huggingface.co/HisnLabs/tajweed-v2/resolve/main/onnx/'+q.get('model')}</script>
+<script src="../voice-check.js?v=t2"></script>
 <script>
 const log=m=>{document.getElementById('log').textContent+=m+'\n'};
 window.addEventListener('error',e=>log('ERR '+e.message));window.addEventListener('unhandledrejection',e=>log('REJ '+(e.reason&&(e.reason.stack||e.reason.message)||e.reason)));
